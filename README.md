@@ -1,2 +1,2 @@
-# eth-inspector
-EthInspector - Ethereum Blockchain Explorer
+# Welcome to EthInspector - Ethereum Blockchain Explorer!
+
