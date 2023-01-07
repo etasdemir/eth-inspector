@@ -1,4 +1,6 @@
 package com.etasdemir.ethinspector.data
 
-class Repository {
+import javax.inject.Inject
+
+class Repository @Inject constructor() {
 }
