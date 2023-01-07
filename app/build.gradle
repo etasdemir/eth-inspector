@@ -3,15 +3,21 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def secretProperties = rootProject.file("secret.properties")
+def properties = new Properties()
+properties.load(new FileInputStream(secretProperties))
+
 android {
     namespace 'com.etasdemir.ethinspector'
     compileSdk 33
 
     defaultConfig {
+        buildConfigField("String", "ETHER_SCAN_API_KEY", properties["ETHER_SCAN_API_KEY"])
+
         applicationId "com.etasdemir.ethinspector"
         minSdk 21
         targetSdk 33
-        versionCode 1
+        versionCode 10100
         versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
