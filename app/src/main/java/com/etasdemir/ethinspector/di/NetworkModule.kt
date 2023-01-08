@@ -25,7 +25,7 @@ annotation class EtherscanRetrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkModule {
+object NetworkModule {
 
     @EtherscanRetrofit
     @Singleton
