@@ -14,7 +14,11 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            remoteRepository.getEthStats()
+//            remoteRepository.getEthStats()
+//                .flowOn(Dispatchers.IO)
+//                .collect {
+//                    // got result
+//                }
         }
     }
 }

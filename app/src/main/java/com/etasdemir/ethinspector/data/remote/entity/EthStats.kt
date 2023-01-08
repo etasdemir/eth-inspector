@@ -30,7 +30,7 @@ data class EthStats(
     @field:Json(name = "suggested_transaction_fee_gwei_options") val transactionFeeOpts:
     TransactionFeeGweiOptions? = TransactionFeeGweiOptions(),
 
-    // Mempool
+    // MempoolCard
     @field:Json(name = "mempool_transactions") val mempoolTransactions: String? = null,
     @field:Json(name = "mempool_median_gas_price") val mempoolMedianGasPrice: String? = null,
     @field:Json(name = "mempool_tps") val mempoolTps: String? = null,

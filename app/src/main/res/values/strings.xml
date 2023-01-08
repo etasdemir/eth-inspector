@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">EthInspector</string>
+
+    <string name="ethereum">Ethereum</string>
+    <string name="usd_with_amount">%1$s USD</string>
+    <string name="eth_with_amount">%1$s ETH</string>
+    <string name="coin_circulation">Circulation</string>
+    <string name="coin_market_cap">Market Cap</string>
+    <string name="coin_dominance">Dominance</string>
+    <string name="all_time">All Time</string>
+    <string name="latest_block">Latest block</string>
+    <string name="blockchain_size">Blockchain size</string>
+    <string name="transactions">Transactions</string>
+    <string name="calls">Calls</string>
+    <string name="mempool">Mempool</string>
+    <string name="transaction_per_sec">Transaction per second</string>
+    <string name="values_of_pending_tx">Values of pending transactions</string>
+    <string name="daily_statistics">24h Statistics</string>
+    <string name="blocks">Blocks</string>
+    <string name="burned_24h">Burned 24h</string>
+    <string name="largest_tx_value">Largest transaction value</string>
+    <string name="volume">Volume</string>
+    <string name="avg_tx_fee">Average transaction fee</string>
+    <string name="title_erc_20">ERC-20 Tokens Stats</string>
+    <string name="title_erc_721">ERC-721 (NFT) Tokens Stats</string>
+    <string name="tokens">Tokens</string>
+    <string name="new_tokens_24h">New tokens 24h</string>
+    <string name="new_tx_24h">New transactions 24h</string>
+
+    <string name="search_placeholder">Search transactions, addresses, blocks</string>
+    <string name="search_invalid_search_title">Hmm…</string>
+    <string name="search_invalid_search_desc">It does not look like a transaction hash, address, or block number. Try to find something else</string>
+
 </resources>
