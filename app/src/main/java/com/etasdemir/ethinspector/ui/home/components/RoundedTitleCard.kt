@@ -25,7 +25,7 @@ fun RoundedTitleCard(title: String = "Default Title", content: @Composable () ->
             .clip(shape = RoundedCornerShape(20.dp))
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.tertiary,
                 RoundedCornerShape(20.dp)
             )
             .background(MaterialTheme.colorScheme.background)
@@ -35,7 +35,7 @@ fun RoundedTitleCard(title: String = "Default Title", content: @Composable () ->
             modifier = Modifier.padding(bottom = 16.dp),
             text = title,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.tertiary
         )
         content()
     }

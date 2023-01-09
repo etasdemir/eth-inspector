@@ -8,7 +8,6 @@
     <string name="coin_market_cap">Market Cap</string>
     <string name="coin_dominance">Dominance</string>
     <string name="all_time">All Time</string>
-    <string name="latest_block">Latest block</string>
     <string name="blockchain_size">Blockchain size</string>
     <string name="transactions">Transactions</string>
     <string name="calls">Calls</string>
