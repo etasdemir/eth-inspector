@@ -3,6 +3,8 @@ package com.etasdemir.ethinspector.ui.home
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,14 +14,31 @@ import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.home.components.*
 import com.etasdemir.ethinspector.ui.search.SearchTopBar
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun HomeScreen() {
     val scrollState: ScrollState = rememberScrollState(0)
+    val searchIcon = remember { Icons.Filled.Search }
 
-    Scaffold(topBar = { SearchTopBar() }) { padding ->
+    val onSearchClick = remember {
+        { searchText: String ->
+            Timber.e(
+                "search given text: $searchText. " +
+                        "if result found navigate to detail screen " +
+                        "else navigate to invalid search screen"
+            )
+        }
+    }
+
+    Scaffold(topBar = {
+        SearchTopBar(
+            onButtonClick = onSearchClick,
+            searchIcon = searchIcon
+        )
+    }) { padding ->
         Column(
             modifier = Modifier
                 .padding(

@@ -20,6 +20,7 @@ private val DarkColorScheme = darkColorScheme(
     surface = Color(0xFFF5F5F5),
     onBackground = Color(0xFF000000),
     onSurface = Color(0xFF000000),
+    error = Color.Red,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -30,14 +31,7 @@ private val LightColorScheme = lightColorScheme(
     surface = Color(0xFFF5F5F5),
     onBackground = Color(0xFF000000),
     onSurface = Color(0xFF000000),
-
-
-    /* Other default colors to override
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onSurface = Color(0xFF1C1B1F),
-    */
+    error = Color.Red,
 )
 
 @Composable
