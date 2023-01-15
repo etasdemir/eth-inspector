@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,6 +14,9 @@ import com.etasdemir.ethinspector.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScreen() {
+    // TODO delete later
+    val anyWalletSaved = remember { false }
+
     Scaffold(topBar = {
         Column {
             Text(
@@ -24,15 +28,19 @@ fun WalletScreen() {
             Divider(Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary)
         }
     }) {
-        LazyColumn(
-            modifier = Modifier.padding(
-                top = it.calculateTopPadding() + 4.dp,
-                end = 4.dp,
-                bottom = it.calculateBottomPadding(),
-                start = 4.dp
-            )
-        ) {
-            
+        if (anyWalletSaved) {
+            LazyColumn(
+                modifier = Modifier.padding(
+                    top = it.calculateTopPadding() + 4.dp,
+                    end = 4.dp,
+                    bottom = it.calculateBottomPadding(),
+                    start = 4.dp
+                )
+            ) {
+
+            }
+        } else {
+            NoSavedWallet()
         }
     }
 }

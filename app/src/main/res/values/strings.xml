@@ -31,5 +31,8 @@
     <string name="search_invalid_search_desc">It does not look like a transaction hash, address, or block number. \nTry to find something else</string>
 
     <string name="my_wallets">My Wallets</string>
+    <string name="no_saved_wallet_title">Could not find any wallet</string>
+    <string name="no_saved_wallet_desc">Please save an address to wallets.</string>
+    <string name="no_saved_wallet_desc2">You can find addresses with search functionality. To save an address, add it to favourites.</string>
 
 </resources>
