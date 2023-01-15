@@ -20,6 +20,7 @@ fun BackButton() {
 
     IconButton(onClick = onBackClick, modifier = Modifier.size(36.dp)) {
         Icon(
+            modifier = Modifier.size(30.dp),
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = "Back button",
             tint = MaterialTheme.colorScheme.tertiary

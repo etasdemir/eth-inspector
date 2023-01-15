@@ -26,7 +26,7 @@ fun ClipboardButton(textToCopy: String) {
 
     IconButton(onClick = onCopyClick, modifier = Modifier.size(36.dp)) {
         Icon(
-            painter = painterResource(id = R.drawable.content_copy_36),
+            painter = painterResource(id = R.drawable.content_copy_30),
             contentDescription = "Copy to clipboard",
             tint = MaterialTheme.colorScheme.tertiary
         )

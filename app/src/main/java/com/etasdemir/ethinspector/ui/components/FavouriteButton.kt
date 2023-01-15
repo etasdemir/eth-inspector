@@ -20,6 +20,7 @@ fun FavouriteButton(isFavourite: Boolean, onFavouriteClick: () -> Unit) {
 
     IconButton(onClick = onFavouriteClick, modifier = Modifier.size(36.dp)) {
         Icon(
+            modifier = Modifier.size(30.dp),
             imageVector = favIcon,
             contentDescription = "Add to favourites",
             tint = MaterialTheme.colorScheme.tertiary

@@ -21,6 +21,7 @@ fun ShareButton() {
 
     IconButton(onClick = onShareClick, modifier = Modifier.size(36.dp)) {
         Icon(
+            modifier = Modifier.size(30.dp),
             imageVector = Icons.Filled.Share,
             contentDescription = "Share with others",
             tint = MaterialTheme.colorScheme.tertiary
