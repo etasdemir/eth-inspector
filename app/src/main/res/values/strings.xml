@@ -30,4 +30,6 @@
     <string name="search_invalid_search_title">Hmm…</string>
     <string name="search_invalid_search_desc">It does not look like a transaction hash, address, or block number. \nTry to find something else</string>
 
+    <string name="my_wallets">My Wallets</string>
+
 </resources>
