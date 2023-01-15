@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.etasdemir.ethinspector.ui.account.AccountScreen
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
-import com.etasdemir.ethinspector.ui.wallet.WalletScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,8 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    HomeScreen()
 //                    InvalidSearchScreen()
-                    WalletScreen()
+//                    WalletScreen()
+                    AccountScreen()
                 }
             }
         }

@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.ui.components.SimpleTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,15 +19,7 @@ fun WalletScreen() {
     val anyWalletSaved = remember { false }
 
     Scaffold(topBar = {
-        Column {
-            Text(
-                modifier = Modifier.padding(15.dp),
-                text = stringResource(id = R.string.my_wallets),
-                color = MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Divider(Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.tertiary)
-        }
+        SimpleTopBar(title = stringResource(id = R.string.my_wallets))
     }) {
         if (anyWalletSaved) {
             LazyColumn(

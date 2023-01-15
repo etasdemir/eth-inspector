@@ -35,4 +35,10 @@
     <string name="no_saved_wallet_desc">Please save an address to wallets.</string>
     <string name="no_saved_wallet_desc2">You can find addresses with search functionality. To save an address, add it to favourites.</string>
 
+    <string name="account_settings">Account Settings</string>
+    <string name="account_settings_theme">Select theme</string>
+    <string name="account_settings_lang">Select language</string>
+    <string name="account_settings_tx">Saved transactions</string>
+    <string name="account_settings_blocks">Saved blocks</string>
+    <string name="account_settings_info">Information</string>
 </resources>
