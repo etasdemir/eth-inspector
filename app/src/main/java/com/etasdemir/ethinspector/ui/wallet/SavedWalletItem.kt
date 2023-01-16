@@ -1,6 +1,7 @@
 package com.etasdemir.ethinspector.ui.wallet
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -23,13 +24,14 @@ import com.etasdemir.ethinspector.utils.format
 data class SavedWalletState(
     val address: String,
     val ethBalance: Double,
-    val usdBalance: String
+    val usdBalance: String,
+    val onItemClick: () -> Unit
 )
 
 @Composable
 fun SavedWalletItem(state: SavedWalletState) {
     val clippedAddress = remember {
-        state.address.clip(13)
+        state.address.clip(12)
     }
     val balance =
         "${
@@ -45,7 +47,8 @@ fun SavedWalletItem(state: SavedWalletState) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(30))
             .background(MaterialTheme.colorScheme.primary)
-            .padding(8.dp),
+            .clickable(onClick = state.onItemClick)
+            .padding(vertical = 15.dp, horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     )
     {
@@ -88,6 +91,6 @@ fun SavedWalletItemPreview() {
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
         29.077655,
         "34.253.19"
-    )
+    ) {}
     SavedWalletItem(state)
 }
