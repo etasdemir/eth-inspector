@@ -46,4 +46,6 @@
     <string name="account_settings_tx_count">Transactions: %1$d</string>
     <string name="account_settings_miner">Miner: %1$s</string>
     <string name="account_settings_block">Block: %1$s</string>
+    <string name="account_settings_saved_tx">Saved Transactions</string>
+    <string name="account_settings_saved_blocks">Saved Blocks</string>
 </resources>

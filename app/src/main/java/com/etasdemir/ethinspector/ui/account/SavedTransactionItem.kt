@@ -1,8 +1,8 @@
 package com.etasdemir.ethinspector.ui.account
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,7 +24,8 @@ data class SavedTransactionState(
     val amount: Double,
     val block: String,
     val date: String,
-    val time: String
+    val time: String,
+    val onItemClick: () -> Unit
 )
 
 @Composable
@@ -44,7 +45,9 @@ fun SavedTransactionItem(state: SavedTransactionState) {
         amountTextColor = Negative
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = state.onItemClick)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -88,6 +91,11 @@ fun SavedTransactionItem(state: SavedTransactionState) {
                 FeintText(text = state.time)
             }
         }
+        Divider(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.primary,
+            thickness = 2.dp
+        )
     }
 }
 
@@ -100,6 +108,6 @@ fun SavedTransactionItemPreview() {
         "2165403",
         "2 Jan, 2018",
         "12:54:11"
-    )
+    ) {}
     SavedTransactionItem(state)
 }
