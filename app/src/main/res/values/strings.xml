@@ -48,4 +48,20 @@
     <string name="account_settings_block">Block: %1$s</string>
     <string name="account_settings_saved_tx">Saved Transactions</string>
     <string name="account_settings_saved_blocks">Saved Blocks</string>
+
+    <string name="transaction_detail">Transaction Details</string>
+    <string name="transaction_hash">Transaction Hash</string>
+    <string name="time">Time</string>
+    <string name="block">Block</string>
+    <string name="amount">Amount</string>
+    <string name="fee">Fee</string>
+    <string name="from">From</string>
+    <string name="to">Interacted With (To)</string>
+    <string name="gas_amount">Gas Amount</string>
+    <string name="gas_price">Gas Price</string>
+    <string name="max_fee_per_gas">Max Fee per Gas</string>
+    <string name="transaction_type">Transaction Type</string>
+    <string name="nonce">Nonce</string>
+
+
 </resources>

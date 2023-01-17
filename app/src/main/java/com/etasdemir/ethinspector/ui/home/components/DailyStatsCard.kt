@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.ui.components.CardRowItem
 
 @Composable
 @Preview

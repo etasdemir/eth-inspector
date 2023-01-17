@@ -12,5 +12,9 @@ fun Double.format(digits: Int): Double {
 }
 
 fun String.clip(digits: Int): String {
-    return this.take(digits) + "..." + this.takeLast(digits)
+    return if (digits >= (this.length / 2)) {
+        this
+    } else {
+        this.take(digits) + "..." + this.takeLast(digits)
+    }
 }

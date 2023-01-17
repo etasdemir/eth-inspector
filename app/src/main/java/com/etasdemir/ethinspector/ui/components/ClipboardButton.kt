@@ -19,7 +19,12 @@ fun ClipboardButton(textToCopy: String) {
         {
             val clipboard =
                 context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText(textToCopy.substring(0, 10), textToCopy)
+            val label = if (textToCopy.length >= 10) {
+                textToCopy.substring(0, 10)
+            } else {
+                textToCopy
+            }
+            val clip = ClipData.newPlainText(label, textToCopy)
             clipboard.setPrimaryClip(clip)
         }
     }

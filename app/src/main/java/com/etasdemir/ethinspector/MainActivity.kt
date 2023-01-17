@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
-import com.etasdemir.ethinspector.ui.wallet.SavedItemScreen
+import com.etasdemir.ethinspector.ui.transaction.TransactionDetailScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +26,8 @@ class MainActivity : ComponentActivity() {
 //                    InvalidSearchScreen()
 //                    WalletScreen()
 //                    AccountScreen()
-                    SavedItemScreen(type = SavedItemScreen.TRANSACTION)
+//                    SavedItemScreen(type = SavedItemScreen.TRANSACTION)
+                    TransactionDetailScreen()
                 }
             }
         }
