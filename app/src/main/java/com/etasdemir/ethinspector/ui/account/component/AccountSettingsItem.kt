@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.ui.account
+package com.etasdemir.ethinspector.ui.account.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

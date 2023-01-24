@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.account.*
+import com.etasdemir.ethinspector.ui.account.component.*
 import com.etasdemir.ethinspector.ui.components.BackButton
 import com.etasdemir.ethinspector.ui.components.SimpleTopBar
 import com.etasdemir.ethinspector.ui.theme.Feint

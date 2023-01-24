@@ -4,6 +4,7 @@
     <string name="ethereum">Ethereum</string>
     <string name="usd_with_amount">\$%1$s USD</string>
     <string name="eth_with_amount">%1$s ETH</string>
+    <string name="gwei_with_amount">%1$s Gwei</string>
     <string name="coin_circulation">Circulation</string>
     <string name="coin_market_cap">Market Cap</string>
     <string name="coin_dominance">Dominance</string>
@@ -62,6 +63,16 @@
     <string name="max_fee_per_gas">Max Fee per Gas</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="nonce">Nonce</string>
+    
+    <string name="block_details">Block Details</string>
+    <string name="block_number">Block Number</string>
+    <string name="miner">Miner</string>
+    <string name="gas_limit">Gas Limit</string>
+    <string name="gas_used">Gas Used</string>
+    <string name="base_fee_per_gas">Base Fee per Gas</string>
+    <string name="block_transactions">Block Transactions</string>
+    <string name="tx_hash">Tx Hash</string>
+
 
 
 </resources>
