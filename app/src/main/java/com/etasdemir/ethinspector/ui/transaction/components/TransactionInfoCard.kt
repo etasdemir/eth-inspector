@@ -48,12 +48,12 @@ fun TransactionInfoCard(state: TransactionInfoCardState) {
             value = state.time
         )
         CardRowItem(
-            leftContent = { BodyTitleText(text = stringResource(id = R.string.block)) },
-            rightContent = {
-                UnderlinedButton(
-                    text = state.block, onClick = onBlockClick
-                )
-            })
+            leftContent = { BodyTitleText(text = stringResource(id = R.string.block)) }
+        ) {
+            UnderlinedButton(
+                text = state.block, onClick = onBlockClick
+            )
+        }
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.amount)) },
             value = stringResource(id = R.string.eth_with_amount, state.amount.format(5))

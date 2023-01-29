@@ -10,12 +10,13 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun CardRowItem(
     modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     field: String? = null,
     value: String? = null,
     leftContent: (@Composable () -> Unit)? = null,
-    rightContent: (@Composable () -> Unit)? = null
+    rightContent: (@Composable () -> Unit)? = null,
 ) {
-    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = modifier.fillMaxWidth()) {
+    Row(horizontalArrangement = horizontalArrangement, modifier = modifier.fillMaxWidth()) {
         if (leftContent != null) {
             leftContent()
         } else if (field != null) {

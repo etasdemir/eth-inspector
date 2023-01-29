@@ -7,17 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.components.FeintText
-import com.etasdemir.ethinspector.ui.theme.Negative
-import com.etasdemir.ethinspector.ui.theme.Positive
+import com.etasdemir.ethinspector.utils.ColoredAmountText
 import com.etasdemir.ethinspector.utils.clip
-import com.etasdemir.ethinspector.utils.format
 
 data class SavedTransactionState(
     val transactionHash: String,
@@ -32,17 +29,6 @@ data class SavedTransactionState(
 fun SavedTransactionItem(state: SavedTransactionState) {
     val clippedTxHash = remember {
         state.transactionHash.clip(10)
-    }
-
-    val formattedNumber = remember { state.amount.format(5) }
-    val amountTextColor: Color?
-    val amountText: String?
-    if (state.amount >= 0) {
-        amountText = "+ $formattedNumber"
-        amountTextColor = Positive
-    } else {
-        amountText = "- $formattedNumber"
-        amountTextColor = Negative
     }
 
     Column(modifier = Modifier
@@ -61,14 +47,7 @@ fun SavedTransactionItem(state: SavedTransactionState) {
                 color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 18.sp
             )
-            Text(
-                text = stringResource(
-                    id = R.string.eth_with_amount,
-                    amountText
-                ),
-                color = amountTextColor,
-                fontSize = 16.sp
-            )
+            ColoredAmountText(amount = state.amount)
         }
         Row(
             modifier = Modifier

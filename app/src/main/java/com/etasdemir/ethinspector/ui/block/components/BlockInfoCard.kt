@@ -51,13 +51,13 @@ fun BlockInfoCard(state: BlockInfoCardState) {
             value = state.transactionCount.toString()
         )
         CardRowItem(
-            field = stringResource(id = R.string.miner),
-            rightContent = {
-                UnderlinedButton(
-                    text = state.miner.clip(10),
-                    onClick = onMinerAddressClick
-                )
-            })
+            field = stringResource(id = R.string.miner)
+        ) {
+            UnderlinedButton(
+                text = state.miner.clip(10),
+                onClick = onMinerAddressClick
+            )
+        }
         CardRowItem(field = stringResource(id = R.string.gas_limit), value = state.gasLimit)
         CardRowItem(field = stringResource(id = R.string.gas_used), value = state.gasUsed)
         CardRowItem(

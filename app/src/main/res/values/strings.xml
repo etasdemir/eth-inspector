@@ -73,6 +73,18 @@
     <string name="block_transactions">Block Transactions</string>
     <string name="tx_hash">Tx Hash</string>
 
+    <string name="address_details">Address Details</string>
+    <string name="address">Address</string>
+    <string name="balance">Balance</string>
+    <string name="tx_count">Transaction Count</string>
+    <string name="to_short">To</string>
+    <string name="transfers">Transfers</string>
+    <string name="quantity">Quantity</string>
+    <string name="token">Token</string>
+
+    <string name="contract_details">Contract Details</string>
+    <string name="creator_address">Creator Address</string>
+    <string name="creation_time">Creation Time</string>
 
 
 </resources>
