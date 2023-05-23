@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
-import timber.log.Timber
 
 @Composable
 fun InvalidSearchScreen() {
@@ -33,14 +32,7 @@ fun InvalidSearchScreen() {
             R.drawable.search_not_found_light
     }
 
-    val onCloseClick = remember {
-        { _: String ->
-            Timber.e("navigate to home screen")
-        }
-    }
-
-
-    Scaffold(topBar = { SearchTopBar(searchedValue, onCloseClick, searchIcon) }) {
+    Scaffold(topBar = { SearchTopBar(searchedValue, searchIcon = searchIcon) }) {
         Column(modifier = Modifier.padding(it)) {
             Image(
                 modifier = Modifier.fillMaxWidth(),

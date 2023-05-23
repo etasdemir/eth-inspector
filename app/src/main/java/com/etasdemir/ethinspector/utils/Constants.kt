@@ -6,6 +6,6 @@ object Constants {
     const val ETHER_SCAN_API_KEY_QUERY_NAME = "apikey"
     const val REQUEST_TIMEOUT = 5000L
 
-    const val TRANSACTION_HEX_LEN = 64
-    const val ADDRESS_HEX_LEN = 40
+    const val TRANSACTION_HEX_LEN = 66
+    const val ADDRESS_HEX_LEN = 42
 }

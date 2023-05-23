@@ -12,32 +12,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.home.components.*
 import com.etasdemir.ethinspector.ui.search.SearchTopBar
-import timber.log.Timber
 
 @Preview
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    homeViewModel: HomeViewModel = viewModel()
+) {
     val scrollState: ScrollState = rememberScrollState(0)
     val searchIcon = remember { Icons.Filled.Search }
 
-    val onSearchClick = remember {
-        { searchText: String ->
-            Timber.e(
-                "search given text: $searchText. " +
-                        "if result found navigate to detail screen " +
-                        "else navigate to invalid search screen"
-            )
-        }
-    }
-
     Scaffold(topBar = {
-        SearchTopBar(
-            onButtonClick = onSearchClick,
-            searchIcon = searchIcon
-        )
+        SearchTopBar(searchIcon = searchIcon)
     }) { padding ->
         Column(
             modifier = Modifier

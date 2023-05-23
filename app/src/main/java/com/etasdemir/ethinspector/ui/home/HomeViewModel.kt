@@ -11,7 +11,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     remoteRepository: RemoteRepository
 ) : ViewModel() {
-
     init {
         viewModelScope.launch {
 //            remoteRepository.getEthStats()
@@ -21,4 +20,6 @@ class HomeViewModel @Inject constructor(
 //                }
         }
     }
+
+
 }

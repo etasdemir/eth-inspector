@@ -15,19 +15,55 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.utils.RequestState
 
 @Composable
 fun SearchTopBar(
     uneditableText: String? = null,
-    onButtonClick: (searchText: String) -> Unit,
-    searchIcon: ImageVector
+    onButtonClick: ((searchText: String) -> Unit)? = null,
+    searchIcon: ImageVector,
+    searchViewModel: SearchViewModel = viewModel()
 ) {
     var searchText by remember { mutableStateOf("") }
+    val isSearchEnabled = uneditableText == null
+    val searchUIState by searchViewModel.searchResult.collectAsStateWithLifecycle()
 
     val onTextChange = remember {
         { newText: String ->
             searchText = newText
+        }
+    }
+
+    val onSearchButtonClick = remember {
+        {
+            if (isSearchEnabled) {
+                if (searchUIState.state != RequestState.LOADING) {
+                    searchViewModel.searchText(searchText)
+                }
+            } else {
+                searchText = ""
+                // TODO navigate to home
+            }
+        }
+    }
+
+    if (searchUIState.state == RequestState.SUCCESS) {
+        when (searchUIState.type) {
+            RawTextType.TRANSACTION -> {
+                // Navigate to transaction search with data
+            }
+            RawTextType.ADDRESS -> {
+                // Navigate to transaction search with data
+            }
+            RawTextType.BLOCK -> {
+                // Navigate to transaction search with data
+            }
+            else -> {
+                // Navigate to invalid search screen
+            }
         }
     }
 
@@ -43,7 +79,7 @@ fun SearchTopBar(
                 .weight(1f)
                 .clip(RoundedCornerShape(35)),
             value = searchText,
-            enabled = uneditableText == null,
+            enabled = isSearchEnabled,
             onValueChange = onTextChange,
             singleLine = true,
             placeholder = {
@@ -71,7 +107,12 @@ fun SearchTopBar(
                 .padding(start = 10.dp)
                 .size(50.dp)
                 .clip(RoundedCornerShape(50)),
-            onClick = { onButtonClick(searchText) },
+            onClick = {
+                onSearchButtonClick()
+                if (onButtonClick != null) {
+                  onButtonClick(searchText)
+                }
+            },
             colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(
