@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InvalidSearchScreen() {
     val searchIcon = remember { Icons.Filled.Close }

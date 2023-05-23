@@ -22,7 +22,6 @@ enum class SavedItemScreen {
     TRANSACTION, BLOCK
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedItemScreen(type: SavedItemScreen) {
     // TODO temp data

@@ -1,12 +1,13 @@
 package com.etasdemir.ethinspector.ui.home
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,7 +17,6 @@ import com.etasdemir.ethinspector.ui.home.components.*
 import com.etasdemir.ethinspector.ui.search.SearchTopBar
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun HomeScreen() {

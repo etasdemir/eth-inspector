@@ -16,7 +16,6 @@ import com.etasdemir.ethinspector.ui.components.*
 import org.w3c.dom.Text
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun AddressDetailScreen() {

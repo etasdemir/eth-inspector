@@ -16,7 +16,6 @@ import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumn
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumnState
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun ContractDetailScreen() {

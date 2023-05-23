@@ -14,7 +14,6 @@ import com.etasdemir.ethinspector.ui.components.DetailTopBar
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.transaction.components.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionDetailScreen() {
     val scrollState = remember { ScrollState(0) }

@@ -19,7 +19,6 @@ enum class AccountItem {
     THEME, LANGUAGE, TRANSACTION, BLOCK, INFO
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun AccountScreen() {

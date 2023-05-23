@@ -1,6 +1,6 @@
 package com.etasdemir.ethinspector.ui.block
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +19,6 @@ import com.etasdemir.ethinspector.ui.components.DetailTopBar
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.theme.Feint
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun BlockDetailScreen() {
