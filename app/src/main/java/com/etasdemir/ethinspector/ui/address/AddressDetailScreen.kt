@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.*
+import org.w3c.dom.Text
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,8 +117,6 @@ fun AddressDetailScreen() {
         ) {
             item {
                 AddressInfoColumn(state = addressInfoState)
-            }
-            item {
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = stringResource(id = R.string.tokens),

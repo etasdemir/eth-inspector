@@ -7,5 +7,5 @@ import com.etasdemir.ethinspector.ui.theme.Feint
 
 @Composable
 fun FeintText(text: String) {
-    Text(text = text, color = Feint, fontSize = 16.sp)
+    Text(text = text, color = Feint, fontSize = 15.sp)
 }

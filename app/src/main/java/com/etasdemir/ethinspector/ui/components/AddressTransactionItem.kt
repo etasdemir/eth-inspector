@@ -31,7 +31,7 @@ data class AddressTransactionItemState(
 @Composable
 fun AddressTransactionItem(state: AddressTransactionItemState) {
     val clippedTxHash = remember {
-        state.transactionHash.clip(8)
+        state.transactionHash.clip(6)
     }
 
     Row(
@@ -73,11 +73,11 @@ fun AddressTransactionItem(state: AddressTransactionItemState) {
                 Text(
                     text = stringResource(id = R.string.account_settings_block, state.block),
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 16.sp
+                    fontSize = 15.sp
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     FeintText(text = state.date)
                     FeintText(text = state.time)

@@ -54,10 +54,16 @@ fun SearchTopBar(
                     overflow = TextOverflow.Ellipsis
                 )
             },
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = MaterialTheme.colorScheme.onBackground,
-                placeholderColor = MaterialTheme.colorScheme.onBackground,
-                containerColor = MaterialTheme.colorScheme.primary,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                disabledTextColor = MaterialTheme.colorScheme.onBackground,
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.primary,
                 cursorColor = MaterialTheme.colorScheme.tertiary
             )
         )
