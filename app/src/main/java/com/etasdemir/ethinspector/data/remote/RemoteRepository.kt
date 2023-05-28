@@ -4,9 +4,9 @@ import com.etasdemir.ethinspector.data.remote.dao.*
 import com.etasdemir.ethinspector.data.remote.entity.SearchType
 import com.etasdemir.ethinspector.data.remote.entity.blockchair.BlockchairResponse
 import com.etasdemir.ethinspector.data.remote.entity.blockchair.EthStatsResponse
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.EtherscanResponse
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.TransactionResponse
+import com.etasdemir.ethinspector.data.remote.entity.etherscan.*
 import com.etasdemir.ethinspector.utils.Constants
+import com.etasdemir.ethinspector.utils.toHex
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -39,14 +39,17 @@ class RemoteRepository @Inject constructor(
                 val transactionResult = this.getTransactionByHash(searchText)
                 return Pair(SearchType.TRANSACTION, transactionResult)
             }
+
             SearchType.ADDRESS -> {
                 val addressResult = this.getAddressInfoByHash(searchText)
-                return Pair(SearchType.ADDRESS, Any())
+                return Pair(SearchType.ADDRESS, addressResult)
             }
+
             SearchType.BLOCK -> {
-                val blockResult = this.getBlockInfoByNumber(searchText)
-                return Pair(SearchType.BLOCK, Any())
+                val blockResult = this.getBlockInfoByNumber(searchText.toULong(), true)
+                return Pair(SearchType.BLOCK, blockResult)
             }
+
             else -> {
                 return Pair(SearchType.INVALID, Any())
             }
@@ -61,8 +64,12 @@ class RemoteRepository @Inject constructor(
         val addressResult = addressDao.getAddressInfoByHash(addressId)
     }
 
-    suspend fun getBlockInfoByNumber(blockNumber: String) {
-        val blockResult = blockDao.getBlockInfoByNumber(blockNumber)
+    suspend fun getBlockInfoByNumber(
+        blockNumber: ULong,
+        getTransactionsAsObject: Boolean
+    ): EtherscanResponse<BlockResponse> {
+        val blockHash = blockNumber.toHex()
+        return blockDao.getBlockInfoByHash(blockHash, getTransactionsAsObject)
     }
 
 

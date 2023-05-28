@@ -84,7 +84,7 @@ fun ColoredAmountText(modifier: Modifier = Modifier, amount: Double, digits: Int
 
 fun amountColor(amount: Double) = if (amount >= 0) Positive else Negative
 
-fun Int.toHex() = this.toString(16)
+fun ULong.toHex() = "0x${this.toString(16)}"
 
-fun String.toDecimal() = this.toInt(16)
+fun String.toDecimal() = this.substring(2).toULong(16)
 

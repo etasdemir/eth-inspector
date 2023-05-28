@@ -8,6 +8,7 @@ import retrofit2.http.Query
 interface TransactionDao {
 
     @GET("/api?module=proxy&action=eth_getTransactionByHash")
-    suspend fun getTransactionByHash(@Query("txhash") transactionId: String): EtherscanResponse<TransactionResponse>
+    suspend fun getTransactionByHash(@Query("txhash") transactionId: String):
+            EtherscanResponse<TransactionResponse>
 
 }
