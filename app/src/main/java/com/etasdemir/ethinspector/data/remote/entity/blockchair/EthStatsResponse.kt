@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class EthStats(
+data class EthStatsResponse(
     // Main Stats
     @field:Json(name = "market_dominance_percentage") val marketDominancePercentage: Double? = null,
     @field:Json(name = "market_cap_usd") val marketCapUsd: String? = null,

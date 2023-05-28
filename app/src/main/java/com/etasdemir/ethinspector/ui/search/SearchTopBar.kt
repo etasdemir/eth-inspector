@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.remote.entity.SearchType
 import com.etasdemir.ethinspector.utils.RequestState
+import timber.log.Timber
 
 @Composable
 fun SearchTopBar(
@@ -52,14 +54,17 @@ fun SearchTopBar(
 
     if (searchUIState.state == RequestState.SUCCESS) {
         when (searchUIState.type) {
-            RawTextType.TRANSACTION -> {
-                // Navigate to transaction search with data
+            SearchType.TRANSACTION -> {
+                Timber.e("transaction result: ${searchUIState.data}")
+                // Navigate to transaction search with type casted data
             }
-            RawTextType.ADDRESS -> {
-                // Navigate to transaction search with data
+            SearchType.ADDRESS -> {
+                Timber.e("address result: ${searchUIState.data}")
+                // Navigate to transaction search with type casted data
             }
-            RawTextType.BLOCK -> {
-                // Navigate to transaction search with data
+            SearchType.BLOCK -> {
+                Timber.e("block result: ${searchUIState.data}")
+                // Navigate to transaction search with type casted data
             }
             else -> {
                 // Navigate to invalid search screen
