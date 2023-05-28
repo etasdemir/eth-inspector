@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.remote.entity.SearchType
-import com.etasdemir.ethinspector.utils.RequestState
+import com.etasdemir.ethinspector.ui.UIResponseState
 import timber.log.Timber
 
 @Composable
@@ -31,7 +31,7 @@ fun SearchTopBar(
 ) {
     var searchText by remember { mutableStateOf("") }
     val isSearchEnabled = uneditableText == null
-    val searchUIState by searchViewModel.searchResult.collectAsStateWithLifecycle()
+    val searchResultPair by searchViewModel.searchResult.collectAsStateWithLifecycle()
 
     val onTextChange = remember {
         { newText: String ->
@@ -42,7 +42,7 @@ fun SearchTopBar(
     val onSearchButtonClick = remember {
         {
             if (isSearchEnabled) {
-                if (searchUIState.state != RequestState.LOADING) {
+                if (searchResultPair == null) {
                     searchViewModel.searchText(searchText)
                 }
             } else {
@@ -52,24 +52,41 @@ fun SearchTopBar(
         }
     }
 
-    if (searchUIState.state == RequestState.SUCCESS) {
-        when (searchUIState.type) {
-            SearchType.TRANSACTION -> {
-                Timber.e("transaction result: ${searchUIState.data}")
-                // Navigate to transaction search with type casted data
+    if (searchResultPair != null) {
+        if (searchResultPair!!.second is UIResponseState.Success) {
+            val response = searchResultPair!!.second.data
+            when (searchResultPair!!.first) {
+                SearchType.TRANSACTION -> {
+                    Timber.e("TRANSACTION result: $response")
+                    // Navigate to transaction with type casted data
+                }
+
+                SearchType.ACCOUNT -> {
+                    Timber.e("ACCOUNT result: $response")
+                    // Navigate to account with type casted data
+                }
+
+                SearchType.CONTRACT -> {
+                    Timber.e("CONTRACT result: $response")
+                    // Navigate to contract with type casted data
+                }
+
+                SearchType.BLOCK -> {
+                    Timber.e("BLOCK result: $response")
+                    // Navigate to block with type casted data
+                }
+
+                else -> {
+                    Timber.e("Invalid search")
+                    // Navigate to invalid search screen
+                }
             }
-            SearchType.ADDRESS -> {
-                Timber.e("address result: ${searchUIState.data}")
-                // Navigate to transaction search with type casted data
-            }
-            SearchType.BLOCK -> {
-                Timber.e("block result: ${searchUIState.data}")
-                // Navigate to transaction search with type casted data
-            }
-            else -> {
-                // Navigate to invalid search screen
-            }
+        } else if (searchResultPair?.second is UIResponseState.Error) {
+            val errorMessage = searchResultPair!!.second.errorMessage
+            Timber.e("Error response: $errorMessage")
+            // Navigate to invalid search screen
         }
+        searchViewModel.resetSearchResult()
     }
 
     Row(
@@ -115,7 +132,7 @@ fun SearchTopBar(
             onClick = {
                 onSearchButtonClick()
                 if (onButtonClick != null) {
-                  onButtonClick(searchText)
+                    onButtonClick(searchText)
                 }
             },
             colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary)

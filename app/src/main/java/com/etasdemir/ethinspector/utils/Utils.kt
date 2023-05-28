@@ -12,22 +12,6 @@ import com.etasdemir.ethinspector.ui.theme.Negative
 import com.etasdemir.ethinspector.ui.theme.Positive
 import java.text.DecimalFormat
 
-enum class RequestState {
-    SUCCESS, LOADING, ERROR
-}
-data class RequestUIState<T>(
-    val state: RequestState? = null,
-    val data: T? = null,
-    val errorMessage: String? = null
-)
-
-data class RequestUIStateWithType<T, K>(
-    val state: RequestState? = null,
-    val data: T? = null,
-    val type: K? = null,
-    val errorMessage: String? = null
-)
-
 fun Double.format(digits: Int): Double {
     val pattern = StringBuilder("#.")
     for (i in 0 until digits) {

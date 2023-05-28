@@ -1,15 +1,14 @@
 package com.etasdemir.ethinspector.data.remote
 
+import com.etasdemir.ethinspector.data.ResponseResult
 import com.etasdemir.ethinspector.data.remote.dao.*
 import com.etasdemir.ethinspector.data.remote.entity.SearchType
 import com.etasdemir.ethinspector.data.remote.entity.blockchair.BlockchairResponse
 import com.etasdemir.ethinspector.data.remote.entity.blockchair.EthStatsResponse
 import com.etasdemir.ethinspector.data.remote.entity.etherscan.*
+import com.etasdemir.ethinspector.data.retrofitResponseResultFactory
 import com.etasdemir.ethinspector.utils.Constants
 import com.etasdemir.ethinspector.utils.toHex
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,55 +20,67 @@ class RemoteRepository @Inject constructor(
     private val transactionDao: TransactionDao,
 ) {
 
-    suspend fun getEthStats(): Flow<BlockchairResponse<EthStatsResponse>> {
-        return flow {
-            val response = ethStatsDao.getEthStats()
-            Timber.e("getEthStats: ${response.raw()}")
-            if (response.isSuccessful && response.body() != null) {
-                emit(response.body()!!)
-            } else {
-                emit(response.body()!!)
-            }
-        }
+    suspend fun getEthStats(): ResponseResult<BlockchairResponse<EthStatsResponse>> {
+        return retrofitResponseResultFactory { ethStatsDao.getEthStats() }
     }
 
-    suspend fun search(searchText: String): Pair<SearchType, Any> {
+    suspend fun search(searchText: String): Pair<SearchType, ResponseResult<*>> {
         when (parseRawTextToType(searchText)) {
             SearchType.TRANSACTION -> {
-                val transactionResult = this.getTransactionByHash(searchText)
-                return Pair(SearchType.TRANSACTION, transactionResult)
+                val transactionResponse = this.getTransactionByHash(searchText)
+                return Pair(SearchType.TRANSACTION, transactionResponse)
             }
 
             SearchType.ADDRESS -> {
-                val addressResult = this.getAddressInfoByHash(searchText)
-                return Pair(SearchType.ADDRESS, addressResult)
+                // TODO is address account or contract
+//                response = this.getAccountInfoByHash(searchText)
+//                searchType = SearchType.ACCOUNT
             }
 
             SearchType.BLOCK -> {
-                val blockResult = this.getBlockInfoByNumber(searchText.toULong(), true)
-                return Pair(SearchType.BLOCK, blockResult)
+                return try {
+                    val convertedBlockNumber = searchText.toULong()
+                    val blockResponse = this.getBlockInfoByNumber(convertedBlockNumber, true)
+                    Pair(SearchType.BLOCK, blockResponse)
+                } catch (error: NumberFormatException) {
+                    Pair(
+                        SearchType.INVALID,
+                        ResponseResult.Error<Any>("NumberFormatException: Invalid block number")
+                    )
+                }
+
             }
 
-            else -> {
-                return Pair(SearchType.INVALID, Any())
-            }
+            else -> return Pair(
+                SearchType.INVALID,
+                ResponseResult.Error<Any>("Invalid search type")
+            )
         }
+        return Pair(
+            SearchType.INVALID,
+            ResponseResult.Error<Any>("Unknown error at: RemoteRepository::search")
+        )
     }
 
-    suspend fun getTransactionByHash(transactionId: String): EtherscanResponse<TransactionResponse> {
-        return transactionDao.getTransactionByHash(transactionId)
+    suspend fun getTransactionByHash(transactionId: String): ResponseResult<EtherscanResponse<TransactionResponse>> {
+        return retrofitResponseResultFactory { transactionDao.getTransactionByHash(transactionId) }
     }
 
-    suspend fun getAddressInfoByHash(addressId: String) {
-        val addressResult = addressDao.getAddressInfoByHash(addressId)
+    suspend fun getAccountInfoByHash(addressId: String): ResponseResult<Any> {
+        return retrofitResponseResultFactory { addressDao.getAccountInfoByHash(addressId) }
     }
 
     suspend fun getBlockInfoByNumber(
         blockNumber: ULong,
         getTransactionsAsObject: Boolean
-    ): EtherscanResponse<BlockResponse> {
+    ): ResponseResult<EtherscanResponse<BlockResponse>> {
         val blockHash = blockNumber.toHex()
-        return blockDao.getBlockInfoByHash(blockHash, getTransactionsAsObject)
+        return retrofitResponseResultFactory {
+            blockDao.getBlockInfoByHash(
+                blockHash,
+                getTransactionsAsObject
+            )
+        }
     }
 
 
