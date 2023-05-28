@@ -1,7 +1,6 @@
 package com.etasdemir.ethinspector.data.remote.dao
 
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.BlockResponse
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.EtherscanResponse
+import com.etasdemir.ethinspector.data.remote.entity.etherscan.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,6 +11,6 @@ interface BlockDao {
     suspend fun getBlockInfoByHash(
         @Query("tag") blockHash: String,
         @Query("boolean") getTransactionsAsObject: Boolean
-    ): Response<EtherscanResponse<BlockResponse>>
+    ): Response<EtherscanRPCResponse<BlockResponse>>
 
 }

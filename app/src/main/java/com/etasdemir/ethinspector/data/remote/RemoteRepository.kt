@@ -32,23 +32,28 @@ class RemoteRepository @Inject constructor(
             }
 
             SearchType.ADDRESS -> {
-                // TODO is address account or contract
-//                response = this.getAccountInfoByHash(searchText)
-//                searchType = SearchType.ACCOUNT
+                return try {
+                    if (isAddressContract(searchText)) {
+                        val contractResponse = getContractInfoByHash(searchText)
+                        Pair(SearchType.CONTRACT, contractResponse)
+                    } else {
+                        val accountResponse = getAccountInfoByHash(searchText)
+                        Pair(SearchType.ACCOUNT, accountResponse)
+                    }
+                } catch (exception: IllegalStateException) {
+                    Pair(
+                        SearchType.ADDRESS,
+                        ResponseResult.Error<Any>(
+                            exception.message ?: "Unknown error at isAddressContract(searchText)"
+                        )
+                    )
+                }
             }
 
             SearchType.BLOCK -> {
-                return try {
-                    val convertedBlockNumber = searchText.toULong()
-                    val blockResponse = this.getBlockInfoByNumber(convertedBlockNumber, true)
-                    Pair(SearchType.BLOCK, blockResponse)
-                } catch (error: NumberFormatException) {
-                    Pair(
-                        SearchType.INVALID,
-                        ResponseResult.Error<Any>("NumberFormatException: Invalid block number")
-                    )
-                }
-
+                val convertedBlockNumber = searchText.toULong()
+                val blockResponse = this.getBlockInfoByNumber(convertedBlockNumber, true)
+                return Pair(SearchType.BLOCK, blockResponse)
             }
 
             else -> return Pair(
@@ -56,24 +61,24 @@ class RemoteRepository @Inject constructor(
                 ResponseResult.Error<Any>("Invalid search type")
             )
         }
-        return Pair(
-            SearchType.INVALID,
-            ResponseResult.Error<Any>("Unknown error at: RemoteRepository::search")
-        )
     }
 
-    suspend fun getTransactionByHash(transactionId: String): ResponseResult<EtherscanResponse<TransactionResponse>> {
-        return retrofitResponseResultFactory { transactionDao.getTransactionByHash(transactionId) }
+    suspend fun getTransactionByHash(transactionHash: String): ResponseResult<EtherscanRPCResponse<TransactionResponse>> {
+        return retrofitResponseResultFactory { transactionDao.getTransactionByHash(transactionHash) }
     }
 
-    suspend fun getAccountInfoByHash(addressId: String): ResponseResult<Any> {
-        return retrofitResponseResultFactory { addressDao.getAccountInfoByHash(addressId) }
+    suspend fun getAccountInfoByHash(addressHash: String): ResponseResult<Any> {
+        return retrofitResponseResultFactory { addressDao.getAccountInfoByHash(addressHash) }
+    }
+
+    suspend fun getContractInfoByHash(addressHash: String): ResponseResult<Any> {
+        return retrofitResponseResultFactory { addressDao.getContractInfoByHash(addressHash) }
     }
 
     suspend fun getBlockInfoByNumber(
         blockNumber: ULong,
         getTransactionsAsObject: Boolean
-    ): ResponseResult<EtherscanResponse<BlockResponse>> {
+    ): ResponseResult<EtherscanRPCResponse<BlockResponse>> {
         val blockHash = blockNumber.toHex()
         return retrofitResponseResultFactory {
             blockDao.getBlockInfoByHash(
@@ -83,6 +88,19 @@ class RemoteRepository @Inject constructor(
         }
     }
 
+    @Throws(IllegalStateException::class)
+    private suspend fun isAddressContract(addressHash: String): Boolean {
+        val contractCreation =
+            retrofitResponseResultFactory<EtherscanResponse<ContractCreationResponse>> {
+                addressDao.getContractCreation(
+                    listOf(addressHash)
+                )
+            }
+        if (contractCreation is ResponseResult.Success) {
+            return contractCreation.data?.status == "1"
+        }
+        throw IllegalStateException("Exception in isAddressContract: ${contractCreation.errorMessage}")
+    }
 
     private fun parseRawTextToType(text: String): SearchType {
         if (text.startsWith("0x")) {
@@ -92,7 +110,12 @@ class RemoteRepository @Inject constructor(
                 return SearchType.ADDRESS
             }
         } else {
-            return SearchType.BLOCK
+            return try {
+                text.toULong()
+                SearchType.BLOCK
+            } catch (error: NumberFormatException) {
+                SearchType.INVALID
+            }
         }
         return SearchType.INVALID
     }
