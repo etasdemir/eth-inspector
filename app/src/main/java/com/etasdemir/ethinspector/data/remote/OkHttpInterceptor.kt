@@ -6,7 +6,7 @@ import okhttp3.Interceptor
 fun apiKeyInterceptor(field: String, key: String): Interceptor {
     return Interceptor { chain ->
         val request = chain.request()
-        val url = request.url()
+        val url = request.url
         val newUrl = url.newBuilder()
             .addQueryParameter(field, key)
             .build()

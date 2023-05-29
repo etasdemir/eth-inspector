@@ -1,5 +1,8 @@
 package com.etasdemir.ethinspector.data
 
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 
 sealed class ResponseResult<T>(
@@ -13,10 +16,20 @@ sealed class ResponseResult<T>(
     class Loading<T> : ResponseResult<T>()
 }
 
-inline fun <reified T>retrofitResponseResultFactory(requestFunction: () -> Response<*>): ResponseResult<T> {
+inline fun <reified T> retrofitResponseResultFactory(
+    bodyInterceptor: ((body: String) -> String?) = { body -> body },
+    requestFunction: () -> Response<*>
+): ResponseResult<T> {
     try {
         val response = requestFunction()
-        val body = response.body()
+        var body = response.body()
+        if (body is ResponseBody) {
+            val stringBody = bodyInterceptor(body.string())
+                ?: return ResponseResult.Error("Custom parsing error.")
+            body = stringBody.toResponseBody(
+                "application/json; charset-utf-8".toMediaTypeOrNull()
+            )
+        }
         val errorBody = response.errorBody()
         if (response.isSuccessful && body != null && body is T) {
             return ResponseResult.Success(body)
@@ -26,5 +39,10 @@ inline fun <reified T>retrofitResponseResultFactory(requestFunction: () -> Respo
     } catch (exception: Exception) {
         return ResponseResult.Error(exception.stackTraceToString())
     }
-    return ResponseResult.Error("Unknown error at: ${Thread.currentThread().stackTrace}")
+    val errorStringBuilder = StringBuilder()
+    val stack = Thread.currentThread().stackTrace
+    for (trace in stack) {
+        errorStringBuilder.appendLine(trace.toString())
+    }
+    return ResponseResult.Error("Unknown error at: $errorStringBuilder")
 }

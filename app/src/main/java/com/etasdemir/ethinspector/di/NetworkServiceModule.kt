@@ -19,8 +19,13 @@ object NetworkServiceModule {
 
     @Singleton
     @Provides
-    fun provideAddressDao(@EtherscanRetrofit retrofit: Retrofit): AddressDao =
-        retrofit.create(AddressDao::class.java)
+    fun provideEtherscanAddressDao(@EtherscanRetrofit retrofit: Retrofit): EtherscanAddressDao =
+        retrofit.create(EtherscanAddressDao::class.java)
+
+    @Singleton
+    @Provides
+    fun provideBlockchairAddressDao(@BlockchairRetrofit retrofit: Retrofit): BlockchairAddressDao =
+        retrofit.create(BlockchairAddressDao::class.java)
 
     @Singleton
     @Provides

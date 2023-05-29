@@ -3,19 +3,21 @@ package com.etasdemir.ethinspector.data.remote
 import com.etasdemir.ethinspector.data.ResponseResult
 import com.etasdemir.ethinspector.data.remote.dao.*
 import com.etasdemir.ethinspector.data.remote.entity.SearchType
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.BlockchairResponse
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.EthStatsResponse
+import com.etasdemir.ethinspector.data.remote.entity.blockchair.*
 import com.etasdemir.ethinspector.data.remote.entity.etherscan.*
 import com.etasdemir.ethinspector.data.retrofitResponseResultFactory
 import com.etasdemir.ethinspector.utils.Constants
 import com.etasdemir.ethinspector.utils.toHex
+import okhttp3.ResponseBody
+import retrofit2.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RemoteRepository @Inject constructor(
     private val ethStatsDao: EthStatsDao,
-    private val addressDao: AddressDao,
+    private val etherscanAddressDao: EtherscanAddressDao,
+    private val blockchairAddressDao: BlockchairAddressDao,
     private val blockDao: BlockDao,
     private val transactionDao: TransactionDao,
 ) {
@@ -63,16 +65,24 @@ class RemoteRepository @Inject constructor(
         }
     }
 
-    suspend fun getTransactionByHash(transactionHash: String): ResponseResult<EtherscanRPCResponse<TransactionResponse>> {
+    suspend fun getTransactionByHash(transactionHash: String): ResponseResult<EtherscanContractCreations> {
         return retrofitResponseResultFactory { transactionDao.getTransactionByHash(transactionHash) }
     }
 
-    suspend fun getAccountInfoByHash(addressHash: String): ResponseResult<Any> {
-        return retrofitResponseResultFactory { addressDao.getAccountInfoByHash(addressHash) }
+    suspend fun getAccountInfoByHash(addressHash: String): ResponseResult<BlockchairAccountResponse> {
+        val accountInfo = blockchairAddressDao.getAccountInfoByHash(addressHash)
+        val result = retrofitResponseResultFactory<ResponseBody>({ body ->
+            CustomResponseParser.parseBlockchairAddressResponse(body)
+        }, { accountInfo })
+        return CustomResponseParser.addressJsonConverter(result)
     }
 
-    suspend fun getContractInfoByHash(addressHash: String): ResponseResult<Any> {
-        return retrofitResponseResultFactory { addressDao.getContractInfoByHash(addressHash) }
+    suspend fun getContractInfoByHash(addressHash: String): ResponseResult<BlockchairContractResponse> {
+        val contractInfo = blockchairAddressDao.getContractInfoByHash(addressHash)
+        val result = retrofitResponseResultFactory<ResponseBody>({ body ->
+            CustomResponseParser.parseBlockchairAddressResponse(body)
+        }, { contractInfo })
+        return CustomResponseParser.addressJsonConverter(result)
     }
 
     suspend fun getBlockInfoByNumber(
@@ -92,7 +102,7 @@ class RemoteRepository @Inject constructor(
     private suspend fun isAddressContract(addressHash: String): Boolean {
         val contractCreation =
             retrofitResponseResultFactory<EtherscanResponse<ContractCreationResponse>> {
-                addressDao.getContractCreation(
+                etherscanAddressDao.getContractCreation(
                     listOf(addressHash)
                 )
             }

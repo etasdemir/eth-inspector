@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -58,7 +59,22 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideOkHttpClientBuilder(): OkHttpClient.Builder = OkHttpClient
-        .Builder()
-        .callTimeout(Constants.REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+    fun provideOkHttpClientBuilder(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient.Builder =
+        OkHttpClient
+            .Builder()
+            .addInterceptor(loggingInterceptor)
+            .callTimeout(Constants.REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+
+    @Provides
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        val logging = HttpLoggingInterceptor()
+        if (BuildConfig.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE)
+        }
+        logging.redactHeader("Authorization");
+        logging.redactHeader("Cookie");
+        return logging
+    }
 }
