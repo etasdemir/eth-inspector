@@ -31,18 +31,30 @@ inline fun <reified T> retrofitResponseResultFactory(
             )
         }
         val errorBody = response.errorBody()
-        if (response.isSuccessful && body != null && body is T) {
-            return ResponseResult.Success(body)
-        } else if (errorBody != null) {
-            return ResponseResult.Error(errorBody.string())
+        if (!response.isSuccessful) {
+            return if (errorBody == null) {
+                val errorStringBuilder = StringBuilder()
+                val stack = Thread.currentThread().stackTrace
+                for (trace in stack) {
+                    errorStringBuilder.appendLine(trace.toString())
+                }
+                ResponseResult.Error("Unsuccessful response, unknown error at: $errorStringBuilder")
+            } else {
+                ResponseResult.Error("Unsuccessful response: ${errorBody.string()}")
+            }
         }
+        if (body == null) {
+            return ResponseResult.Error("Response is successful but body is null.")
+        }
+        if (body !is T) {
+            return ResponseResult.Error(
+                "Response is successful but body does not have same type with given generic type T. \n" +
+                        "T is: ${T::class.java} \n" +
+                        "body is: ${body.javaClass}"
+            )
+        }
+        return ResponseResult.Success(body)
     } catch (exception: Exception) {
         return ResponseResult.Error(exception.stackTraceToString())
     }
-    val errorStringBuilder = StringBuilder()
-    val stack = Thread.currentThread().stackTrace
-    for (trace in stack) {
-        errorStringBuilder.appendLine(trace.toString())
-    }
-    return ResponseResult.Error("Unknown error at: $errorStringBuilder")
 }

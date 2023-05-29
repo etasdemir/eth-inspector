@@ -77,6 +77,10 @@ class RemoteRepository @Inject constructor(
         return CustomResponseParser.addressJsonConverter(result)
     }
 
+    suspend fun getERC20TokenTransfers(addressHash: String): ResponseResult<EtherscanTokenTransfers> {
+        return retrofitResponseResultFactory { etherscanAddressDao.getERC20TokenTransfers(addressHash) }
+    }
+
     suspend fun getContractInfoByHash(addressHash: String): ResponseResult<BlockchairContractResponse> {
         val contractInfo = blockchairAddressDao.getContractInfoByHash(addressHash)
         val result = retrofitResponseResultFactory<ResponseBody>({ body ->
