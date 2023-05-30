@@ -5,7 +5,6 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class BlockResponse(
     val baseFeePerGas: String,
-    val difficulty: String,
     val gasLimit: String,
     val gasUsed: String,
     val hash: String,
@@ -15,6 +14,5 @@ data class BlockResponse(
     val parentHash: String,
     val size: String,
     val timestamp: String,
-    val totalDifficulty: String,
     val transactions: List<TransactionResponse>,
 )

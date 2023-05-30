@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 data class DetailTopBarState(
     val barTitle: String,
     val isFavouriteEnabled: Boolean,
-    val onFavouriteClick: () -> Unit,
+    val onFavouriteClick: (prev: Boolean) -> Unit,
     val textToCopy: String
 )
 

@@ -2,19 +2,19 @@ package com.etasdemir.ethinspector.utils
 
 import java.math.BigDecimal
 
-fun String.fromWei(unit: EthUnit = EthUnit.GWEI): BigDecimal {
+fun String.fromWei(unit: EthUnit): BigDecimal {
     return BigDecimal(this).fromWei(unit)
 }
 
-fun BigDecimal.fromWei(unit: EthUnit = EthUnit.GWEI): BigDecimal {
+fun BigDecimal.fromWei(unit: EthUnit): BigDecimal {
     return this.divide(unit.weiFactor)
 }
 
-fun String.toWei(unit: EthUnit = EthUnit.GWEI): BigDecimal {
+fun String.toWei(unit: EthUnit): BigDecimal {
     return BigDecimal(this).toWei(unit)
 }
 
-fun BigDecimal.toWei(unit: EthUnit = EthUnit.GWEI): BigDecimal {
+fun BigDecimal.toWei(unit: EthUnit): BigDecimal {
     return this.multiply(unit.weiFactor)
 }
 

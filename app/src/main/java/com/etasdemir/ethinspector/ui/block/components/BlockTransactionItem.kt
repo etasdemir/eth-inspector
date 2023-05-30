@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -20,20 +21,25 @@ import com.etasdemir.ethinspector.utils.*
 
 data class BlockTransactionItemState(
     val address: String,
-    val amount: String,
-    val onClick: (String) -> Unit
+    val amount: ULong,
 )
 
 @Composable
-fun BlockTransactionItem(modifier: Modifier = Modifier, state: BlockTransactionItemState) {
-    val amount = state.amount.format(digits = 5)
+fun BlockTransactionItem(
+    modifier: Modifier = Modifier,
+    state: BlockTransactionItemState,
+    onClick: (txHash: String) -> Unit
+) {
+    val amount = remember {
+        state.amount.toString().fromWei(EthUnit.ETHER).toString().format(6)
+    }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(40))
             .background(MaterialTheme.colorScheme.background)
-            .clickable { state.onClick(state.address) }
+            .clickable { onClick(state.address) }
             .padding(15.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -57,7 +63,7 @@ fun BlockTransactionItem(modifier: Modifier = Modifier, state: BlockTransactionI
 fun BlockTransactionItemPreview() {
     val state = BlockTransactionItemState(
         "0x1656AFA45AF5765F76F4F187567F85",
-        "0.05012035123"
-    ) {}
-    BlockTransactionItem(state = state)
+        7165918000000000u
+    )
+    BlockTransactionItem(state = state) {}
 }
