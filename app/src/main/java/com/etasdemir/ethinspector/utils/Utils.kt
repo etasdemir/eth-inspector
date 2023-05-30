@@ -22,6 +22,9 @@ fun Double.format(digits: Int): Double {
 }
 
 fun String.format(digits: Int): String {
+    if (digits == 0) {
+        return this.split('.')[0]
+    }
     val delimiter = "."
     val parts = this.split(delimiter)
     val lastPart = parts.last().toCharArray()
@@ -72,3 +75,28 @@ fun ULong.toHex() = "0x${this.toString(16)}"
 
 fun String.toDecimal() = this.substring(2).toULong(16)
 
+fun String.addDots(): String {
+    val len = this.length
+    if (len < 3) return this
+
+    var current = 0
+    val part = StringBuilder()
+    val result = StringBuilder()
+    part.insert(0, "")
+    for (i in len - 1 downTo 0) {
+        current++
+        part.insert(0, this[i])
+        if (current % 3 == 0) {
+            result.insert(0, part)
+            if (i != 0) {
+                result.insert(0, ".")
+            }
+            part.clear()
+            current = 0
+        }
+    }
+    if (len % 3 != 0) {
+        result.insert(0, this.substring(0, len % 3))
+    }
+    return result.toString()
+}

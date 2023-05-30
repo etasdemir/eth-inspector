@@ -20,7 +20,7 @@ data class EthStatsResponse(
     @field:Json(name = "calls") val calls: String? = null,
     @field:Json(name = "burned") val burned: String? = null,
 
-    // 24h Statslargest_transaction_24h
+    // 24h Stats
     @field:Json(name = "blocks_24h") val blocks24h: Double? = null,
     @field:Json(name = "transactions_24h") val transactions24h: Double? = null,
     @field:Json(name = "volume_24h_approximate") val volume24hApproximate: String? = null,
