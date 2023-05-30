@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
     fun getEthStats() {
         viewModelScope.launch {
             val ethStatsResponse = remoteRepository.getEthStats()
-            val mappedResponse = mapResponseToUIResponseState(ethStatsResponse)
+            val mappedResponse = mapResponseToUIResponseState(ethStatsResponse) { body -> body }
             _ethStatsResult.value = mappedResponse
         }
     }

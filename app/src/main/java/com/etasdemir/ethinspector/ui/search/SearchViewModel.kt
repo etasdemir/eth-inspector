@@ -26,7 +26,8 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             _searchResult.value = Pair(SearchType.INVALID, UIResponseState.Loading<Any>())
             val searchResultPair = remoteRepository.search(searchText)
-            val uiResponseState = mapResponseToUIResponseState(searchResultPair.second)
+            val uiResponseState =
+                mapResponseToUIResponseState(searchResultPair.second) { body -> body }
             val searchType = searchResultPair.first
             _searchResult.value = Pair(searchType, uiResponseState)
         }

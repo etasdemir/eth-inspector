@@ -12,7 +12,7 @@ data class TransactionResponse (
     val maxFeePerGas: String? = null,
     val maxPriorityFeePerGas: String? = null,
     val hash: String,
-    val nonce: String,
+    val nonce: String?,
     val to: String?,
     val transactionIndex: String,
     val value: String,

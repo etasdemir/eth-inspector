@@ -13,24 +13,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.components.*
+import com.etasdemir.ethinspector.ui.transaction.TransactionDetailState
 import com.etasdemir.ethinspector.utils.format
+import com.etasdemir.ethinspector.utils.getDateString
 import timber.log.Timber
 
-data class TransactionInfoCardState(
-    val transactionHash: String,
-    val time: String,
-    val block: String,
-    val amount: Double,
-    val fee: String
-)
-
 @Composable
-fun TransactionInfoCard(state: TransactionInfoCardState) {
+fun TransactionInfoCard(state: TransactionDetailState) {
     val onBlockClick = remember {
         { block: String ->
             Timber.e("Navigate to block: $block")
         }
     }
+    val convertedDate =
+        if (state.timestamp != null) getDateString(state.timestamp.toLong()) else null
 
     Column(
         modifier = Modifier
@@ -45,13 +41,13 @@ fun TransactionInfoCard(state: TransactionInfoCardState) {
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.time)) },
-            value = state.time
+            value = convertedDate
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.block)) }
         ) {
             UnderlinedButton(
-                text = state.block, onClick = onBlockClick
+                text = state.block.toString(), onClick = onBlockClick
             )
         }
         CardRowItem(
@@ -60,7 +56,7 @@ fun TransactionInfoCard(state: TransactionInfoCardState) {
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.fee)) },
-            value = state.fee
+            value = state.fee.toString().format(6)
         )
     }
 }
@@ -69,12 +65,22 @@ fun TransactionInfoCard(state: TransactionInfoCardState) {
 @Composable
 @Preview
 fun TransactionInfoCardPreview() {
-    val state = TransactionInfoCardState(
+    val state = TransactionDetailState(
+        // Info Card
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
         "21.02.2020 13:57:45",
-        "5301614",
+        5301614u,
         0.0123151,
-        "0.00012531"
+        0.00012531,
+
+    // Detail Card
+        "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
+        "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
+        21999.0,
+        14.0,
+        16.0,
+        2,
+        "40351"
     )
     TransactionInfoCard(state)
 }

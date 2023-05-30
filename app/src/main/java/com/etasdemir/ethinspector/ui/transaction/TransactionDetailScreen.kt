@@ -2,22 +2,55 @@ package com.etasdemir.ethinspector.ui.transaction
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
-import com.etasdemir.ethinspector.ui.transaction.components.*
+import com.etasdemir.ethinspector.ui.transaction.components.TransactionDetailCard
+import com.etasdemir.ethinspector.ui.transaction.components.TransactionInfoCard
+import timber.log.Timber
+
+data class TransactionDetailState(
+    // Info Card
+    val transactionHash: String,
+    val timestamp: String?,
+    val block: ULong,
+    val amount: Double,
+    val fee: Double,
+
+    // Detail Card
+    val fromAddress: String,
+    val toAddress: String?,
+    val gasAmount: Double,
+    val gasPrice: Double,
+    val maxFeePerGas: Double?,
+    val txType: Int,
+    val nonce: String?
+)
 
 @Composable
-fun TransactionDetailScreen() {
+@Preview
+fun TransactionDetailScreen(
+    transactionDetailViewModel: TransactionDetailViewModel = viewModel()
+) {
     val scrollState = remember { ScrollState(0) }
     val topBarTitle = stringResource(id = R.string.transaction_detail)
+    val state by transactionDetailViewModel.transactionState.collectAsStateWithLifecycle()
+
+    val txHashTakenFromArgs = "0xbc78ab8a9e9a0bca7d0321a27b2c03addeae08ba81ea98b03cd3dd237eabed44"
+
+    LaunchedEffect(key1 = "tx_detail_screen_get_tx") {
+        transactionDetailViewModel.getTransactionByHash(txHashTakenFromArgs)
+    }
 
     // TODO Static data
     val topBarState = remember {
@@ -25,25 +58,24 @@ fun TransactionDetailScreen() {
             topBarTitle,
             true,
             {},
-            "tx hash"
+            txHashTakenFromArgs
         )
     }
-    val infoState = TransactionInfoCardState(
-        "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-        "21.02.2020 13:57:45",
-        "5301614",
-        0.0123151,
-        "0.00012531"
-    )
-    val detailState = TransactionDetailCardState(
-        "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-        "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-        "21999",
-        "14.418428466",
-        "16.418428466",
-        "2 (EIP-1559)",
-        40351.0
-    )
+
+
+    if (state is UIResponseState.Loading) {
+        // Show loading
+        Timber.e("TransactionDetailScreen: Loading transaction detail screen")
+        return
+    }
+    if (state is UIResponseState.Error) {
+        Timber.e("TransactionDetailScreen: Error ${state.errorMessage}")
+        return
+    }
+    if (state is UIResponseState.Success && state.data == null) {
+        Timber.e("TransactionDetailScreen: Response is success but data null.")
+        return
+    }
 
     Scaffold(topBar = { DetailTopBar(topBarState) }) {
         Column(
@@ -54,17 +86,13 @@ fun TransactionDetailScreen() {
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(20.dp)
         ) {
-            TransactionInfoCard(infoState)
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(20.dp))
-            TransactionDetailCard(detailState)
+            TransactionInfoCard(state.data!!)
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+            )
+            TransactionDetailCard(state.data!!)
         }
     }
-}
-
-@Composable
-@Preview
-fun TransactionDetailScreenPreview() {
-    TransactionDetailScreen()
 }

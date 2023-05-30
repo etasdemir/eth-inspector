@@ -47,7 +47,8 @@ fun SearchTopBar(
                 }
             } else {
                 searchText = ""
-                // TODO navigate to home
+                Timber.e("Navigate to home")
+                // Navigate to home
             }
         }
     }

@@ -13,9 +13,12 @@ sealed class UIResponseState<T>(
     class Loading<T> : UIResponseState<T>()
 }
 
-fun <T> mapResponseToUIResponseState(responseResult: ResponseResult<T>): UIResponseState<T> {
+fun <T, K> mapResponseToUIResponseState(
+    responseResult: ResponseResult<T>,
+    mapBody: ((body: T) -> K)
+): UIResponseState<K> {
     return when (responseResult) {
-        is ResponseResult.Success -> UIResponseState.Success(responseResult.data!!)
+        is ResponseResult.Success -> UIResponseState.Success(mapBody(responseResult.data!!))
 
         is ResponseResult.Error -> UIResponseState.Error(responseResult.errorMessage!!)
 

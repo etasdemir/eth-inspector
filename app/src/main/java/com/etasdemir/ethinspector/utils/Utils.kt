@@ -10,7 +10,8 @@ import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.theme.Negative
 import com.etasdemir.ethinspector.ui.theme.Positive
-import java.text.DecimalFormat
+import java.text.*
+import java.util.Locale
 
 fun Double.format(digits: Int): Double {
     val pattern = StringBuilder("#.")
@@ -99,4 +100,13 @@ fun String.addDots(): String {
         result.insert(0, this.substring(0, len % 3))
     }
     return result.toString()
+}
+
+private val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.ENGLISH)
+fun getDateString(time: Long) : String = simpleDateFormat.format(time * 1000L)
+
+fun Double.toPlainString(): String {
+    val df = DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+    df.maximumFractionDigits = 340
+    return df.format(this)
 }

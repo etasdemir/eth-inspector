@@ -65,7 +65,7 @@ class RemoteRepository @Inject constructor(
         }
     }
 
-    suspend fun getTransactionByHash(transactionHash: String): ResponseResult<EtherscanContractCreations> {
+    suspend fun getTransactionByHash(transactionHash: String): ResponseResult<EtherscanRPCResponse<TransactionResponse>> {
         return retrofitResponseResultFactory { transactionDao.getTransactionByHash(transactionHash) }
     }
 

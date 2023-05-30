@@ -10,20 +10,22 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun UnderlinedButton(modifier: Modifier = Modifier, text: String, onClick: (value: String) -> Unit) {
-    Surface(
-        modifier = modifier
-            .clickable { onClick(text) },
-        color = Color.Transparent
-    )
-    {
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.tertiary,
-            style = TextStyle(
-                textDecoration = TextDecoration.Underline
-            ),
-            fontSize = 16.sp
-        )
+fun UnderlinedButton(
+    modifier: Modifier = Modifier,
+    text: String?,
+    onClick: (value: String) -> Unit
+) {
+    if (text != null) {
+        Surface(
+            modifier = modifier.clickable { onClick(text) }, color = Color.Transparent
+        ) {
+
+            Text(
+                text = text, color = MaterialTheme.colorScheme.tertiary, style = TextStyle(
+                    textDecoration = TextDecoration.Underline
+                ), fontSize = 16.sp
+            )
+
+        }
     }
 }
