@@ -20,16 +20,17 @@ import com.etasdemir.ethinspector.utils.ColoredAmountText
 import com.etasdemir.ethinspector.utils.clip
 
 data class AddressTransactionItemState(
-    val transactionHash: String,
+    val transactionHash: String?,
     val amount: Double,
-    val block: String,
+    val block: Long,
     val date: String,
-    val time: String,
-    val onItemClick: () -> Unit
 )
 
 @Composable
-fun AddressTransactionItem(state: AddressTransactionItemState) {
+fun AddressTransactionItem(state: AddressTransactionItemState, onItemClick: (String) -> Unit) {
+    if (state.transactionHash == null) {
+        return
+    }
     val clippedTxHash = remember {
         state.transactionHash.clip(6)
     }
@@ -38,7 +39,7 @@ fun AddressTransactionItem(state: AddressTransactionItemState) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(35))
-            .clickable(onClick = state.onItemClick)
+            .clickable(onClick = { onItemClick(state.transactionHash) })
             .background(MaterialTheme.colorScheme.primary)
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -75,13 +76,7 @@ fun AddressTransactionItem(state: AddressTransactionItemState) {
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 15.sp
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    FeintText(text = state.date)
-                    FeintText(text = state.time)
-                }
+                FeintText(text = state.date)
             }
         }
         ArrowIcon()
@@ -94,7 +89,8 @@ fun AddressTransactionItem(state: AddressTransactionItemState) {
 @Preview
 fun AddressTransactionItemPreview() {
     val state = AddressTransactionItemState(
-        "0x9868768A6SD86A87ASD6A8S787A66S87D6A8", 4232.3030, "142353532", "21.02.2020", "15:23:17"
-    ) {}
-    AddressTransactionItem(state)
+        "0x9868768A6SD86A87ASD6A8S787A66S87D6A8",
+        4232.3030, 142353532, "2023-03-02 02:59:23"
+    )
+    AddressTransactionItem(state) {}
 }

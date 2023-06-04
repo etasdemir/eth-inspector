@@ -1,27 +1,54 @@
 package com.etasdemir.ethinspector.ui.address
 
-import androidx.compose.foundation.*
+
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.*
-import org.w3c.dom.Text
 import timber.log.Timber
+
+data class AddressDetailState(
+    val addressInfo: AddressInfoColumnState,
+    val transactions: List<AddressTransactionItemState>,
+    val tokens: List<TokenItemState>,
+    var transfers: List<TransferItemState>
+)
 
 @Composable
 @Preview
-fun AddressDetailScreen() {
+fun AddressDetailScreen(
+    addressViewModel: AddressDetailViewModel = viewModel()
+) {
+    // TODO static data
+    val address = "0x31A47094C6325D357c7331c621d6768Ba041916e"
+    val addressState by addressViewModel.addressDetailState.collectAsStateWithLifecycle()
+
+    val isAddressFavourite = false
+    val topBarTitle = stringResource(id = R.string.address_details)
+    val topBarState = remember {
+        DetailTopBarState(
+            barTitle = topBarTitle,
+            isFavouriteEnabled = isAddressFavourite,
+            onFavouriteClick = {},
+            textToCopy = address
+        )
+    }
+
     val onTransferItemClick = remember {
-        {
-            Timber.e("AddressDetailScreen::onTransferItemClick")
+        { hash: String ->
+            Timber.e("AddressDetailScreen::onTransferItemClick $hash")
         }
     }
 
@@ -37,74 +64,25 @@ fun AddressDetailScreen() {
         }
     }
 
-    // TODO static data
-    val address = "0x1412AGHDK1H23G123HJH2KJ32H"
-    val balanceEth = "29.03841209"
-    val balanceUsd = "143,324.03841209"
-    val txCount = 62489.0
-
-    val isAddressFavourite = false
-    val topBarTitle = stringResource(id = R.string.address_details)
-    val topBarState = remember {
-        DetailTopBarState(
-            barTitle = topBarTitle,
-            isFavouriteEnabled = isAddressFavourite,
-            onFavouriteClick = {},
-            textToCopy = address
-        )
+    LaunchedEffect(key1 = "get_address_detail_by_hash") {
+        addressViewModel.getAccountInfoByHash(address)
     }
 
-    val addressInfoState = AddressInfoColumnState(
-        address,
-        balanceEth,
-        balanceUsd,
-        txCount
-    )
+    if (addressState is UIResponseState.Loading) {
+        // Show loading
+        Timber.e("AddressDetailScreen: Loading transaction detail screen")
+        return
+    }
+    if (addressState is UIResponseState.Error) {
+        Timber.e("AddressDetailScreen: Error ${addressState.errorMessage}")
+        return
+    }
+    if (addressState is UIResponseState.Success && addressState.data == null) {
+        Timber.e("AddressDetailScreen: Response is success but data null.")
+        return
+    }
 
-    val txItemState = listOf(
-        AddressTransactionItemState(
-            "0x9868768A6SD86A87ASD6A8S787A66S87D6A8",
-            4232.3030,
-            "142353532",
-            "21.02.2020",
-            "15:23:17"
-        ) {},
-        AddressTransactionItemState(
-            "0x9868768A6SD86A87ASD6A8S787A66S87D6A8",
-            4232.3030,
-            "142353532",
-            "21.02.2020",
-            "15:23:17"
-        ) {}
-    )
-
-    val tokenItems = listOf(
-        TokenItemState(
-            "Furucombo (COMBO)", "0X12837987HG12JGH12GH3F89FS7", "12831894289312831200"
-        ) {},
-        TokenItemState(
-            "Furucombo (COMBO)", "0X12837987HG12JGH12GH3F89FS7", "12831894289312831200"
-        ) {}
-    )
-
-    val transferItems = listOf(
-        TransferItemState(
-            "0xA78SD6A8S6C87F87S6DF8S7DF6ASD987AS9D",
-            "Maker (MKR)",
-            1532.112323,
-            "530430240",
-            "21.02.2020 13:57:45"
-        ) {},
-        TransferItemState(
-            "0xA78SD6A8S6C87F87S6DF8S7DF6ASD987AS9D",
-            "Maker (MKR)",
-            -1532.112323,
-            "530430240",
-            "21.02.2020 13:57:45"
-        ) {}
-    )
-
-
+    val data = addressState.data!!
 
     Scaffold(topBar = { DetailTopBar(state = topBarState) }) {
         LazyColumn(
@@ -115,7 +93,7 @@ fun AddressDetailScreen() {
                 .padding(24.dp)
         ) {
             item {
-                AddressInfoColumn(state = addressInfoState)
+                AddressInfoColumn(address, data.addressInfo)
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = stringResource(id = R.string.tokens),
@@ -123,8 +101,8 @@ fun AddressDetailScreen() {
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            items(tokenItems) { token ->
-                TokenItem(state = token)
+            items(data.tokens) { token ->
+                TokenItem(state = token, onTokenItemClick)
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -139,13 +117,15 @@ fun AddressDetailScreen() {
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            items(txItemState) { item ->
-                AddressTransactionItem(item)
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                )
+            items(data.transactions) { item ->
+                if (item.transactionHash != null) {
+                    AddressTransactionItem(item, onTransactionItemClick)
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                    )
+                }
             }
             item {
                 Text(
@@ -155,8 +135,8 @@ fun AddressDetailScreen() {
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            items(transferItems) { transfer ->
-                TransferItem(state = transfer)
+            items(data.transfers) { transfer ->
+                TransferItem(state = transfer, onTransferItemClick)
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()

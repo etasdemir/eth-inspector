@@ -5,7 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AccountResponse(
-    val balance: String,
+    @Json(name = "balance")
+    val balanceWei: String,
     @Json(name = "balance_usd")
     val balanceUsd: Double,
     @Json(name = "received_approximate")

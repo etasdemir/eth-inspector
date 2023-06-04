@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.ui.components.CardRowItem
@@ -20,18 +22,18 @@ import com.etasdemir.ethinspector.utils.clip
 
 data class TokenItemState(
     val name: String,
+    val symbol: String,
     val address: String,
-    val quantity: String,
-    val onClick: (address: String) -> Unit,
+    val quantity: Double
 )
 
 @Composable
-fun TokenItem(state: TokenItemState) {
+fun TokenItem(state: TokenItemState, onItemClick: (String) -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(30))
         .background(MaterialTheme.colorScheme.primary)
-        .clickable { state.onClick(state.address) }
+        .clickable { onItemClick(state.address) }
         .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -42,15 +44,16 @@ fun TokenItem(state: TokenItemState) {
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = state.name,
+                text = "${state.name} (${state.symbol})",
                 color = MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.titleMedium
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
             )
             CardRowItem(
                 field = stringResource(id = R.string.address), value = state.address.clip(8)
             )
             CardRowItem(
-                field = stringResource(id = R.string.quantity), value = state.quantity
+                field = stringResource(id = R.string.quantity), value = state.quantity.toString()
             )
         }
         ArrowIcon()
@@ -61,7 +64,10 @@ fun TokenItem(state: TokenItemState) {
 @Composable
 fun TokenItemPreview() {
     val state = TokenItemState(
-        "Furucombo (COMBO)", "0X12837987HG12JGH12GH3F89FS7", "12831894289312831200"
-    ) {}
-    TokenItem(state)
+        "Furucombo",
+        "COMBO",
+        "0X12837987HG12JGH12GH3F89FS7",
+        128318942893.0
+    )
+    TokenItem(state, {})
 }

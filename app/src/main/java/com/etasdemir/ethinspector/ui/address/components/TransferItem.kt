@@ -20,23 +20,24 @@ import com.etasdemir.ethinspector.utils.ColoredAmountText
 import com.etasdemir.ethinspector.utils.clip
 
 data class TransferItemState(
-    val to: String,
+    val hash: String,
+    val to: String?,
     val tokenName: String,
+    val tokenSymbol: String,
     val amount: Double,
-    val block: String,
-    val date: String,
-    val onClick: () -> Unit
+    val blockNumber: String,
+    val timestamp: String
 )
 
 @Composable
-fun TransferItem(state: TransferItemState) {
+fun TransferItem(state: TransferItemState, onItemClick: (String) -> Unit) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(30))
             .background(MaterialTheme.colorScheme.primary)
-            .clickable(onClick = state.onClick)
+            .clickable(onClick = { onItemClick(state.hash) })
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -54,10 +55,12 @@ fun TransferItem(state: TransferItemState) {
                         text = stringResource(id = R.string.to_short),
                         color = MaterialTheme.colorScheme.tertiary
                     )
-                    Text(
-                        text = state.to.clip(6),
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                    if (state.to != null) {
+                        Text(
+                            text = state.to.clip(6),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 }
                 ColoredAmountText(amount = state.amount)
             }
@@ -69,7 +72,7 @@ fun TransferItem(state: TransferItemState) {
             CardRowItem(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 field = stringResource(id = R.string.block),
-                value = state.block
+                value = state.blockNumber
             )
         }
         ArrowIcon()
@@ -81,10 +84,12 @@ fun TransferItem(state: TransferItemState) {
 fun TransferItemPreview() {
     val state = TransferItemState(
         "0xA78SD6A8S6C87F87S6DF8S7DF6ASD987AS9D",
-        "Maker (MKR)",
+        "0xA78SD6A8S6C87F87S6DF8S7DF6ASD987AS9D",
+        "Maker",
+        "MKR",
         1532.112323,
         "530430240",
-        "21.02.2020 13:57:45"
-    ) {}
-    TransferItem(state)
+        "530430240"
+    )
+    TransferItem(state) {}
 }

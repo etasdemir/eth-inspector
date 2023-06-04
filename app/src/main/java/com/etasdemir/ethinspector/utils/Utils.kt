@@ -12,6 +12,7 @@ import com.etasdemir.ethinspector.ui.theme.Negative
 import com.etasdemir.ethinspector.ui.theme.Positive
 import java.text.*
 import java.util.Locale
+import kotlin.math.abs
 
 fun Double.format(digits: Int): Double {
     val pattern = StringBuilder("#.")
@@ -109,4 +110,16 @@ fun Double.toPlainString(): String {
     val df = DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH))
     df.maximumFractionDigits = 340
     return df.format(this)
+}
+
+fun convertTokenAmountFromDecimal(amount: String, tokenDecimal: Int): Double {
+    val numbers = amount.toMutableList()
+    val diff = numbers.size - tokenDecimal
+    if (diff <= 0) {
+        for (i in 0 .. abs(diff)) {
+            numbers.add(0, '0')
+        }
+    }
+    numbers.add(numbers.size - tokenDecimal, '.')
+    return String(numbers.toCharArray()).format(3).toDouble()
 }

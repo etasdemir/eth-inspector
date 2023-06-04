@@ -15,6 +15,7 @@ import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumn
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumnState
+import timber.log.Timber
 
 @Composable
 @Preview
@@ -43,21 +44,25 @@ fun ContractDetailScreen() {
         address
     )
 
+    val onTransactionClick = remember {
+        { txHash: String ->
+            Timber.e("navigate to transaction: $txHash")
+        }
+    }
+
     val txItemState = listOf(
         AddressTransactionItemState(
             "0x9868768A6SD86A87ASD6A8S787A66S87D6A8",
             4232.3030,
-            "142353532",
-            "21.02.2020",
-            "15:23:17"
-        ) {},
+            142353532,
+            "2023-03-02 02:59:23"
+        ),
         AddressTransactionItemState(
             "0x9868768A6SD86A87ASD6A8S787A66S87D6A8",
             4232.3030,
-            "142353532",
-            "21.02.2020",
-            "15:23:17"
-        ) {}
+            142353532,
+            "2023-03-02 02:59:23"
+        )
     )
 
     Scaffold(topBar = { DetailTopBar(state = topBarState) }) {
@@ -78,7 +83,7 @@ fun ContractDetailScreen() {
                 )
             }
             items(txItemState) { transaction ->
-                AddressTransactionItem(state = transaction)
+                AddressTransactionItem(state = transaction, onTransactionClick)
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
