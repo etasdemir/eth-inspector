@@ -5,8 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ContractDetailsResponse (
-    val type: String,
-    val data: TokenData,
+    val type: String?,
+    val data: TokenData?,
     @Json(name = "creating_transaction_hash")
     val creatingTransactionHash: String,
     @Json(name = "creating_address")

@@ -31,7 +31,7 @@ interface BlockchairAddressDao {
     suspend fun getAccountInfoByHash(@Path("hash") addressHash: String):
             Response<ResponseBody>
 
-    @GET("/ethereum/dashboards/address/{hash}?contract_details=true")
+    @GET("/ethereum/dashboards/address/{hash}?contract_details=true&erc_20=false&nonce=false")
     suspend fun getContractInfoByHash(@Path("hash") addressHash: String):
             Response<ResponseBody>
 

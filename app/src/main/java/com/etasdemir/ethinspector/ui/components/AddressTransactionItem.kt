@@ -16,12 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.utils.ColoredAmountText
-import com.etasdemir.ethinspector.utils.clip
+import com.etasdemir.ethinspector.utils.*
 
 data class AddressTransactionItemState(
     val transactionHash: String?,
-    val amount: Double,
+    val amountWei: Double,
     val block: Long,
     val date: String,
 )
@@ -33,6 +32,9 @@ fun AddressTransactionItem(state: AddressTransactionItemState, onItemClick: (Str
     }
     val clippedTxHash = remember {
         state.transactionHash.clip(6)
+    }
+    val amountEth = remember {
+        state.amountWei.toString().fromWei(EthUnit.ETHER).toString().format(6).toDouble()
     }
 
     Row(
@@ -61,7 +63,7 @@ fun AddressTransactionItem(state: AddressTransactionItemState, onItemClick: (Str
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 18.sp
                 )
-                ColoredAmountText(amount = state.amount)
+                ColoredAmountText(amount = amountEth)
             }
             Row(
                 modifier = Modifier

@@ -9,7 +9,8 @@ data class ContractResponse(
     val contractCreated: Boolean,
     @Json(name = "contract_destroyed")
     val contractDestroyed: Boolean,
-    val balance: String,
+    @Json(name = "balance")
+    val balanceWei: String,
     @Json(name = "balance_usd")
     val balanceUsd: Double,
     @Json(name = "received_approximate")
