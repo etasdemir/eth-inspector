@@ -45,7 +45,9 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
         DetailTopBarState(
             topBarTitle,
             true,
-            {},
+            { previous, now ->
+
+            },
             blockNumberFromArgs
         )
     }

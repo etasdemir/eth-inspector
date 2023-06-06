@@ -57,7 +57,9 @@ fun TransactionDetailScreen(
         DetailTopBarState(
             topBarTitle,
             true,
-            {},
+            { previous, now ->
+
+            },
             txHashTakenFromArgs
         )
     }

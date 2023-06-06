@@ -6,19 +6,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FavouriteButton(isFavourite: Boolean, onFavouriteClick: (prev: Boolean) -> Unit) {
-    val favIcon = remember {
-        if (isFavourite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+fun FavouriteButton(
+    initialIsFavourite: Boolean,
+    onFavouriteClick: (prev: Boolean, now: Boolean) -> Unit
+) {
+    var isFavourite by remember {
+        mutableStateOf(initialIsFavourite)
+    }
+    val favIcon = if (isFavourite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+    val onClick = remember {
+        {
+            val previous = isFavourite
+            isFavourite = !previous
+            onFavouriteClick(previous, isFavourite)
+        }
     }
 
-    IconButton(onClick = {onFavouriteClick(isFavourite)}, modifier = Modifier.size(36.dp)) {
+    IconButton(onClick = onClick, modifier = Modifier.size(36.dp)) {
         Icon(
             modifier = Modifier.size(30.dp),
             imageVector = favIcon,
@@ -32,7 +42,7 @@ fun FavouriteButton(isFavourite: Boolean, onFavouriteClick: (prev: Boolean) -> U
 @Preview
 fun FavouriteButtonPreview() {
     Column {
-        val onFavouriteClick = { _: Boolean -> }
+        val onFavouriteClick = { _: Boolean, _: Boolean -> }
         FavouriteButton(true, onFavouriteClick)
         Divider()
         FavouriteButton(false, onFavouriteClick)

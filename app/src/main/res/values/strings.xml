@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">EthInspector</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="skip">Skip</string>
+
     <string name="ethereum">Ethereum</string>
     <string name="percentage_with_value">%1$s%%</string>
     <string name="usd_with_amount">\$%1$s USD</string>
@@ -88,5 +92,7 @@
     <string name="creator_address">Creator Address</string>
     <string name="creation_time">Creation Time</string>
 
+    <string name="modal_address_title">Give your address a name</string>
+    <string name="modal_address_hash">Address: %1$s</string>
 
 </resources>

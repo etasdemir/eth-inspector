@@ -41,7 +41,9 @@ fun AddressDetailScreen(
         DetailTopBarState(
             barTitle = topBarTitle,
             isFavouriteEnabled = isAddressFavourite,
-            onFavouriteClick = {},
+            onFavouriteClick = { previous, now ->
+
+            },
             textToCopy = address
         )
     }

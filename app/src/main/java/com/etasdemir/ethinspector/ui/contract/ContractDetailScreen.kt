@@ -29,19 +29,14 @@ data class ContractDetailState(
 fun ContractDetailScreen(
     contractViewModel: ContractDetailViewModel = viewModel()
 ) {
-    val topBarTitle = stringResource(id = R.string.contract_details)
-    val contractDetailState by contractViewModel.contractDetailState.collectAsStateWithLifecycle()
-
     // TODO static data
     val address = "0x388C818CA8B9251b393131C08a736A67ccB19297"
-    val isFavourite = remember { true }
+    val topBarTitle = stringResource(id = R.string.contract_details)
 
-    val topBarState = DetailTopBarState(
-        topBarTitle,
-        isFavourite,
-        {},
-        address
-    )
+    val topBarState by contractViewModel.topBarState.collectAsStateWithLifecycle()
+    val isSheetShown by contractViewModel.isSheetShown.collectAsStateWithLifecycle()
+    val contractDetailState by contractViewModel.contractDetailState.collectAsStateWithLifecycle()
+    val data = contractDetailState.data
 
     val onTransactionClick = remember {
         { txHash: String ->
@@ -49,7 +44,8 @@ fun ContractDetailScreen(
         }
     }
 
-    LaunchedEffect(key1 = "get_contract_detail_by_hash") {
+    LaunchedEffect(key1 = "initialize_contract_detail") {
+        contractViewModel.initialize(address, topBarTitle)
         contractViewModel.getContractDetailByHash(address)
     }
 
@@ -62,13 +58,19 @@ fun ContractDetailScreen(
         Timber.e("ContractDetailScreen: Error ${contractDetailState.errorMessage}")
         return
     }
-    if (contractDetailState is UIResponseState.Success && contractDetailState.data == null) {
+    if (contractDetailState is UIResponseState.Success && data == null) {
         Timber.e("ContractDetailScreen: Response is success but data null.")
         return
     }
-    val data = contractDetailState.data!!
 
-    Scaffold(topBar = { DetailTopBar(state = topBarState) }) {
+
+    Scaffold(topBar = {
+        if (topBarState != null) {
+            DetailTopBar(
+                state = topBarState!!
+            )
+        }
+    }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -76,9 +78,9 @@ fun ContractDetailScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(24.dp)
         ) {
-            if (data.contractInfo != null) {
+            if (data!!.contractInfo != null) {
                 item {
-                    ContractInfoColumn(state = data.contractInfo, address)
+                    ContractInfoColumn(state = data.contractInfo!!, address)
                     Text(
                         modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                         text = stringResource(id = R.string.transactions),
@@ -94,5 +96,8 @@ fun ContractDetailScreen(
                 }
             }
         }
+    }
+    if (isSheetShown) {
+        AddressSaveModal(contractViewModel.modalState)
     }
 }
