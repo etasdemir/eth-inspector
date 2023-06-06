@@ -2,13 +2,13 @@ package com.etasdemir.ethinspector.ui.address
 
 import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.ResponseResult
+import com.etasdemir.ethinspector.data.local.LocalRepository
 import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.mappers.addTransfersToResponse
 import com.etasdemir.ethinspector.mappers.mapAddressResponseToAddressDetailState
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import com.etasdemir.ethinspector.ui.shared.AddressViewModel
-import com.etasdemir.ethinspector.utils.AddressType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,8 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddressDetailViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository
-) : AddressViewModel() {
+    private val remoteRepository: RemoteRepository,
+    localRepository: LocalRepository
+) : AddressViewModel(localRepository) {
 
     private val _addressDetailState =
         MutableStateFlow<UIResponseState<AddressDetailState?>>(UIResponseState.Loading())

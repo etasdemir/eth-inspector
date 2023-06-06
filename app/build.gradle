@@ -66,7 +66,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.1'
+    implementation 'androidx.activity:activity-compose:1.7.2'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.compose.material3:material3:1.2.0-alpha01'
@@ -81,6 +81,7 @@ dependencies {
     def room_version = "2.5.1"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
     // Hilt
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation "com.google.dagger:hilt-android:$hilt_version"

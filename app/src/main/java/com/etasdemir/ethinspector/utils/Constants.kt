@@ -1,8 +1,9 @@
 package com.etasdemir.ethinspector.utils
 
-import javax.inject.Inject
-
 object Constants {
+    const val LOCAL_DB_NAME = "LocalSqlite"
+    const val LOCAL_DB_VERSION = 1
+
     const val BLOCK_CHAIR_URL = "https://api.blockchair.com"
     const val ETHER_SCAN_URL = "https://api.etherscan.io"
     const val ETHER_SCAN_API_KEY_QUERY_NAME = "apikey"
