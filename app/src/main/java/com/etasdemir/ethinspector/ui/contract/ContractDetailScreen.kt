@@ -17,6 +17,7 @@ import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumn
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumnState
+import com.etasdemir.ethinspector.utils.AddressType
 import timber.log.Timber
 
 data class ContractDetailState(
@@ -45,7 +46,7 @@ fun ContractDetailScreen(
     }
 
     LaunchedEffect(key1 = "initialize_contract_detail") {
-        contractViewModel.initialize(address, topBarTitle)
+        contractViewModel.initialize(address, topBarTitle, AddressType.CONTRACT)
         contractViewModel.getContractDetailByHash(address)
     }
 

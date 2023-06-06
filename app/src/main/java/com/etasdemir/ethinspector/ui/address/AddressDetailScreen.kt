@@ -17,6 +17,7 @@ import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.*
+import com.etasdemir.ethinspector.utils.AddressType
 import timber.log.Timber
 
 data class AddressDetailState(
@@ -33,20 +34,12 @@ fun AddressDetailScreen(
 ) {
     // TODO static data
     val address = "0x31A47094C6325D357c7331c621d6768Ba041916e"
-    val addressState by addressViewModel.addressDetailState.collectAsStateWithLifecycle()
-
-    val isAddressFavourite = false
     val topBarTitle = stringResource(id = R.string.address_details)
-    val topBarState = remember {
-        DetailTopBarState(
-            barTitle = topBarTitle,
-            isFavouriteEnabled = isAddressFavourite,
-            onFavouriteClick = { previous, now ->
 
-            },
-            textToCopy = address
-        )
-    }
+    val topBarState by addressViewModel.topBarState.collectAsStateWithLifecycle()
+    val isSheetShown by addressViewModel.isSheetShown.collectAsStateWithLifecycle()
+    val addressState by addressViewModel.addressDetailState.collectAsStateWithLifecycle()
+    val data = addressState.data
 
     val onTransferItemClick = remember {
         { hash: String ->
@@ -66,7 +59,8 @@ fun AddressDetailScreen(
         }
     }
 
-    LaunchedEffect(key1 = "get_address_detail_by_hash") {
+    LaunchedEffect(key1 = "initialize_account_detail") {
+        addressViewModel.initialize(address, topBarTitle, AddressType.ACCOUNT)
         addressViewModel.getAccountInfoByHash(address)
     }
 
@@ -79,14 +73,18 @@ fun AddressDetailScreen(
         Timber.e("AddressDetailScreen: Error ${addressState.errorMessage}")
         return
     }
-    if (addressState is UIResponseState.Success && addressState.data == null) {
+    if (addressState is UIResponseState.Success && data == null) {
         Timber.e("AddressDetailScreen: Response is success but data null.")
         return
     }
 
-    val data = addressState.data!!
-
-    Scaffold(topBar = { DetailTopBar(state = topBarState) }) {
+    Scaffold(topBar = {
+        if (topBarState != null) {
+            DetailTopBar(
+                state = topBarState!!
+            )
+        }
+    }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,7 +93,7 @@ fun AddressDetailScreen(
                 .padding(24.dp)
         ) {
             item {
-                AddressInfoColumn(address, data.addressInfo)
+                AddressInfoColumn(address, data!!.addressInfo)
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = stringResource(id = R.string.tokens),
@@ -103,7 +101,7 @@ fun AddressDetailScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            items(data.tokens) { token ->
+            items(data!!.tokens) { token ->
                 TokenItem(state = token, onTokenItemClick)
                 Spacer(
                     modifier = Modifier
@@ -146,5 +144,8 @@ fun AddressDetailScreen(
                 )
             }
         }
+    }
+    if (isSheetShown) {
+        AddressSaveModal(addressViewModel.modalState)
     }
 }

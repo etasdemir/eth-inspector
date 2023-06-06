@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.etasdemir.ethinspector.ui.contract.ContractDetailScreen
+import com.etasdemir.ethinspector.ui.address.AddressDetailScreen
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,8 +29,8 @@ class MainActivity : ComponentActivity() {
 //                    SavedItemScreen(type = SavedItemScreen.TRANSACTION)
 //                    TransactionDetailScreen()
 //                    BlockDetailScreen()
-//                    AddressDetailScreen()
-                    ContractDetailScreen()
+                    AddressDetailScreen()
+//                    ContractDetailScreen()
                 }
             }
         }
