@@ -33,6 +33,7 @@ fun HomeScreen(
         homeViewModel.getEthStats()
     }
 
+    // TODO parsing should be in view model
     var mainStatsState: EthMainStatsState? = null
     var allTimeStatsState: AllTimeStatsState? = null
     var mempoolStatsState: MempoolState? = null

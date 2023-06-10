@@ -5,5 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class UserLocal(
-    @PrimaryKey val uid: Int,
+    @PrimaryKey val installationId: String,
+    val theme: String,
+    val language: String
 )

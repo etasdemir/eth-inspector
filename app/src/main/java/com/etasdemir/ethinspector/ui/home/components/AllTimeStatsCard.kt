@@ -9,7 +9,10 @@ import com.etasdemir.ethinspector.utils.addDots
 import com.etasdemir.ethinspector.utils.humanReadableByteCountSI
 
 data class AllTimeStatsState(
-    val blocks: String, val blockchainSize: String, val transactions: String, val calls: String
+    val blocks: String,
+    val blockchainSize: String,
+    val transactions: String,
+    val calls: String
 )
 
 @Composable

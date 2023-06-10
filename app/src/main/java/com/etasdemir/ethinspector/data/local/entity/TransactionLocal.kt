@@ -5,5 +5,21 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TransactionLocal(
-    @PrimaryKey val uid: Int,
+    // Info Card
+    @PrimaryKey val transactionHash: String,
+    val timestamp: String?,
+    val block: ULong,
+    val amount: Double,
+    val fee: Double,
+
+    // Detail Card
+    val fromAddress: String,
+    val toAddress: String?,
+    val gasAmount: Double,
+    val gasPrice: Double,
+    val maxFeePerGas: Double?,
+    val txType: Int,
+    val nonce: String?,
+
+    val isFavourite: Boolean
 )

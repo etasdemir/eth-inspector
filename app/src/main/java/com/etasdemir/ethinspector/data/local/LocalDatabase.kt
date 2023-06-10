@@ -13,7 +13,8 @@ import com.etasdemir.ethinspector.utils.Constants
         ContractLocal::class,
         EthStatsLocal::class,
         TransactionLocal::class,
-        UserLocal::class
+        UserLocal::class,
+        LocalBlockTransactionItem::class
     ],
     version = Constants.LOCAL_DB_VERSION
 )
