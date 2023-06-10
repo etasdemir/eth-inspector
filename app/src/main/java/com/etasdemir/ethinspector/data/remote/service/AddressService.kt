@@ -1,7 +1,7 @@
-package com.etasdemir.ethinspector.data.remote.dao
+package com.etasdemir.ethinspector.data.remote.service
 
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.*
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.*
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.*
+import com.etasdemir.ethinspector.data.remote.dto.etherscan.*
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -12,7 +12,7 @@ typealias EtherscanContractCreations = EtherscanResponse<List<ContractCreationRe
 typealias EtherscanTokenTransfers = EtherscanResponse<List<TokenTransferResponse>>
 
 
-interface EtherscanAddressDao {
+interface EtherscanAddressService {
     @GET("/api?module=contract&action=getcontractcreation")
     suspend fun getContractCreation(@Query("contractaddresses") contractAddresses: List<String>):
             Response<EtherscanContractCreations>
@@ -26,7 +26,7 @@ interface EtherscanAddressDao {
     ): Response<EtherscanTokenTransfers>
 }
 
-interface BlockchairAddressDao {
+interface BlockchairAddressService {
     @GET("/ethereum/dashboards/address/{hash}?erc_20=true&nonce=false")
     suspend fun getAccountInfoByHash(@Path("hash") addressHash: String):
             Response<ResponseBody>

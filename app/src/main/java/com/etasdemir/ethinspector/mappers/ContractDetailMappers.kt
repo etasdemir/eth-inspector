@@ -1,6 +1,6 @@
 package com.etasdemir.ethinspector.mappers
 
-import com.etasdemir.ethinspector.data.remote.dao.BlockchairContractResponse
+import com.etasdemir.ethinspector.data.remote.service.BlockchairContractResponse
 import com.etasdemir.ethinspector.ui.components.AddressTransactionItemState
 import com.etasdemir.ethinspector.ui.contract.ContractDetailState
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumnState

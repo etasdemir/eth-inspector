@@ -1,10 +1,10 @@
 package com.etasdemir.ethinspector.data.remote
 
 import com.etasdemir.ethinspector.data.ResponseResult
-import com.etasdemir.ethinspector.data.remote.dao.*
-import com.etasdemir.ethinspector.data.remote.entity.SearchType
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.*
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.*
+import com.etasdemir.ethinspector.data.remote.dto.SearchType
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.*
+import com.etasdemir.ethinspector.data.remote.dto.etherscan.*
+import com.etasdemir.ethinspector.data.remote.service.*
 import com.etasdemir.ethinspector.data.retrofitResponseResultFactory
 import com.etasdemir.ethinspector.utils.Constants
 import com.etasdemir.ethinspector.utils.toHex
@@ -15,15 +15,15 @@ import javax.inject.Singleton
 
 @Singleton
 class RemoteRepository @Inject constructor(
-    private val ethStatsDao: EthStatsDao,
-    private val etherscanAddressDao: EtherscanAddressDao,
-    private val blockchairAddressDao: BlockchairAddressDao,
-    private val blockDao: BlockDao,
-    private val transactionDao: TransactionDao,
+    private val ethStatsService: EthStatsService,
+    private val etherscanAddressService: EtherscanAddressService,
+    private val blockchairAddressService: BlockchairAddressService,
+    private val blockService: BlockService,
+    private val transactionService: TransactionService,
 ) {
 
     suspend fun getEthStats(): ResponseResult<BlockchairResponse<EthStatsResponse>> {
-        return retrofitResponseResultFactory { ethStatsDao.getEthStats() }
+        return retrofitResponseResultFactory { ethStatsService.getEthStats() }
     }
 
     suspend fun search(searchText: String): Pair<SearchType, ResponseResult<*>> {
@@ -66,11 +66,11 @@ class RemoteRepository @Inject constructor(
     }
 
     suspend fun getTransactionByHash(transactionHash: String): ResponseResult<EtherscanRPCResponse<TransactionResponse>> {
-        return retrofitResponseResultFactory { transactionDao.getTransactionByHash(transactionHash) }
+        return retrofitResponseResultFactory { transactionService.getTransactionByHash(transactionHash) }
     }
 
     suspend fun getAccountInfoByHash(addressHash: String): ResponseResult<BlockchairAccountResponse> {
-        val accountInfo = blockchairAddressDao.getAccountInfoByHash(addressHash)
+        val accountInfo = blockchairAddressService.getAccountInfoByHash(addressHash)
         val result = retrofitResponseResultFactory<ResponseBody>({ body ->
             CustomResponseParser.parseBlockchairAddressResponse(body)
         }, { accountInfo })
@@ -78,11 +78,11 @@ class RemoteRepository @Inject constructor(
     }
 
     suspend fun getERC20TokenTransfers(addressHash: String): ResponseResult<EtherscanTokenTransfers> {
-        return retrofitResponseResultFactory { etherscanAddressDao.getERC20TokenTransfers(addressHash) }
+        return retrofitResponseResultFactory { etherscanAddressService.getERC20TokenTransfers(addressHash) }
     }
 
     suspend fun getContractInfoByHash(addressHash: String): ResponseResult<BlockchairContractResponse> {
-        val contractInfo = blockchairAddressDao.getContractInfoByHash(addressHash)
+        val contractInfo = blockchairAddressService.getContractInfoByHash(addressHash)
         val result = retrofitResponseResultFactory<ResponseBody>({ body ->
             CustomResponseParser.parseBlockchairAddressResponse(body)
         }, { contractInfo })
@@ -95,7 +95,7 @@ class RemoteRepository @Inject constructor(
     ): ResponseResult<EtherscanRPCResponse<BlockResponse>> {
         val blockHash = blockNumber.toHex()
         return retrofitResponseResultFactory {
-            blockDao.getBlockInfoByHash(
+            blockService.getBlockInfoByHash(
                 blockHash,
                 getTransactionsAsObject
             )
@@ -106,7 +106,7 @@ class RemoteRepository @Inject constructor(
     private suspend fun isAddressContract(addressHash: String): Boolean {
         val contractCreation =
             retrofitResponseResultFactory<EtherscanResponse<ContractCreationResponse>> {
-                etherscanAddressDao.getContractCreation(
+                etherscanAddressService.getContractCreation(
                     listOf(addressHash)
                 )
             }

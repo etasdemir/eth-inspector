@@ -1,6 +1,6 @@
 package com.etasdemir.ethinspector.di
 
-import com.etasdemir.ethinspector.data.remote.dao.*
+import com.etasdemir.ethinspector.data.remote.service.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,26 +14,26 @@ object NetworkServiceModule {
 
     @Singleton
     @Provides
-    fun provideEthStatsDao(@BlockchairRetrofit retrofit: Retrofit): EthStatsDao =
-        retrofit.create(EthStatsDao::class.java)
+    fun provideEthStatsService(@BlockchairRetrofit retrofit: Retrofit): EthStatsService =
+        retrofit.create(EthStatsService::class.java)
 
     @Singleton
     @Provides
-    fun provideEtherscanAddressDao(@EtherscanRetrofit retrofit: Retrofit): EtherscanAddressDao =
-        retrofit.create(EtherscanAddressDao::class.java)
+    fun provideEtherscanAddressService(@EtherscanRetrofit retrofit: Retrofit): EtherscanAddressService =
+        retrofit.create(EtherscanAddressService::class.java)
 
     @Singleton
     @Provides
-    fun provideBlockchairAddressDao(@BlockchairRetrofit retrofit: Retrofit): BlockchairAddressDao =
-        retrofit.create(BlockchairAddressDao::class.java)
+    fun provideBlockchairAddressService(@BlockchairRetrofit retrofit: Retrofit): BlockchairAddressService =
+        retrofit.create(BlockchairAddressService::class.java)
 
     @Singleton
     @Provides
-    fun provideBlockDao(@EtherscanRetrofit retrofit: Retrofit): BlockDao =
-        retrofit.create(BlockDao::class.java)
+    fun provideBlockService(@EtherscanRetrofit retrofit: Retrofit): BlockService =
+        retrofit.create(BlockService::class.java)
 
     @Singleton
     @Provides
-    fun provideTransactionDao(@EtherscanRetrofit retrofit: Retrofit): TransactionDao =
-        retrofit.create(TransactionDao::class.java)
+    fun provideTransactionService(@EtherscanRetrofit retrofit: Retrofit): TransactionService =
+        retrofit.create(TransactionService::class.java)
 }

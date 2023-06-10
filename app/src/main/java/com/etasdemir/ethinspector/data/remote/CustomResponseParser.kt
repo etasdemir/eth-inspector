@@ -1,8 +1,8 @@
 package com.etasdemir.ethinspector.data.remote
 
 import com.etasdemir.ethinspector.data.ResponseResult
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.AddressResponse
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.BlockchairResponse
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.AddressResponse
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.BlockchairResponse
 import com.squareup.moshi.*
 import okhttp3.ResponseBody
 import org.json.JSONObject

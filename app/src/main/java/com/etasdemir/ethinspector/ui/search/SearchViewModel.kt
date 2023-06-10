@@ -3,7 +3,7 @@ package com.etasdemir.ethinspector.ui.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.remote.RemoteRepository
-import com.etasdemir.ethinspector.data.remote.entity.SearchType
+import com.etasdemir.ethinspector.data.remote.dto.SearchType
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel

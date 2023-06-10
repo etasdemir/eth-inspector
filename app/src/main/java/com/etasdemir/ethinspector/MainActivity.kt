@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.etasdemir.ethinspector.ui.address.AddressDetailScreen
+import com.etasdemir.ethinspector.ui.home.HomeScreen
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,14 +22,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    HomeScreen()
+                    HomeScreen()
 //                    InvalidSearchScreen()
 //                    WalletScreen()
 //                    AccountScreen()
 //                    SavedItemScreen(type = SavedItemScreen.TRANSACTION)
 //                    TransactionDetailScreen()
 //                    BlockDetailScreen()
-                    AddressDetailScreen()
+//                    AddressDetailScreen()
 //                    ContractDetailScreen()
                 }
             }

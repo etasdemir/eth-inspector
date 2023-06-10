@@ -8,7 +8,7 @@ data class TransactionLocal(
     // Info Card
     @PrimaryKey val transactionHash: String,
     val timestamp: String?,
-    val block: ULong,
+    val block: Long,
     val amount: Double,
     val fee: Double,
 

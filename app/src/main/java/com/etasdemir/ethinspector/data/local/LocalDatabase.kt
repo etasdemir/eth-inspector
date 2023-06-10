@@ -8,13 +8,17 @@ import com.etasdemir.ethinspector.utils.Constants
 
 @Database(
     entities = [
-        AccountLocal::class,
+        AccountInfoLocal::class,
         BlockLocal::class,
-        ContractLocal::class,
+        BlockTransactionItemLocal::class,
+        ContractInfoLocal::class,
         EthStatsLocal::class,
         TransactionLocal::class,
         UserLocal::class,
-        LocalBlockTransactionItem::class
+        AddressTransactionItemLocal::class,
+        TokenItemAccountCrossRef::class,
+        TokenItemLocal::class,
+        TransferItemLocal::class
     ],
     version = Constants.LOCAL_DB_VERSION
 )

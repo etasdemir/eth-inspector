@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.data.remote.entity.blockchair
+package com.etasdemir.ethinspector.data.remote.dto.blockchair
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

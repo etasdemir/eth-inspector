@@ -1,7 +1,7 @@
 package com.etasdemir.ethinspector.mappers
 
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.EtherscanRPCResponse
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.TransactionResponse
+import com.etasdemir.ethinspector.data.remote.dto.etherscan.EtherscanRPCResponse
+import com.etasdemir.ethinspector.data.remote.dto.etherscan.TransactionResponse
 import com.etasdemir.ethinspector.ui.transaction.TransactionDetailState
 import com.etasdemir.ethinspector.utils.*
 

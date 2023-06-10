@@ -3,10 +3,18 @@ package com.etasdemir.ethinspector.data.local.entity
 import androidx.room.*
 
 @Entity
-data class AccountLocal(
+data class AccountInfoLocal(
     @PrimaryKey
     val accountAddress: String,
+    val balanceWei: String,
+    val balanceUsd: Double,
+    val transactionCount: Long,
 
+    val isFavourite: Boolean,
+    val userGivenName: String,
+)
+
+data class AccountLocal(
     @Embedded
     val accountInfo: AccountInfoLocal,
 
@@ -28,10 +36,4 @@ data class AccountLocal(
         entityColumn = "addressHash"
     )
     var transfers: List<TransferItemLocal>
-)
-
-data class AccountInfoLocal(
-    val balanceWei: String,
-    val balanceUsd: Double,
-    val transactionCount: Long
 )

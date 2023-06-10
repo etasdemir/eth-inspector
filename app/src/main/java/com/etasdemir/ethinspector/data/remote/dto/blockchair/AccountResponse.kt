@@ -1,14 +1,10 @@
-package com.etasdemir.ethinspector.data.remote.entity.blockchair
+package com.etasdemir.ethinspector.data.remote.dto.blockchair
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ContractResponse(
-    @Json(name = "contract_created")
-    val contractCreated: Boolean,
-    @Json(name = "contract_destroyed")
-    val contractDestroyed: Boolean,
+data class AccountResponse(
     @Json(name = "balance")
     val balanceWei: String,
     @Json(name = "balance_usd")
@@ -41,6 +37,4 @@ data class ContractResponse(
     val firstSeenSpending: String?,
     @Json(name = "last_seen_spending")
     val lastSeenSpending: String?,
-    @Json(name = "contract_details")
-    val contractDetails: ContractDetailsResponse,
 )

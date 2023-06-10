@@ -1,7 +1,7 @@
 package com.etasdemir.ethinspector.mappers
 
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.BlockResponse
-import com.etasdemir.ethinspector.data.remote.entity.etherscan.EtherscanRPCResponse
+import com.etasdemir.ethinspector.data.remote.dto.etherscan.BlockResponse
+import com.etasdemir.ethinspector.data.remote.dto.etherscan.EtherscanRPCResponse
 import com.etasdemir.ethinspector.ui.block.BlockDetailState
 import com.etasdemir.ethinspector.ui.block.components.BlockTransactionItemState
 import com.etasdemir.ethinspector.utils.toDecimal

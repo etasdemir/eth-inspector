@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.data.remote.entity.etherscan
+package com.etasdemir.ethinspector.data.remote.dto.etherscan
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

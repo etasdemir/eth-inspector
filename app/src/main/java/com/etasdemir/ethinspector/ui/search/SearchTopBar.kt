@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.data.remote.entity.SearchType
+import com.etasdemir.ethinspector.data.remote.dto.SearchType
 import com.etasdemir.ethinspector.ui.UIResponseState
 import timber.log.Timber
 

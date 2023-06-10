@@ -1,7 +1,7 @@
 package com.etasdemir.ethinspector.mappers
 
-import com.etasdemir.ethinspector.data.remote.dao.BlockchairAccountResponse
-import com.etasdemir.ethinspector.data.remote.dao.EtherscanTokenTransfers
+import com.etasdemir.ethinspector.data.remote.service.BlockchairAccountResponse
+import com.etasdemir.ethinspector.data.remote.service.EtherscanTokenTransfers
 import com.etasdemir.ethinspector.ui.address.AddressDetailState
 import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.AddressTransactionItemState

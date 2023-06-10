@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class AddressTransactionItemLocal(
-    @PrimaryKey val transactionHash: String?,
+    @PrimaryKey val transactionHash: String,
     val addressHash: String,
     val amountWei: Double,
     val block: Long,

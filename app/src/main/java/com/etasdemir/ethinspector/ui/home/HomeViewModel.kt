@@ -3,8 +3,8 @@ package com.etasdemir.ethinspector.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.remote.RemoteRepository
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.BlockchairResponse
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.EthStatsResponse
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.BlockchairResponse
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.EthStatsResponse
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel

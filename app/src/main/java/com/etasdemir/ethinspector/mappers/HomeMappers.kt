@@ -1,7 +1,7 @@
 package com.etasdemir.ethinspector.mappers
 
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.EthStatsResponse
-import com.etasdemir.ethinspector.data.remote.entity.blockchair.TokenStat
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.EthStatsResponse
+import com.etasdemir.ethinspector.data.remote.dto.blockchair.TokenStat
 import com.etasdemir.ethinspector.ui.home.components.*
 import timber.log.Timber
 
