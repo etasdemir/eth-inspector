@@ -14,23 +14,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.AddressTransfer
 import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.ColoredAmountText
 import com.etasdemir.ethinspector.utils.clip
 
-data class TransferItemState(
-    val hash: String,
-    val to: String?,
-    val tokenName: String,
-    val tokenSymbol: String,
-    val amount: Double,
-    val blockNumber: String,
-    val timestamp: String
-)
 
 @Composable
-fun TransferItem(state: TransferItemState, onItemClick: (String) -> Unit) {
+fun TransferItem(state: AddressTransfer, onItemClick: (String) -> Unit) {
 
     Row(
         modifier = Modifier
@@ -82,7 +74,7 @@ fun TransferItem(state: TransferItemState, onItemClick: (String) -> Unit) {
 @Composable
 @Preview
 fun TransferItemPreview() {
-    val state = TransferItemState(
+    val state = AddressTransfer(
         "0xA78SD6A8S6C87F87S6DF8S7DF6ASD987AS9D",
         "0xA78SD6A8S6C87F87S6DF8S7DF6ASD987AS9D",
         "Maker",

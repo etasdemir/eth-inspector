@@ -1,7 +1,9 @@
 package com.etasdemir.ethinspector.ui.address
 
 import androidx.lifecycle.viewModelScope
+import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.ResponseResult
+import com.etasdemir.ethinspector.data.domain_model.Account
 import com.etasdemir.ethinspector.data.local.LocalRepository
 import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.mappers.addTransfersToResponse
@@ -17,18 +19,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddressDetailViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository,
-    localRepository: LocalRepository
-) : AddressViewModel(localRepository) {
+    private val repository: Repository,
+) : AddressViewModel(repository) {
 
-    private val _addressDetailState =
-        MutableStateFlow<UIResponseState<AddressDetailState?>>(UIResponseState.Loading())
-    val addressDetailState = _addressDetailState.asStateFlow()
+    private val _addressState =
+        MutableStateFlow<UIResponseState<Account?>>(UIResponseState.Loading())
+    val addressState = _addressState.asStateFlow()
 
     fun getAccountInfoByHash(hash: String) {
         viewModelScope.launch {
-            val addressResponse = remoteRepository.getAccountInfoByHash(hash)
-            val erc20TransfersResponse = remoteRepository.getERC20TokenTransfers(hash)
+            val addressResponse = repository.getAccountInfoByHash(hash)
+            val erc20TransfersResponse = repository.getERC20TokenTransfers(hash)
             val uiAddressState = mapResponseToUIResponseState(addressResponse) {
                 mapAddressResponseToAddressDetailState(it)
             }
@@ -37,7 +38,7 @@ class AddressDetailViewModel @Inject constructor(
             ) {
                 addTransfersToResponse(uiAddressState.data!!, erc20TransfersResponse.data!!)
             }
-            _addressDetailState.value = uiAddressState
+            _addressState.value = uiAddressState
         }
     }
 

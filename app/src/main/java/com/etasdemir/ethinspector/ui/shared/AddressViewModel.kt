@@ -2,8 +2,8 @@ package com.etasdemir.ethinspector.ui.shared
 
 import androidx.compose.material3.*
 import androidx.lifecycle.ViewModel
+import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.domain_model.AddressType
-import com.etasdemir.ethinspector.data.local.LocalRepository
 import com.etasdemir.ethinspector.ui.components.AddressSaveModalState
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.utils.clip
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 open class AddressViewModel @Inject constructor(
-    private val localRepository: LocalRepository
+    private val repository: Repository
 ) : ViewModel() {
 
     private lateinit var type: AddressType

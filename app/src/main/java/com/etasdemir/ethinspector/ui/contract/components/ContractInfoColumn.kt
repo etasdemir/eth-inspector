@@ -8,20 +8,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.ContractInfo
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.utils.*
 import timber.log.Timber
 
-data class ContractInfoColumnState(
-    val creatorAddress: String,
-    val creationTime: String,
-    val txCount: Long,
-    val balanceWei: String,
-    val balanceUsd: Double
-)
-
 @Composable
-fun ContractInfoColumn(state: ContractInfoColumnState, address: String) {
+fun ContractInfoColumn(state: ContractInfo, address: String) {
     val onCreatorAddressClick = remember {
         {
             Timber.e("navigate to address detail with $address")
@@ -68,7 +61,7 @@ fun ContractInfoColumnPreview() {
     val txCount: Long = 67321
     val balanceEth = "29.1273293897"
     val balanceUsd = 35123.1238123
-    val state = ContractInfoColumnState(
+    val state = ContractInfo(
         creatorAddress, creationTime, txCount, balanceEth, balanceUsd
     )
     ContractInfoColumn(state, address)

@@ -16,17 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.AddressTransaction
 import com.etasdemir.ethinspector.utils.*
 
-data class AddressTransactionItemState(
-    val transactionHash: String?,
-    val amountWei: Double,
-    val block: Long,
-    val date: String,
-)
-
 @Composable
-fun AddressTransactionItem(state: AddressTransactionItemState, onItemClick: (String) -> Unit) {
+fun AddressTransactionItem(state: AddressTransaction, onItemClick: (String) -> Unit) {
     if (state.transactionHash == null) {
         return
     }
@@ -90,7 +84,7 @@ fun AddressTransactionItem(state: AddressTransactionItemState, onItemClick: (Str
 @Composable
 @Preview
 fun AddressTransactionItemPreview() {
-    val state = AddressTransactionItemState(
+    val state = AddressTransaction(
         "0x9868768A6SD86A87ASD6A8S787A66S87D6A8",
         4232.3030, 142353532, "2023-03-02 02:59:23"
     )

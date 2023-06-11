@@ -4,18 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.AccountInfo
 import com.etasdemir.ethinspector.ui.components.CardColumnItem
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.*
 
-data class AddressInfoColumnState(
-    val balanceWei: String,
-    val balanceUsd: Double,
-    val transactionCount: Long
-)
-
 @Composable
-fun AddressInfoColumn(address: String, state: AddressInfoColumnState) {
+fun AddressInfoColumn(address: String, state: AccountInfo) {
     val balanceEth = remember {
         state.balanceWei.fromWei(EthUnit.ETHER).toString().format(3)
     }

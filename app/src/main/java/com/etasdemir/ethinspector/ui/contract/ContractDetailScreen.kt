@@ -17,13 +17,7 @@ import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumn
-import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumnState
 import timber.log.Timber
-
-data class ContractDetailState(
-    val contractInfo: ContractInfoColumnState?,
-    val transactions: List<AddressTransactionItemState>
-)
 
 @Composable
 @Preview
@@ -36,8 +30,7 @@ fun ContractDetailScreen(
 
     val topBarState by contractViewModel.topBarState.collectAsStateWithLifecycle()
     val isSheetShown by contractViewModel.isSheetShown.collectAsStateWithLifecycle()
-    val contractDetailState by contractViewModel.contractDetailState.collectAsStateWithLifecycle()
-    val data = contractDetailState.data
+    val contractState by contractViewModel.contractState.collectAsStateWithLifecycle()
 
     val onTransactionClick = remember {
         { txHash: String ->
@@ -50,19 +43,20 @@ fun ContractDetailScreen(
         contractViewModel.getContractDetailByHash(address)
     }
 
-    if (contractDetailState is UIResponseState.Loading) {
+    if (contractState is UIResponseState.Loading) {
         // Show loading
         Timber.e("ContractDetailScreen: Loading transaction detail screen")
         return
     }
-    if (contractDetailState is UIResponseState.Error) {
-        Timber.e("ContractDetailScreen: Error ${contractDetailState.errorMessage}")
+    if (contractState is UIResponseState.Error) {
+        Timber.e("ContractDetailScreen: Error ${contractState.errorMessage}")
         return
     }
-    if (contractDetailState is UIResponseState.Success && data == null) {
+    if (contractState is UIResponseState.Success && contractState.data == null) {
         Timber.e("ContractDetailScreen: Response is success but data null.")
         return
     }
+    val data = contractState.data!!
 
 
     Scaffold(topBar = {
@@ -79,16 +73,14 @@ fun ContractDetailScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(24.dp)
         ) {
-            if (data!!.contractInfo != null) {
-                item {
-                    ContractInfoColumn(state = data.contractInfo!!, address)
-                    Text(
-                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                        text = stringResource(id = R.string.transactions),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
+            item {
+                ContractInfoColumn(state = data.contractInfo, address)
+                Text(
+                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                    text = stringResource(id = R.string.transactions),
+                    color = MaterialTheme.colorScheme.tertiary,
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
             items(data.transactions) { transaction ->
                 if (transaction.transactionHash != null) {

@@ -1,8 +1,9 @@
 package com.etasdemir.ethinspector.ui.contract
 
 import androidx.lifecycle.viewModelScope
+import com.etasdemir.ethinspector.data.Repository
+import com.etasdemir.ethinspector.data.domain_model.Contract
 import com.etasdemir.ethinspector.data.local.LocalRepository
-import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.mappers.mapContractResponseToState
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
@@ -15,21 +16,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ContractDetailViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository,
-    localRepository: LocalRepository
-) : AddressViewModel(localRepository) {
+    private val repository: Repository,
+) : AddressViewModel(repository) {
 
-    private val _contractDetailState =
-        MutableStateFlow<UIResponseState<ContractDetailState>>(UIResponseState.Loading())
-    val contractDetailState = _contractDetailState.asStateFlow()
+    private val _contractState =
+        MutableStateFlow<UIResponseState<Contract>>(UIResponseState.Loading())
+    val contractState = _contractState.asStateFlow()
 
     fun getContractDetailByHash(hash: String) {
         viewModelScope.launch {
-            val contractResponse = remoteRepository.getContractInfoByHash(hash)
+            val contractResponse = repository.getContractInfoByHash(hash)
             val contractState = mapResponseToUIResponseState(contractResponse) {
                 mapContractResponseToState(it)
             }
-            _contractDetailState.value = contractState
+            _contractState.value = contractState
         }
     }
 }

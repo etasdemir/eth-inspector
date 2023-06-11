@@ -20,13 +20,6 @@ import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.*
 import timber.log.Timber
 
-data class AddressDetailState(
-    val addressInfo: AddressInfoColumnState,
-    val transactions: List<AddressTransactionItemState>,
-    val tokens: List<TokenItemState>,
-    var transfers: List<TransferItemState>
-)
-
 @Composable
 @Preview
 fun AddressDetailScreen(
@@ -38,8 +31,7 @@ fun AddressDetailScreen(
 
     val topBarState by addressViewModel.topBarState.collectAsStateWithLifecycle()
     val isSheetShown by addressViewModel.isSheetShown.collectAsStateWithLifecycle()
-    val addressState by addressViewModel.addressDetailState.collectAsStateWithLifecycle()
-    val data = addressState.data
+    val addressState by addressViewModel.addressState.collectAsStateWithLifecycle()
 
     val onTransferItemClick = remember {
         { hash: String ->
@@ -73,10 +65,11 @@ fun AddressDetailScreen(
         Timber.e("AddressDetailScreen: Error ${addressState.errorMessage}")
         return
     }
-    if (addressState is UIResponseState.Success && data == null) {
+    if (addressState is UIResponseState.Success && addressState.data == null) {
         Timber.e("AddressDetailScreen: Response is success but data null.")
         return
     }
+    val data = addressState.data!!
 
     Scaffold(topBar = {
         if (topBarState != null) {
@@ -93,7 +86,7 @@ fun AddressDetailScreen(
                 .padding(24.dp)
         ) {
             item {
-                AddressInfoColumn(address, data!!.addressInfo)
+                AddressInfoColumn(address, data.accountInfo)
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = stringResource(id = R.string.tokens),
@@ -101,7 +94,7 @@ fun AddressDetailScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            items(data!!.tokens) { token ->
+            items(data.tokens) { token ->
                 TokenItem(state = token, onTokenItemClick)
                 Spacer(
                     modifier = Modifier

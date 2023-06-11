@@ -16,19 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.Token
 import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.clip
 
-data class TokenItemState(
-    val name: String,
-    val symbol: String,
-    val address: String,
-    val quantity: Double
-)
-
 @Composable
-fun TokenItem(state: TokenItemState, onItemClick: (String) -> Unit) {
+fun TokenItem(state: Token, onItemClick: (String) -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(30))
@@ -63,7 +57,7 @@ fun TokenItem(state: TokenItemState, onItemClick: (String) -> Unit) {
 @Preview
 @Composable
 fun TokenItemPreview() {
-    val state = TokenItemState(
+    val state = Token(
         "Furucombo",
         "COMBO",
         "0X12837987HG12JGH12GH3F89FS7",
