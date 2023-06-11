@@ -12,7 +12,3 @@ object Constants {
     const val TRANSACTION_HEX_LEN = 66
     const val ADDRESS_HEX_LEN = 42
 }
-
-enum class AddressType {
-    CONTRACT, ACCOUNT
-}

@@ -16,41 +16,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.UIResponseState
-import com.etasdemir.ethinspector.ui.block.components.*
+import com.etasdemir.ethinspector.ui.block.components.BlockInfoCard
+import com.etasdemir.ethinspector.ui.block.components.BlockTransactionItem
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.theme.Feint
 import timber.log.Timber
-
-data class BlockDetailState(
-    val blockNumber: ULong,
-    val timestamp: String,
-    val txCount: Int,
-    val minerAddress: String,
-    val gasLimit: ULong,
-    val gasUsed: ULong,
-    val baseFeePerGas: ULong,
-    val transactions: List<BlockTransactionItemState>
-)
 
 @Composable
 @Preview
 fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
     val topBarTitle = stringResource(id = R.string.block_details)
     val blockNumberFromArgs = "17372699"
-    val blockDetailState by blockViewModel.blockDetailState.collectAsStateWithLifecycle()
-
-    // TODO Static data
-    val topBarState = remember {
-        DetailTopBarState(
-            topBarTitle,
-            true,
-            { previous, now ->
-
-            },
-            blockNumberFromArgs
-        )
-    }
+    val blockState by blockViewModel.blockState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = "get_block_detail") {
         blockViewModel.getBlockDetailByNumber(blockNumberFromArgs)
@@ -63,18 +41,30 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
     }
 
 
-    if (blockDetailState is UIResponseState.Loading) {
+    if (blockState is UIResponseState.Loading) {
         // Show loading
         Timber.e("BlockDetailScreen: Loading transaction detail screen")
         return
     }
-    if (blockDetailState is UIResponseState.Error) {
-        Timber.e("BlockDetailScreen: Error ${blockDetailState.errorMessage}")
+    if (blockState is UIResponseState.Error) {
+        Timber.e("BlockDetailScreen: Error ${blockState.errorMessage}")
         return
     }
-    if (blockDetailState is UIResponseState.Success && blockDetailState.data == null) {
+    if (blockState is UIResponseState.Success && blockState.data == null) {
         Timber.e("BlockDetailScreen: Response is success but data null.")
         return
+    }
+
+    // TODO Static data
+    val topBarState = remember {
+        DetailTopBarState(
+            topBarTitle,
+            blockState.data!!.isFavourite,
+            { previous, now ->
+
+            },
+            blockNumberFromArgs
+        )
     }
 
     Scaffold(topBar = { DetailTopBar(state = topBarState) }) {
@@ -86,7 +76,7 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
                 .padding(20.dp)
         ) {
             item(3) {
-                BlockInfoCard(blockDetailState.data!!)
+                BlockInfoCard(blockState.data!!)
                 Text(
                     modifier = Modifier.padding(top = 40.dp),
                     text = stringResource(id = R.string.block_transactions),
@@ -112,10 +102,10 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
                     )
                 }
             }
-            items(blockDetailState.data!!.transactions) { itemBlockState ->
+            items(blockState.data!!.transactions) { itemBlockState ->
                 BlockTransactionItem(
                     modifier = Modifier.padding(vertical = 5.dp),
-                    state = itemBlockState,
+                    blockTransaction = itemBlockState,
                     onClick = onTransactionClick
                 )
             }

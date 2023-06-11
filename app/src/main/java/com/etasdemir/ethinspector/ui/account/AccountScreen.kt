@@ -2,29 +2,34 @@ package com.etasdemir.ethinspector.ui.account
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItem
 import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItemState
 import com.etasdemir.ethinspector.ui.components.*
 
-enum class AccountItem {
+private enum class AccountItem {
     THEME, LANGUAGE, TRANSACTION, BLOCK, INFO
 }
 
 @Composable
 @Preview
-fun AccountScreen() {
-    // TODO delete later
-    val theme = "Dark"
-    val language = "English"
+fun AccountScreen(
+    accountViewModel: AccountViewModel = viewModel()
+) {
+    val userState by accountViewModel.userState.collectAsStateWithLifecycle()
+    if (userState == null) {
+        accountViewModel.getUser()
+        return
+    }
 
     val onItemClick = remember {
         { type: AccountItem ->
@@ -49,14 +54,14 @@ fun AccountScreen() {
                     painterResource(id = R.drawable.nights_stay_24),
                     stringResource(id = R.string.account_settings_theme),
                     { onItemClick(AccountItem.THEME) },
-                    { FeintText(text = theme) })
+                    { FeintText(text = userState!!.theme.name) })
             )
             AccountSettingsItem(
                 state = AccountSettingsItemState(
                     painterResource(id = R.drawable.language_24),
                     stringResource(id = R.string.account_settings_lang),
                     { onItemClick(AccountItem.LANGUAGE) },
-                    { FeintText(text = language) })
+                    { FeintText(text = userState!!.language.name) })
             )
             AccountSettingsItem(
                 state = AccountSettingsItemState(

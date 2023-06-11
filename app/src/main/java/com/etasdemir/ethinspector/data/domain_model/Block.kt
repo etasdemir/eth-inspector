@@ -8,7 +8,9 @@ data class Block(
     val gasLimit: ULong,
     val gasUsed: ULong,
     val baseFeePerGas: ULong,
-    val transactions: List<BlockTransaction>
+    val transactions: List<BlockTransaction>,
+
+    var isFavourite: Boolean = false
 )
 
 data class BlockTransaction(

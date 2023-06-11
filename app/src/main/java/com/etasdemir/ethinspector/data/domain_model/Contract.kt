@@ -2,7 +2,10 @@ package com.etasdemir.ethinspector.data.domain_model
 
 data class Contract(
     val contractInfo: ContractInfo,
-    val transactions: List<AddressTransaction>
+    val transactions: List<AddressTransaction>,
+
+    var isFavourite: Boolean = false,
+    var userGivenName: String? = null
 )
 
 data class ContractInfo(

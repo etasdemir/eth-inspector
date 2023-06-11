@@ -19,24 +19,6 @@ import com.etasdemir.ethinspector.ui.transaction.components.TransactionDetailCar
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionInfoCard
 import timber.log.Timber
 
-data class TransactionDetailState(
-    // Info Card
-    val transactionHash: String,
-    val timestamp: String?,
-    val block: ULong,
-    val amount: Double,
-    val fee: Double,
-
-    // Detail Card
-    val fromAddress: String,
-    val toAddress: String?,
-    val gasAmount: Double,
-    val gasPrice: Double,
-    val maxFeePerGas: Double?,
-    val txType: Int,
-    val nonce: String?
-)
-
 @Composable
 @Preview
 fun TransactionDetailScreen(
@@ -44,7 +26,7 @@ fun TransactionDetailScreen(
 ) {
     val scrollState = remember { ScrollState(0) }
     val topBarTitle = stringResource(id = R.string.transaction_detail)
-    val state by transactionDetailViewModel.transactionState.collectAsStateWithLifecycle()
+    val transactionState by transactionDetailViewModel.transactionState.collectAsStateWithLifecycle()
 
     val txHashTakenFromArgs = "0xbc78ab8a9e9a0bca7d0321a27b2c03addeae08ba81ea98b03cd3dd237eabed44"
 
@@ -52,31 +34,30 @@ fun TransactionDetailScreen(
         transactionDetailViewModel.getTransactionByHash(txHashTakenFromArgs)
     }
 
+    if (transactionState is UIResponseState.Loading) {
+        // Show loading
+        Timber.e("TransactionDetailScreen: Loading transaction detail screen")
+        return
+    }
+    if (transactionState is UIResponseState.Error) {
+        Timber.e("TransactionDetailScreen: Error ${transactionState.errorMessage}")
+        return
+    }
+    if (transactionState is UIResponseState.Success && transactionState.data == null) {
+        Timber.e("TransactionDetailScreen: Response is success but data null.")
+        return
+    }
+
     // TODO Static data
     val topBarState = remember {
         DetailTopBarState(
             topBarTitle,
-            true,
+            transactionState.data!!.isFavourite,
             { previous, now ->
 
             },
             txHashTakenFromArgs
         )
-    }
-
-
-    if (state is UIResponseState.Loading) {
-        // Show loading
-        Timber.e("TransactionDetailScreen: Loading transaction detail screen")
-        return
-    }
-    if (state is UIResponseState.Error) {
-        Timber.e("TransactionDetailScreen: Error ${state.errorMessage}")
-        return
-    }
-    if (state is UIResponseState.Success && state.data == null) {
-        Timber.e("TransactionDetailScreen: Response is success but data null.")
-        return
     }
 
     Scaffold(topBar = { DetailTopBar(topBarState) }) {
@@ -88,13 +69,13 @@ fun TransactionDetailScreen(
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(20.dp)
         ) {
-            TransactionInfoCard(state.data!!)
+            TransactionInfoCard(transactionState.data!!)
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(20.dp)
             )
-            TransactionDetailCard(state.data!!)
+            TransactionDetailCard(transactionState.data!!)
         }
     }
 }

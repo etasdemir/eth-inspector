@@ -16,3 +16,7 @@ data class AddressTransfer(
     val blockNumber: String,
     val timestamp: String
 )
+
+enum class AddressType {
+    CONTRACT, ACCOUNT
+}

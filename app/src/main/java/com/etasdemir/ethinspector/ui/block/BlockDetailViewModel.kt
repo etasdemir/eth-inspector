@@ -2,7 +2,8 @@ package com.etasdemir.ethinspector.ui.block
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.etasdemir.ethinspector.data.remote.RemoteRepository
+import com.etasdemir.ethinspector.data.Repository
+import com.etasdemir.ethinspector.data.domain_model.Block
 import com.etasdemir.ethinspector.mappers.mapBlockResponseToBlockState
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
@@ -14,21 +15,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BlockDetailViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository
+    private val repository: Repository
 ) : ViewModel() {
 
-    private val _blockDetailState =
-        MutableStateFlow<UIResponseState<BlockDetailState>>(UIResponseState.Loading())
-    val blockDetailState = _blockDetailState.asStateFlow()
+    private val _blockState =
+        MutableStateFlow<UIResponseState<Block>>(UIResponseState.Loading())
+    val blockState = _blockState.asStateFlow()
 
     fun getBlockDetailByNumber(blockNumber: String) {
         viewModelScope.launch {
             val blockResponse =
-                remoteRepository.getBlockInfoByNumber(blockNumber.toULong(), true)
+                repository.getBlockInfoByNumber(blockNumber.toULong(), true)
             val uiBlockState = mapResponseToUIResponseState(blockResponse) {
                 mapBlockResponseToBlockState(it)
             }
-            _blockDetailState.value = uiBlockState
+            _blockState.value = uiBlockState
         }
     }
 

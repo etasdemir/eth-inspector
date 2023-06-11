@@ -4,18 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.TokenStats
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.addDots
 
-data class TokenStatsState(
-    val tokens: String,
-    val newTokens: String,
-    val tx: String,
-    val newTx: String,
-)
-
 @Composable
-fun TokenStatsCard(title: String, state: TokenStatsState) {
+fun TokenStatsCard(title: String, state: TokenStats) {
     RoundedTitleCard(title) {
         CardRowItem(field = stringResource(id = R.string.tokens), value = state.tokens.addDots())
         CardRowItem(
@@ -31,7 +25,7 @@ fun TokenStatsCard(title: String, state: TokenStatsState) {
 @Preview
 fun TokenStatsCardPreview() {
     val title = "ERC-20 Tokens Stats"
-    val state = TokenStatsState(
+    val state = TokenStats(
         "570,931", "591",
         "1,233,157,345", "734,074"
     )

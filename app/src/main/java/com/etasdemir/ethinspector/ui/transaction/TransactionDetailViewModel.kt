@@ -2,6 +2,8 @@ package com.etasdemir.ethinspector.ui.transaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.etasdemir.ethinspector.data.Repository
+import com.etasdemir.ethinspector.data.domain_model.Transaction
 import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.mappers.mapTransactionToTxDetailState
 import com.etasdemir.ethinspector.ui.UIResponseState
@@ -13,17 +15,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionDetailViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _transactionState =
-        MutableStateFlow<UIResponseState<TransactionDetailState>>(UIResponseState.Loading())
-    val transactionState: StateFlow<UIResponseState<TransactionDetailState>> =
+        MutableStateFlow<UIResponseState<Transaction>>(UIResponseState.Loading())
+    val transactionState: StateFlow<UIResponseState<Transaction>> =
         _transactionState.asStateFlow()
 
     fun getTransactionByHash(txHash: String) {
         viewModelScope.launch {
-            val txResponse = remoteRepository.getTransactionByHash(txHash)
+            val txResponse = repository.getTransactionByHash(txHash)
             val mappedUIResponse = mapResponseToUIResponseState(txResponse) {
                 mapTransactionToTxDetailState(it)
             }

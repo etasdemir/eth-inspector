@@ -13,5 +13,7 @@ data class Transaction(
     val gasPrice: Double,
     val maxFeePerGas: Double?,
     val txType: Int,
-    val nonce: String?
+    val nonce: String?,
+
+    var isFavourite: Boolean = false
 )

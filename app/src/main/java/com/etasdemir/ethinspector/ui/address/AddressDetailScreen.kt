@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.*
-import com.etasdemir.ethinspector.utils.AddressType
 import timber.log.Timber
 
 data class AddressDetailState(

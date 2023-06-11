@@ -17,21 +17,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.BlockTransaction
 import com.etasdemir.ethinspector.utils.*
-
-data class BlockTransactionItemState(
-    val address: String,
-    val amount: ULong,
-)
 
 @Composable
 fun BlockTransactionItem(
     modifier: Modifier = Modifier,
-    state: BlockTransactionItemState,
+    blockTransaction: BlockTransaction,
     onClick: (txHash: String) -> Unit
 ) {
     val amount = remember {
-        state.amount.toString().fromWei(EthUnit.ETHER).toString().format(6)
+        blockTransaction.amount.toString().fromWei(EthUnit.ETHER).toString().format(6)
     }
 
     Row(
@@ -39,12 +35,12 @@ fun BlockTransactionItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(40))
             .background(MaterialTheme.colorScheme.background)
-            .clickable { onClick(state.address) }
+            .clickable { onClick(blockTransaction.address) }
             .padding(15.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = state.address.clip(12),
+            text = blockTransaction.address.clip(12),
             color = MaterialTheme.colorScheme.tertiary,
             style = TextStyle(
                 textDecoration = TextDecoration.Underline
@@ -61,9 +57,9 @@ fun BlockTransactionItem(
 @Composable
 @Preview
 fun BlockTransactionItemPreview() {
-    val state = BlockTransactionItemState(
+    val state = BlockTransaction(
         "0x1656AFA45AF5765F76F4F187567F85",
         7165918000000000u
     )
-    BlockTransactionItem(state = state) {}
+    BlockTransactionItem(blockTransaction = state) {}
 }

@@ -1,7 +1,7 @@
 package com.etasdemir.ethinspector.data.remote
 
 import com.etasdemir.ethinspector.data.ResponseResult
-import com.etasdemir.ethinspector.data.remote.dto.SearchType
+import com.etasdemir.ethinspector.data.domain_model.SearchType
 import com.etasdemir.ethinspector.data.remote.dto.blockchair.*
 import com.etasdemir.ethinspector.data.remote.dto.etherscan.*
 import com.etasdemir.ethinspector.data.remote.service.*
@@ -77,16 +77,16 @@ class RemoteRepository @Inject constructor(
         return CustomResponseParser.addressJsonConverter(result)
     }
 
-    suspend fun getERC20TokenTransfers(addressHash: String): ResponseResult<EtherscanTokenTransfers> {
-        return retrofitResponseResultFactory { etherscanAddressService.getERC20TokenTransfers(addressHash) }
-    }
-
     suspend fun getContractInfoByHash(addressHash: String): ResponseResult<BlockchairContractResponse> {
         val contractInfo = blockchairAddressService.getContractInfoByHash(addressHash)
         val result = retrofitResponseResultFactory<ResponseBody>({ body ->
             CustomResponseParser.parseBlockchairAddressResponse(body)
         }, { contractInfo })
         return CustomResponseParser.addressJsonConverter(result)
+    }
+
+    suspend fun getERC20TokenTransfers(addressHash: String): ResponseResult<EtherscanTokenTransfers> {
+        return retrofitResponseResultFactory { etherscanAddressService.getERC20TokenTransfers(addressHash) }
     }
 
     suspend fun getBlockInfoByNumber(

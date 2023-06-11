@@ -9,59 +9,52 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.mappers.*
+import com.etasdemir.ethinspector.data.domain_model.TokenStats
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.home.components.*
 import com.etasdemir.ethinspector.ui.search.SearchTopBar
 import timber.log.Timber
 
-@Preview
+data class EthStatsState(
+    val mainStatsState: EthMainStatsState,
+    val allTimeStatsState: AllTimeStatsState,
+    val mempoolStatsState: MempoolState,
+    val dailyStatsState: DailyStatsState,
+    val ercTokenStatsState: TokenStats,
+    val nftTokenStatsState: TokenStats
+)
+
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = viewModel()
 ) {
     val scrollState: ScrollState = rememberScrollState(0)
     val searchIcon = remember { Icons.Filled.Search }
-    val ethStatsResponse by homeViewModel.ethStatsResult.collectAsStateWithLifecycle()
+    val ethStats by homeViewModel.ethStats.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = "fetch_home_eth_stats") {
+    LaunchedEffect(key1 = "initialize_home") {
         homeViewModel.getEthStats()
     }
 
-    // TODO parsing should be in view model
-    var mainStatsState: EthMainStatsState? = null
-    var allTimeStatsState: AllTimeStatsState? = null
-    var mempoolStatsState: MempoolState? = null
-    var dailyStatsState: DailyStatsState? = null
-    var ercTokenStatsState: TokenStatsState? = null
-    var nftTokenStatsState: TokenStatsState? = null
-
-    if (ethStatsResponse is UIResponseState.Success &&
-        ethStatsResponse.data != null &&
-        ethStatsResponse.data?.data != null
-    ) {
-        val ethStats = ethStatsResponse.data!!.data!!
-        val layer2 = ethStats.layer2
-        mainStatsState = mapEthStatsToMainStatsState(ethStats)
-        allTimeStatsState = mapEthStatsToAllTimeStatsState(ethStats)
-        mempoolStatsState = mapEthStatsToMempoolStatsState(ethStats)
-        dailyStatsState = mapEthStatsToDailyStatsState(ethStats)
-        if (layer2 != null) {
-            if (layer2.erc_20 != null) {
-                ercTokenStatsState = mapEthStatsToTokenStatsState(layer2.erc_20)
-            }
-            if (layer2.erc_721 != null) {
-                nftTokenStatsState = mapEthStatsToTokenStatsState(layer2.erc_721)
-            }
-        }
-    } else {
-        Timber.e("HomeScreen error: ${ethStatsResponse.errorMessage}")
+    if (ethStats is UIResponseState.Loading) {
+        // Show loading
+        Timber.e("HomeScreen: Loading transaction detail screen")
+        return
     }
+    if (ethStats is UIResponseState.Error) {
+        Timber.e("HomeScreen: Error ${ethStats.errorMessage}")
+        return
+    }
+    if (ethStats is UIResponseState.Success && ethStats.data == null) {
+        Timber.e("HomeScreen: Response is success but data null.")
+        return
+    }
+    val stats = ethStats.data!!
+    val ethStatsState = homeViewModel.mapEthStatsToState(stats)
 
     Scaffold(topBar = {
         SearchTopBar(searchIcon = searchIcon)
@@ -76,17 +69,17 @@ fun HomeScreen(
                 )
                 .verticalScroll(scrollState)
         ) {
-            if (mainStatsState != null) EthMainStatsCard(mainStatsState)
-            if (allTimeStatsState != null) AllTimeStatsCard(allTimeStatsState)
-            if (mempoolStatsState != null) MempoolCard(mempoolStatsState)
-            if (dailyStatsState != null) DailyStatsCard(dailyStatsState)
-            if (ercTokenStatsState != null) TokenStatsCard(
+            EthMainStatsCard(ethStatsState.mainStatsState)
+            AllTimeStatsCard(ethStatsState.allTimeStatsState)
+            MempoolCard(ethStatsState.mempoolStatsState)
+            DailyStatsCard(ethStatsState.dailyStatsState)
+            TokenStatsCard(
                 stringResource(id = R.string.title_erc_20),
-                ercTokenStatsState
+                ethStatsState.ercTokenStatsState
             )
-            if (nftTokenStatsState != null) TokenStatsCard(
+            TokenStatsCard(
                 stringResource(id = R.string.title_erc_721),
-                nftTokenStatsState
+                ethStatsState.nftTokenStatsState
             )
         }
     }
