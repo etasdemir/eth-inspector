@@ -30,7 +30,7 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
     val blockNumberFromArgs = "17372699"
     val blockState by blockViewModel.blockState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = "get_block_detail") {
+    LaunchedEffect(key1 = "initialize_block_detail") {
         blockViewModel.getBlockDetailByNumber(blockNumberFromArgs)
     }
 

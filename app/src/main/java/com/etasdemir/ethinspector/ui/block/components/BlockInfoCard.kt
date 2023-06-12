@@ -12,34 +12,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.ui.block.BlockDetailState
+import com.etasdemir.ethinspector.data.domain_model.Block
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.utils.*
 import timber.log.Timber
 
 @Composable
-fun BlockInfoCard(state: BlockDetailState) {
+fun BlockInfoCard(block: Block) {
     val onMinerAddressClick = remember {
         { _: String ->
-            Timber.e("navigate to address screen with: ${state.minerAddress}")
+            Timber.e("navigate to address screen with: ${block.minerAddress}")
         }
     }
-    val blockCreationDate = remember { getDateString(state.timestamp.toLong()) }
+    val blockCreationDate = remember { getDateString(block.timestamp.toLong()) }
     val usedGasPercentage = remember {
-        (state.gasUsed * 100u).div(state.gasLimit)
+        (block.gasUsed * 100u).div(block.gasLimit)
     }
     val usedGasPercentageRes =
         stringResource(id = R.string.percentage_with_value, usedGasPercentage)
     val gasLimitStr = remember {
-        state.gasLimit.toString().addDots()
+        block.gasLimit.toString().addDots()
     }
     val gasLimitStrRes = stringResource(id = R.string.wei_with_amount, gasLimitStr)
     val gasUsedStr = remember {
-        state.gasUsed.toString().addDots()
+        block.gasUsed.toString().addDots()
     }
     val gasUsedStrRes = stringResource(id = R.string.wei_with_amount, gasUsedStr)
     val baseFeePerGas = remember {
-        state.baseFeePerGas.toString().fromWei(EthUnit.GWEI).toString().format(3)
+        block.baseFeePerGas.toString().fromWei(EthUnit.GWEI).toString().format(3)
     }
 
     Column(
@@ -51,18 +51,18 @@ fun BlockInfoCard(state: BlockDetailState) {
     ) {
         CardColumnItem(
             title = stringResource(id = R.string.block_number),
-            body = "#${state.blockNumber}"
+            body = "#${block.blockNumber}"
         )
         CardRowItem(field = stringResource(id = R.string.time), value = blockCreationDate)
         CardRowItem(
             field = stringResource(id = R.string.transactions),
-            value = state.txCount.toString()
+            value = block.txCount.toString()
         )
         CardRowItem(
             field = stringResource(id = R.string.miner)
         ) {
             UnderlinedButton(
-                text = state.minerAddress.clip(10),
+                text = block.minerAddress.clip(10),
                 onClick = onMinerAddressClick
             )
         }
@@ -84,7 +84,7 @@ fun BlockInfoCard(state: BlockDetailState) {
 @Composable
 @Preview
 fun BlockInfoCardPreview() {
-    val state = BlockDetailState(
+    val state = Block(
         5301512u,
         "12412315235235",
         52,

@@ -24,8 +24,8 @@ data class EthStatsState(
     val allTimeStatsState: AllTimeStatsState,
     val mempoolStatsState: MempoolState,
     val dailyStatsState: DailyStatsState,
-    val ercTokenStatsState: TokenStats,
-    val nftTokenStatsState: TokenStats
+    val ercTokenStatsState: TokenStats?,
+    val nftTokenStatsState: TokenStats?
 )
 
 @Composable
@@ -73,14 +73,18 @@ fun HomeScreen(
             AllTimeStatsCard(ethStatsState.allTimeStatsState)
             MempoolCard(ethStatsState.mempoolStatsState)
             DailyStatsCard(ethStatsState.dailyStatsState)
-            TokenStatsCard(
-                stringResource(id = R.string.title_erc_20),
-                ethStatsState.ercTokenStatsState
-            )
-            TokenStatsCard(
-                stringResource(id = R.string.title_erc_721),
-                ethStatsState.nftTokenStatsState
-            )
+            if (ethStatsState.ercTokenStatsState != null) {
+                TokenStatsCard(
+                    stringResource(id = R.string.title_erc_20),
+                    ethStatsState.ercTokenStatsState
+                )
+            }
+            if (ethStatsState.nftTokenStatsState != null) {
+                TokenStatsCard(
+                    stringResource(id = R.string.title_erc_721),
+                    ethStatsState.nftTokenStatsState
+                )
+            }
         }
     }
 }

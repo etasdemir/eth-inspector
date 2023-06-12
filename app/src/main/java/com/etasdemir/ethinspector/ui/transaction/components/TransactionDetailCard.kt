@@ -12,14 +12,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.Transaction
 import com.etasdemir.ethinspector.ui.components.*
-import com.etasdemir.ethinspector.ui.transaction.TransactionDetailState
 import com.etasdemir.ethinspector.utils.format
 import com.etasdemir.ethinspector.utils.toPlainString
 import timber.log.Timber
 
 @Composable
-fun TransactionDetailCard(state: TransactionDetailState) {
+fun TransactionDetailCard(transaction: Transaction) {
     val onAddressClick = remember {
         { address: String ->
             Timber.e("navigate to address screen $address")
@@ -27,10 +27,10 @@ fun TransactionDetailCard(state: TransactionDetailState) {
     }
 
     val gasPriceStr = remember {
-        state.gasPrice.toPlainString().format(6)
+        transaction.gasPrice.toPlainString().format(6)
     }
     val maxFeePerGasStr = remember {
-        state.maxFeePerGas?.toPlainString()?.format(6)
+        transaction.maxFeePerGas?.toPlainString()?.format(6)
     }
 
     Column(
@@ -46,8 +46,8 @@ fun TransactionDetailCard(state: TransactionDetailState) {
             bodyContent = {
                 UnderlinedButton(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = state.fromAddress,
-                    onClick = { onAddressClick(state.fromAddress) })
+                    text = transaction.fromAddress,
+                    onClick = { onAddressClick(transaction.fromAddress) })
             }
         )
         CardColumnItem(
@@ -55,13 +55,13 @@ fun TransactionDetailCard(state: TransactionDetailState) {
             bodyContent = {
                 UnderlinedButton(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = state.toAddress,
-                    onClick = { onAddressClick(state.toAddress!!) })
+                    text = transaction.toAddress,
+                    onClick = { onAddressClick(transaction.toAddress!!) })
             }
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.gas_amount)) },
-            value = state.gasAmount.toString()
+            value = transaction.gasAmount.toString()
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.gas_price)) },
@@ -76,7 +76,7 @@ fun TransactionDetailCard(state: TransactionDetailState) {
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.nonce)) },
-            value = state.nonce
+            value = transaction.nonce
         )
     }
 }
@@ -85,7 +85,7 @@ fun TransactionDetailCard(state: TransactionDetailState) {
 @Composable
 @Preview
 fun TransactionDetailCardPreview() {
-    val state = TransactionDetailState(
+    val state = Transaction(
         // Info Card
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
         "21.02.2020 13:57:45",

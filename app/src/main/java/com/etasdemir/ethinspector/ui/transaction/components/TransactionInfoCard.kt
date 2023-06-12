@@ -12,21 +12,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.Transaction
 import com.etasdemir.ethinspector.ui.components.*
-import com.etasdemir.ethinspector.ui.transaction.TransactionDetailState
 import com.etasdemir.ethinspector.utils.format
 import com.etasdemir.ethinspector.utils.getDateString
 import timber.log.Timber
 
 @Composable
-fun TransactionInfoCard(state: TransactionDetailState) {
+fun TransactionInfoCard(transaction: Transaction) {
     val onBlockClick = remember {
         { block: String ->
             Timber.e("Navigate to block: $block")
         }
     }
     val convertedDate =
-        if (state.timestamp != null) getDateString(state.timestamp.toLong()) else null
+        if (transaction.timestamp != null) getDateString(transaction.timestamp.toLong()) else null
 
     Column(
         modifier = Modifier
@@ -37,7 +37,7 @@ fun TransactionInfoCard(state: TransactionDetailState) {
     ) {
         CardColumnItem(
             title = stringResource(id = R.string.transaction_hash),
-            body = state.transactionHash
+            body = transaction.transactionHash
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.time)) },
@@ -47,16 +47,16 @@ fun TransactionInfoCard(state: TransactionDetailState) {
             leftContent = { BodyTitleText(text = stringResource(id = R.string.block)) }
         ) {
             UnderlinedButton(
-                text = state.block.toString(), onClick = onBlockClick
+                text = transaction.block.toString(), onClick = onBlockClick
             )
         }
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.amount)) },
-            value = stringResource(id = R.string.eth_with_amount, state.amount.format(5))
+            value = stringResource(id = R.string.eth_with_amount, transaction.amount.format(5))
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.fee)) },
-            value = state.fee.toString().format(6)
+            value = transaction.fee.toString().format(6)
         )
     }
 }
@@ -65,7 +65,7 @@ fun TransactionInfoCard(state: TransactionDetailState) {
 @Composable
 @Preview
 fun TransactionInfoCardPreview() {
-    val state = TransactionDetailState(
+    val state = Transaction(
         // Info Card
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
         "21.02.2020 13:57:45",
@@ -73,7 +73,7 @@ fun TransactionInfoCardPreview() {
         0.0123151,
         0.00012531,
 
-    // Detail Card
+        // Detail Card
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
         21999.0,
