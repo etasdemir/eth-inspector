@@ -4,8 +4,8 @@ import com.etasdemir.ethinspector.data.domain_model.EthStats
 import com.etasdemir.ethinspector.data.local.entity.EthStatsEntity
 import com.etasdemir.ethinspector.data.local.entity.LocalTokenStats
 
-fun EthStats.toEthStatsEntity(installationId: String): EthStatsEntity {
-    val erc20Stats = this.erc20Stats?.let {
+fun mapEthStatsToEntity(ethStats: EthStats, installationId: String): EthStatsEntity {
+    val erc20Stats = ethStats.erc20Stats?.let {
         LocalTokenStats(
             it.tokens,
             it.newTokens,
@@ -13,7 +13,7 @@ fun EthStats.toEthStatsEntity(installationId: String): EthStatsEntity {
             it.newTx,
         )
     }
-    val nftStats = this.nftStats?.let {
+    val nftStats = ethStats.nftStats?.let {
         LocalTokenStats(
             it.tokens,
             it.newTokens,
@@ -23,24 +23,24 @@ fun EthStats.toEthStatsEntity(installationId: String): EthStatsEntity {
     }
     return EthStatsEntity(
         installationId,
-        this.marketPrice,
-        this.priceChange,
-        this.circulation,
-        this.marketCap,
-        this.dominance,
-        this.blocks,
-        this.blockchainSize,
-        this.transactions,
-        this.calls,
-        this.mempoolTransactions,
-        this.mempoolTps,
-        this.mempoolPendingTxValue,
-        this.dailyTransactions,
-        this.dailyBlocks,
-        this.burned24h,
-        this.largestTxValue,
-        this.volume,
-        this.avgTxFee,
+        ethStats.marketPrice,
+        ethStats.priceChange,
+        ethStats.circulation,
+        ethStats.marketCap,
+        ethStats.dominance,
+        ethStats.blocks,
+        ethStats.blockchainSize,
+        ethStats.transactions,
+        ethStats.calls,
+        ethStats.mempoolTransactions,
+        ethStats.mempoolTps,
+        ethStats.mempoolPendingTxValue,
+        ethStats.dailyTransactions,
+        ethStats.dailyBlocks,
+        ethStats.burned24h,
+        ethStats.largestTxValue,
+        ethStats.volume,
+        ethStats.avgTxFee,
         erc20Stats,
         nftStats
     )
