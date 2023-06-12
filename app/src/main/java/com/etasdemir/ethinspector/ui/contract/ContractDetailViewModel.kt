@@ -3,8 +3,7 @@ package com.etasdemir.ethinspector.ui.contract
 import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.domain_model.Contract
-import com.etasdemir.ethinspector.data.local.LocalRepository
-import com.etasdemir.ethinspector.mappers.mapContractResponseToState
+import com.etasdemir.ethinspector.mappers.remote_to_domain.mapContractResponseToState
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import com.etasdemir.ethinspector.ui.shared.AddressViewModel

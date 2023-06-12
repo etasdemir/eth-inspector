@@ -4,7 +4,7 @@ data class Account(
     val accountInfo: AccountInfo,
     val transactions: List<AddressTransaction>,
     val tokens: List<Token>,
-    var transfers: List<AddressTransfer>,
+    val transfers: List<AddressTransfer>,
 
     var isFavourite: Boolean = false,
     var userGivenName: String? = null

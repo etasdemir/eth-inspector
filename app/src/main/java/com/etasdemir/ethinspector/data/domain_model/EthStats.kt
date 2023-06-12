@@ -27,8 +27,8 @@ data class EthStats(
     val volume: String,
     val avgTxFee: Double,
 
-    val erc20Stats: TokenStats,
-    val nftStats: TokenStats
+    val erc20Stats: TokenStats?,
+    val nftStats: TokenStats?
 )
 
 data class TokenStats(

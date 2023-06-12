@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.domain_model.Transaction
-import com.etasdemir.ethinspector.data.remote.RemoteRepository
-import com.etasdemir.ethinspector.mappers.mapTransactionToTxDetailState
+import com.etasdemir.ethinspector.mappers.remote_to_domain.mapTransactionToTxDetailState
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
