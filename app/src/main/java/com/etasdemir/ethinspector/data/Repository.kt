@@ -8,10 +8,8 @@ import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.data.remote.dto.etherscan.*
 import com.etasdemir.ethinspector.data.remote.service.BlockchairAccountResponse
 import com.etasdemir.ethinspector.data.remote.service.BlockchairContractResponse
-import com.etasdemir.ethinspector.mappers.domain_to_local.mapBlockToBlockEntity
-import com.etasdemir.ethinspector.mappers.domain_to_local.mapEthStatsToEntity
-import com.etasdemir.ethinspector.mappers.local_to_domain.mapBlockEntityToBlock
-import com.etasdemir.ethinspector.mappers.local_to_domain.mapEthStatsEntityToEthStats
+import com.etasdemir.ethinspector.mappers.domain_to_local.*
+import com.etasdemir.ethinspector.mappers.local_to_domain.*
 import com.etasdemir.ethinspector.mappers.remote_to_domain.*
 import com.etasdemir.ethinspector.utils.Installation
 import javax.inject.Inject
@@ -35,6 +33,16 @@ class Repository @Inject constructor(
         // update or create user
     }
 
+    suspend fun saveBlock(block: Block) {
+        val blockEntity = mapBlockToBlockEntity(block)
+        localRepository.saveBlock(blockEntity)
+    }
+
+    suspend fun saveTransaction(transaction: Transaction) {
+        val transactionEntity = mapTransactionToTransactionEntity(transaction)
+        localRepository.saveTransaction(transactionEntity)
+    }
+
     // TODO Persist search results
     @Suppress("UNCHECKED_CAST")
     suspend fun search(searchText: String): Pair<SearchType, ResponseResult<*>> {
@@ -49,6 +57,9 @@ class Repository @Inject constructor(
             SearchType.BLOCK -> {
                 val block =
                     mapBlockResponseToBlock(response.second as ResponseResult<EtherscanRPCResponse<BlockResponse>>)
+                block.data?.let {
+                    localRepository.saveBlock(mapBlockToBlockEntity(it))
+                }
                 return Pair(response.first, block)
             }
 
@@ -107,8 +118,16 @@ class Repository @Inject constructor(
     suspend fun getTransactionByHash(
         transactionHash: String
     ): ResponseResult<Transaction> {
-        val transactionResponse = remoteRepository.getTransactionByHash(transactionHash)
-        return mapTransactionResponseToTransaction(transactionResponse)
+        val cacheStrategy = LocalFirstStrategy(
+            ::mapTransactionResponseToTransaction,
+            ::mapTransactionEntityToTransaction,
+            ::mapTransactionToTransactionEntity
+        )
+        return cacheStrategy.execute(
+            { remoteRepository.getTransactionByHash(transactionHash) },
+            { localRepository.getTransactionByHash(transactionHash) },
+            localRepository::saveTransaction
+        )
     }
 
     suspend fun getAccountInfoByHash(addressHash: String): ResponseResult<Account> {
