@@ -10,6 +10,6 @@ interface EthStatsDao {
     suspend fun saveEthStats(ethStatsEntity: EthStatsEntity)
 
     @Query("SELECT * from eth_stats")
-    suspend fun getEthStats(): EthStatsEntity
+    suspend fun getEthStats(): EthStatsEntity?
 
 }

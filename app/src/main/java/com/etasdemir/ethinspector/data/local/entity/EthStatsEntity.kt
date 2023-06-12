@@ -36,9 +36,9 @@ data class EthStatsEntity(
     val avgTxFee: Double,
 
     @Embedded(prefix = "erc_")
-    val erc20Stats: LocalTokenStats,
+    val erc20Stats: LocalTokenStats?,
     @Embedded(prefix = "nft_")
-    val nftStats: LocalTokenStats
+    val nftStats: LocalTokenStats?
 )
 
 data class LocalTokenStats(

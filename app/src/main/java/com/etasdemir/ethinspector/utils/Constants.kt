@@ -2,7 +2,7 @@ package com.etasdemir.ethinspector.utils
 
 object Constants {
     const val LOCAL_DB_NAME = "LocalSqlite"
-    const val LOCAL_DB_VERSION = 6
+    const val LOCAL_DB_VERSION = 7
 
     const val BLOCK_CHAIR_URL = "https://api.blockchair.com"
     const val ETHER_SCAN_URL = "https://api.etherscan.io"

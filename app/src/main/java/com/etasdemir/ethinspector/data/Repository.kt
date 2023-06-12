@@ -6,6 +6,8 @@ import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.data.remote.dto.etherscan.*
 import com.etasdemir.ethinspector.data.remote.service.BlockchairAccountResponse
 import com.etasdemir.ethinspector.data.remote.service.BlockchairContractResponse
+import com.etasdemir.ethinspector.mappers.domain_to_local.toEthStatsEntity
+import com.etasdemir.ethinspector.mappers.local_to_domain.toEthStats
 import com.etasdemir.ethinspector.mappers.remote_to_domain.*
 import com.etasdemir.ethinspector.utils.Installation
 import javax.inject.Inject
@@ -18,9 +20,10 @@ class Repository @Inject constructor(
     private val installation: Installation
 ) {
 
+    private val installationId = installation.id()
+
     suspend fun getUser(): User {
-        // retrieve user
-        // if user null, create initial user
+        val userEntity = localRepository.getUser()
         return User(installation.id(), AvailableThemes.Light, AvailableLanguages.English)
     }
 
@@ -66,12 +69,15 @@ class Repository @Inject constructor(
         val ethStatsResponse = remoteRepository.getEthStats()
         return if (ethStatsResponse is ResponseResult.Error) {
             val ethStatsLocal = localRepository.getEthStats()
-            // if local not null, return
-            mapEthStatsResponseToEthStats(ethStatsResponse)
+            if (ethStatsLocal != null) {
+                return ResponseResult.Success(ethStatsLocal.toEthStats())
+            } else {
+                return mapEthStatsResponseToEthStats(ethStatsResponse)
+            }
         } else {
             val ethStats = mapEthStatsResponseToEthStats(ethStatsResponse)
             if (ethStats.data != null) {
-                localRepository.saveEthStats(ethStats.data)
+                localRepository.saveEthStats(ethStats.data.toEthStatsEntity(installationId))
             }
             ethStats
         }

@@ -12,7 +12,7 @@ data class AddressTransactionEntity(
     val date: String,
 )
 
-@Entity(primaryKeys = ["symbol", "accountAddress"])
+@Entity(tableName = "token_and_account_cross_ref", primaryKeys = ["symbol", "accountAddress"])
 data class TokenEntityAccountCrossRef(
     val symbol: String,
     val accountAddress: String
