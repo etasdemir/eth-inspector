@@ -58,6 +58,7 @@ fun BlockTransactionItem(
 @Preview
 fun BlockTransactionItemPreview() {
     val state = BlockTransaction(
+        12390103289123u,
         "0x1656AFA45AF5765F76F4F187567F85",
         7165918000000000u
     )

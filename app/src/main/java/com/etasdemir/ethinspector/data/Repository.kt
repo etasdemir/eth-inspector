@@ -1,5 +1,6 @@
 package com.etasdemir.ethinspector.data
 
+import com.etasdemir.ethinspector.data.cache.LocalFirstStrategy
 import com.etasdemir.ethinspector.data.cache.RemoteFirstStrategy
 import com.etasdemir.ethinspector.data.domain_model.*
 import com.etasdemir.ethinspector.data.local.LocalRepository
@@ -7,7 +8,9 @@ import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.data.remote.dto.etherscan.*
 import com.etasdemir.ethinspector.data.remote.service.BlockchairAccountResponse
 import com.etasdemir.ethinspector.data.remote.service.BlockchairContractResponse
+import com.etasdemir.ethinspector.mappers.domain_to_local.mapBlockToBlockEntity
 import com.etasdemir.ethinspector.mappers.domain_to_local.mapEthStatsToEntity
+import com.etasdemir.ethinspector.mappers.local_to_domain.mapBlockEntityToBlock
 import com.etasdemir.ethinspector.mappers.local_to_domain.mapEthStatsEntityToEthStats
 import com.etasdemir.ethinspector.mappers.remote_to_domain.*
 import com.etasdemir.ethinspector.utils.Installation
@@ -32,6 +35,7 @@ class Repository @Inject constructor(
         // update or create user
     }
 
+    // TODO Persist search results
     @Suppress("UNCHECKED_CAST")
     suspend fun search(searchText: String): Pair<SearchType, ResponseResult<*>> {
         val response = remoteRepository.search(searchText)
@@ -84,9 +88,20 @@ class Repository @Inject constructor(
     suspend fun getBlockInfoByNumber(
         blockNumber: ULong, getTransactionsAsObject: Boolean
     ): ResponseResult<Block> {
-        val blockResponse =
-            remoteRepository.getBlockInfoByNumber(blockNumber, getTransactionsAsObject)
-        return mapBlockResponseToBlock(blockResponse)
+        val cacheStrategy = LocalFirstStrategy(
+            ::mapBlockResponseToBlock,
+            ::mapBlockEntityToBlock,
+            ::mapBlockToBlockEntity
+        )
+        return cacheStrategy.execute(
+            {
+                remoteRepository.getBlockInfoByNumber(blockNumber, getTransactionsAsObject)
+            },
+            {
+                localRepository.getBlockByNumber(blockNumber.toLong())
+            },
+            localRepository::saveBlock
+        )
     }
 
     suspend fun getTransactionByHash(

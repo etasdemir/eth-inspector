@@ -14,7 +14,7 @@ fun mapBlockResponseToBlock(response: ResponseResult<EtherscanRPCResponse<BlockR
         val mappedTransactions = ArrayList<BlockTransaction>()
         for (transaction in result.transactions) {
             mappedTransactions.add(
-                BlockTransaction(transaction.hash, transaction.value.toDecimal())
+                BlockTransaction(result.number.toDecimal(), transaction.hash, transaction.value.toDecimal())
             )
         }
         val block = Block(

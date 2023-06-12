@@ -14,6 +14,7 @@ data class Block(
 )
 
 data class BlockTransaction(
+    val blockNumber: ULong,
     val address: String,
     val amount: ULong,
 )

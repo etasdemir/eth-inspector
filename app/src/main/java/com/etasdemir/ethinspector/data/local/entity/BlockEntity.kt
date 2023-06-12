@@ -18,8 +18,8 @@ data class BlockEntity constructor(
 
 @Entity("block_transaction")
 data class BlockTransactionEntity(
-    @PrimaryKey(autoGenerate = false)
-    val fk_blockNumber: Long,
+    val blockNumber: Long,
+    @PrimaryKey
     val address: String,
     val amount: Long,
 )
@@ -29,7 +29,7 @@ data class BlockAndTransactionsRelationEntity(
 
     @Relation(
         parentColumn = "blockNumber",
-        entityColumn = "fk_blockNumber"
+        entityColumn = "blockNumber"
     )
     val transactions: List<BlockTransactionEntity>
 )
