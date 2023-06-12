@@ -2,8 +2,8 @@ package com.etasdemir.ethinspector.data.local.entity
 
 import androidx.room.*
 
-@Entity
-data class AccountInfoLocal(
+@Entity(tableName = "account_info")
+data class AccountInfoEntity(
     @PrimaryKey
     val accountAddress: String,
     val balanceWei: String,
@@ -14,26 +14,26 @@ data class AccountInfoLocal(
     val userGivenName: String,
 )
 
-data class AccountLocal(
+data class AccountRelationEntity(
     @Embedded
-    val accountInfo: AccountInfoLocal,
+    val accountInfo: AccountInfoEntity,
 
     @Relation(
         parentColumn = "accountAddress",
         entityColumn = "addressHash"
     )
-    val transactions: List<AddressTransactionItemLocal>,
+    val transactions: List<AddressTransactionEntity>,
 
     @Relation(
         parentColumn = "accountAddress",
         entityColumn = "symbol",
-        associateBy = Junction(TokenItemAccountCrossRef::class)
+        associateBy = Junction(TokenEntityAccountCrossRef::class)
     )
-    val tokens: List<TokenItemLocal>,
+    val tokens: List<TokenEntity>,
 
     @Relation(
         parentColumn = "accountAddress",
         entityColumn = "addressHash"
     )
-    var transfers: List<TransferItemLocal>
+    var transfers: List<TransferEntity>
 )

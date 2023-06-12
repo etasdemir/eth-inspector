@@ -64,7 +64,17 @@ class Repository @Inject constructor(
 
     suspend fun getEthStats(): ResponseResult<EthStats> {
         val ethStatsResponse = remoteRepository.getEthStats()
-        return mapEthStatsResponseToEthStats(ethStatsResponse)
+        return if (ethStatsResponse is ResponseResult.Error) {
+            val ethStatsLocal = localRepository.getEthStats()
+            // if local not null, return
+            mapEthStatsResponseToEthStats(ethStatsResponse)
+        } else {
+            val ethStats = mapEthStatsResponseToEthStats(ethStatsResponse)
+            if (ethStats.data != null) {
+                localRepository.saveEthStats(ethStats.data)
+            }
+            ethStats
+        }
     }
 
     suspend fun getBlockInfoByNumber(

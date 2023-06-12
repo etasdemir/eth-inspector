@@ -8,24 +8,24 @@ import com.etasdemir.ethinspector.utils.Constants
 
 @Database(
     entities = [
-        AccountInfoLocal::class,
-        BlockLocal::class,
-        BlockTransactionItemLocal::class,
-        ContractInfoLocal::class,
-        EthStatsLocal::class,
-        TransactionLocal::class,
-        UserLocal::class,
-        AddressTransactionItemLocal::class,
-        TokenItemAccountCrossRef::class,
-        TokenItemLocal::class,
-        TransferItemLocal::class
+        AccountInfoEntity::class,
+        BlockEntity::class,
+        BlockTransactionEntity::class,
+        ContractInfoEntity::class,
+        EthStatsEntity::class,
+        TransactionEntity::class,
+        UserEntity::class,
+        AddressTransactionEntity::class,
+        TokenEntityAccountCrossRef::class,
+        TokenEntity::class,
+        TransferEntity::class
     ],
     version = Constants.LOCAL_DB_VERSION
 )
 abstract class LocalDatabase : RoomDatabase() {
-    abstract fun addressDaoLocal(): AddressDaoLocal
-    abstract fun blockDaoLocal(): BlockDaoLocal
-    abstract fun ethStatsDaoLocal(): EthStatsDaoLocal
-    abstract fun transactionDaoLocal(): TransactionDaoLocal
-    abstract fun userDaoLocal(): UserDaoLocal
+    abstract fun addressDaoLocal(): AddressDao
+    abstract fun blockDaoLocal(): BlockDao
+    abstract fun ethStatsDaoLocal(): EthStatsDao
+    abstract fun transactionDaoLocal(): TransactionDao
+    abstract fun userDaoLocal(): UserDao
 }

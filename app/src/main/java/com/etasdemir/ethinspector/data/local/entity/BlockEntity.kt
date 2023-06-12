@@ -2,8 +2,8 @@ package com.etasdemir.ethinspector.data.local.entity
 
 import androidx.room.*
 
-@Entity
-data class BlockLocal constructor(
+@Entity(tableName = "block")
+data class BlockEntity constructor(
     @PrimaryKey(autoGenerate = false)
     val blockNumber: Long,
     val timestamp: String,
@@ -16,21 +16,21 @@ data class BlockLocal constructor(
     val isFavourite: Boolean
 )
 
-@Entity
-data class BlockTransactionItemLocal(
+@Entity("block_transaction")
+data class BlockTransactionEntity(
     @PrimaryKey(autoGenerate = false)
     val fk_blockNumber: Long,
     val address: String,
     val amount: Long,
 )
-data class BlockAndTransactionsLocal(
+data class BlockAndTransactionsRelationEntity(
     @Embedded
-    val blockLocal: BlockLocal,
+    val blockEntity: BlockEntity,
 
     @Relation(
         parentColumn = "blockNumber",
         entityColumn = "fk_blockNumber"
     )
-    val transactions: List<BlockTransactionItemLocal>
+    val transactions: List<BlockTransactionEntity>
 )
 

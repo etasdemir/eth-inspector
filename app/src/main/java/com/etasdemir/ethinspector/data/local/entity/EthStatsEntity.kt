@@ -5,8 +5,8 @@ import androidx.room.*
 /**
  * If EthStats endpoint fails, use latest local copy
  * */
-@Entity
-data class EthStatsLocal(
+@Entity(tableName = "eth_stats")
+data class EthStatsEntity(
     @PrimaryKey val installationId: String,
 
     // Main Stats

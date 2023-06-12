@@ -2,8 +2,8 @@ package com.etasdemir.ethinspector.data.local.entity
 
 import androidx.room.*
 
-@Entity
-data class ContractInfoLocal(
+@Entity(tableName = "contract_info")
+data class ContractInfoEntity(
     @PrimaryKey val contractAddress: String,
     val creatorAddress: String,
     val creationTime: String,
@@ -15,13 +15,13 @@ data class ContractInfoLocal(
     val userGivenName: String,
 )
 
-data class ContractAndTransactionsLocal(
+data class ContractAndTransactionsRelationEntity(
     @Embedded
-    val contractInfoLocal: ContractInfoLocal,
+    val contractInfoEntity: ContractInfoEntity,
 
     @Relation(
         parentColumn = "contractAddress",
         entityColumn = "addressHash"
     )
-    val transactions: List<AddressTransactionItemLocal>
+    val transactions: List<AddressTransactionEntity>
 )

@@ -25,17 +25,17 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideAddressDaoLocal(db: LocalDatabase): AddressDaoLocal = db.addressDaoLocal()
+    fun provideAddressDaoLocal(db: LocalDatabase): AddressDao = db.addressDaoLocal()
 
     @Provides
-    fun provideBlockDaoLocal(db: LocalDatabase): BlockDaoLocal = db.blockDaoLocal()
+    fun provideBlockDaoLocal(db: LocalDatabase): BlockDao = db.blockDaoLocal()
 
     @Provides
-    fun provideEthStatsDaoLocal(db: LocalDatabase): EthStatsDaoLocal = db.ethStatsDaoLocal()
+    fun provideEthStatsDaoLocal(db: LocalDatabase): EthStatsDao = db.ethStatsDaoLocal()
 
     @Provides
-    fun provideTransactionDaoLocal(db: LocalDatabase): TransactionDaoLocal = db.transactionDaoLocal()
+    fun provideTransactionDaoLocal(db: LocalDatabase): TransactionDao = db.transactionDaoLocal()
 
     @Provides
-    fun provideUserDaoLocal(db: LocalDatabase): UserDaoLocal = db.userDaoLocal()
+    fun provideUserDaoLocal(db: LocalDatabase): UserDao = db.userDaoLocal()
 }

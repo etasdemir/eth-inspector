@@ -3,8 +3,8 @@ package com.etasdemir.ethinspector.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class AddressTransactionItemLocal(
+@Entity(tableName = "address_transaction")
+data class AddressTransactionEntity(
     @PrimaryKey val transactionHash: String,
     val addressHash: String,
     val amountWei: Double,
@@ -13,21 +13,21 @@ data class AddressTransactionItemLocal(
 )
 
 @Entity(primaryKeys = ["symbol", "accountAddress"])
-data class TokenItemAccountCrossRef(
+data class TokenEntityAccountCrossRef(
     val symbol: String,
     val accountAddress: String
 )
 
-@Entity
-data class TokenItemLocal(
+@Entity(tableName = "token")
+data class TokenEntity(
     val name: String,
     @PrimaryKey val symbol: String,
     val address: String,
     val quantity: Double
 )
 
-@Entity
-data class TransferItemLocal(
+@Entity(tableName = "transfer")
+data class TransferEntity(
     @PrimaryKey val hash: String,
     val addressHash: String,
     val to: String?,
