@@ -14,7 +14,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
-import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionDetailCard
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionInfoCard
 import timber.log.Timber
@@ -24,14 +23,18 @@ import timber.log.Timber
 fun TransactionDetailScreen(
     transactionDetailViewModel: TransactionDetailViewModel = viewModel()
 ) {
+    val txHashTakenFromArgs = "0xbc78ab8a9e9a0bca7d0321a27b2c03addeae08ba81ea98b03cd3dd237eabed44"
+
     val scrollState = remember { ScrollState(0) }
     val topBarTitle = stringResource(id = R.string.transaction_detail)
     val transactionState by transactionDetailViewModel.transactionState.collectAsStateWithLifecycle()
+    val topBarState by transactionDetailViewModel.topBarState.collectAsStateWithLifecycle()
 
-    val txHashTakenFromArgs = "0xbc78ab8a9e9a0bca7d0321a27b2c03addeae08ba81ea98b03cd3dd237eabed44"
-
-    LaunchedEffect(key1 = "tx_detail_screen_get_tx") {
-        transactionDetailViewModel.getTransactionByHash(txHashTakenFromArgs)
+    LaunchedEffect(key1 = "initialize_transaction_screen") {
+        transactionDetailViewModel.apply {
+            initialize(txHashTakenFromArgs, topBarTitle)
+            getTransactionByHash(txHashTakenFromArgs)
+        }
     }
 
     if (transactionState is UIResponseState.Loading) {
@@ -48,19 +51,7 @@ fun TransactionDetailScreen(
         return
     }
 
-    // TODO Static data
-    val topBarState = remember {
-        DetailTopBarState(
-            topBarTitle,
-            transactionState.data!!.isFavourite,
-            { previous, now ->
-
-            },
-            txHashTakenFromArgs
-        )
-    }
-
-    Scaffold(topBar = { DetailTopBar(topBarState) }) {
+    Scaffold(topBar = { DetailTopBar(topBarState!!) }) {
         Column(
             modifier = Modifier
                 .fillMaxHeight()

@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddressDetailViewModel @Inject constructor(
     private val repository: Repository,
-) : AddressViewModel(repository) {
+) : AddressViewModel<Account>(repository) {
 
     private val _addressState =
         MutableStateFlow<UIResponseState<Account>>(UIResponseState.Loading())
@@ -25,6 +25,9 @@ class AddressDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val addressResponse = repository.getAccountInfoByHash(hash)
             val uiAddressState = mapResponseToUIResponseState(addressResponse)
+            uiAddressState.data?.let {
+                super.initData(it)
+            }
             _addressState.value = uiAddressState
         }
     }

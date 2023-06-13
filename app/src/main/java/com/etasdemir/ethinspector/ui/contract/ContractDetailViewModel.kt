@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ContractDetailViewModel @Inject constructor(
     private val repository: Repository,
-) : AddressViewModel(repository) {
+) : AddressViewModel<Contract>(repository) {
 
     private val _contractState =
         MutableStateFlow<UIResponseState<Contract>>(UIResponseState.Loading())
@@ -25,6 +25,9 @@ class ContractDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val contractResponse = repository.getContractInfoByHash(hash)
             val contractState = mapResponseToUIResponseState(contractResponse)
+            contractState.data?.let {
+                super.initData(it)
+            }
             _contractState.value = contractState
         }
     }

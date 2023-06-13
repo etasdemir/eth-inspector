@@ -19,19 +19,23 @@ import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.block.components.BlockInfoCard
 import com.etasdemir.ethinspector.ui.block.components.BlockTransactionItem
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
-import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.theme.Feint
 import timber.log.Timber
 
 @Composable
 @Preview
 fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
-    val topBarTitle = stringResource(id = R.string.block_details)
     val blockNumberFromArgs = "17372699"
+    val topBarTitle = stringResource(id = R.string.block_details)
+
     val blockState by blockViewModel.blockState.collectAsStateWithLifecycle()
+    val topBarState by blockViewModel.topBarState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = "initialize_block_detail") {
-        blockViewModel.getBlockDetailByNumber(blockNumberFromArgs)
+        blockViewModel.apply {
+            initialize(blockNumberFromArgs, topBarTitle)
+            getBlockDetailByNumber(blockNumberFromArgs)
+        }
     }
 
     val onTransactionClick = remember {
@@ -55,19 +59,7 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
         return
     }
 
-    // TODO Static data
-    val topBarState = remember {
-        DetailTopBarState(
-            topBarTitle,
-            blockState.data!!.isFavourite,
-            { previous, now ->
-
-            },
-            blockNumberFromArgs
-        )
-    }
-
-    Scaffold(topBar = { DetailTopBar(state = topBarState) }) {
+    Scaffold(topBar = { DetailTopBar(state = topBarState!!) }) {
         LazyColumn(
             modifier = Modifier
                 .padding(it)
