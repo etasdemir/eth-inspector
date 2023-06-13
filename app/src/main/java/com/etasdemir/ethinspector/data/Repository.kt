@@ -43,14 +43,18 @@ class Repository @Inject constructor(
         localRepository.saveTransaction(transactionEntity)
     }
 
-    // TODO Persist search results
     @Suppress("UNCHECKED_CAST")
     suspend fun search(searchText: String): Pair<SearchType, ResponseResult<*>> {
         val response = remoteRepository.search(searchText)
         when (response.first) {
             SearchType.TRANSACTION -> {
                 val transaction =
-                    mapTransactionResponseToTransaction(response.second as ResponseResult<EtherscanRPCResponse<TransactionResponse>>)
+                    mapTransactionResponseToTransaction(
+                        response.second as ResponseResult<EtherscanRPCResponse<TransactionResponse>>
+                    )
+                transaction.data?.let {
+                    localRepository.saveTransaction(mapTransactionToTransactionEntity(transaction.data))
+                }
                 return Pair(response.first, transaction)
             }
 
@@ -65,13 +69,22 @@ class Repository @Inject constructor(
 
             SearchType.ACCOUNT -> {
                 val account =
-                    mapAccountResponseToAccount(response.second as ResponseResult<BlockchairAccountResponse>)
+                    mapAccountResponseToAccount(
+                        response.second as ResponseResult<BlockchairAccountResponse>,
+                        searchText
+                    )
                 return Pair(response.first, account)
             }
 
             SearchType.CONTRACT -> {
                 val contract =
-                    mapContractResponseToContract(response.second as ResponseResult<BlockchairContractResponse>)
+                    mapContractResponseToContract(
+                        response.second as ResponseResult<BlockchairContractResponse>,
+                        searchText
+                    )
+                contract.data?.let {
+                    localRepository.saveContractRelation(mapContractToContractRelation(contract.data))
+                }
                 return Pair(response.first, contract)
             }
 
@@ -131,15 +144,34 @@ class Repository @Inject constructor(
     }
 
     suspend fun getAccountInfoByHash(addressHash: String): ResponseResult<Account> {
-        val accountResponse = remoteRepository.getAccountInfoByHash(addressHash)
-        val tokenTransfers = this.getERC20TokenTransfers(addressHash)
-        val account = mapAccountResponseToAccount(accountResponse)
-        return addTransfersToAccount(account, tokenTransfers)
+        val cacheStrategy = LocalFirstStrategy(
+            { mapAccountResponseToAccount(it, addressHash) },
+            ::mapAccountRelationToAccount,
+            { mapAccountToAccountRelation(it, addressHash) }
+        )
+        val account = cacheStrategy.execute(
+            { remoteRepository.getAccountInfoByHash(addressHash) },
+            { localRepository.getAccountRelationByAddress(addressHash) },
+            localRepository::saveAccountRelation
+        )
+        if (account.data != null && account.data.addressTokens.isEmpty()) {
+            val tokens = this.getERC20TokenTransfers(addressHash)
+            addTransfersToAccount(account, tokens)
+        }
+        return account
     }
 
     suspend fun getContractInfoByHash(addressHash: String): ResponseResult<Contract> {
-        val contractResponse = remoteRepository.getContractInfoByHash(addressHash)
-        return mapContractResponseToContract(contractResponse)
+        val cacheStrategy = LocalFirstStrategy(
+            { mapContractResponseToContract(it, addressHash) },
+            ::mapContractRelationToContract,
+            ::mapContractToContractRelation,
+        )
+        return cacheStrategy.execute(
+            { remoteRepository.getContractInfoByHash(addressHash) },
+            { localRepository.getContractRelationByAddress(addressHash) },
+            localRepository::saveContractRelation
+        )
     }
 
     @SuppressWarnings("WeakerAccess")

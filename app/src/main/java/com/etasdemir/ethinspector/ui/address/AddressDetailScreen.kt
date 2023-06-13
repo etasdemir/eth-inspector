@@ -94,7 +94,7 @@ fun AddressDetailScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            items(data.tokens) { token ->
+            items(data.addressTokens) { token ->
                 TokenItem(state = token, onTokenItemClick)
                 Spacer(
                     modifier = Modifier

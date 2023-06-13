@@ -4,7 +4,10 @@ import com.etasdemir.ethinspector.data.ResponseResult
 import com.etasdemir.ethinspector.data.domain_model.*
 import com.etasdemir.ethinspector.data.remote.service.BlockchairContractResponse
 
-fun mapContractResponseToContract(response: ResponseResult<BlockchairContractResponse>): ResponseResult<Contract> {
+fun mapContractResponseToContract(
+    response: ResponseResult<BlockchairContractResponse>,
+    contractAddress: String
+): ResponseResult<Contract> {
     val responseData = response.data
     val data = responseData?.data
     if (response is ResponseResult.Success && responseData != null && data != null) {
@@ -23,6 +26,7 @@ fun mapContractResponseToContract(response: ResponseResult<BlockchairContractRes
         val address = data.address
         val contractDetails = address.contractDetails
         val contractInfo = ContractInfo(
+            contractAddress,
             contractDetails.creatingAddress,
             contractDetails.creatingTime,
             address.transactionCount,

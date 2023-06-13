@@ -12,7 +12,7 @@ data class ContractInfoEntity(
     val balanceUsd: Double,
 
     val isFavourite: Boolean,
-    val userGivenName: String,
+    val userGivenName: String?,
 )
 
 data class ContractAndTransactionsRelationEntity(

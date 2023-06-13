@@ -1,34 +1,28 @@
 package com.etasdemir.ethinspector.data.local.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "address_transaction")
+@Entity(tableName = "address_transaction", primaryKeys = ["transactionHash", "addressHash"])
 data class AddressTransactionEntity(
-    @PrimaryKey val transactionHash: String,
+    val transactionHash: String,
     val addressHash: String,
     val amountWei: Double,
     val block: Long,
     val date: String,
 )
 
-@Entity(tableName = "token_and_account_cross_ref", primaryKeys = ["symbol", "accountAddress"])
-data class TokenEntityAccountCrossRef(
-    val symbol: String,
-    val accountAddress: String
-)
-
-@Entity(tableName = "token")
-data class TokenEntity(
+@Entity(tableName = "address_token", primaryKeys = ["ownerAddress", "tokenAddress"])
+data class AddressTokenEntity(
+    val ownerAddress: String,
     val name: String,
-    @PrimaryKey val symbol: String,
-    val address: String,
+    val symbol: String,
+    val tokenAddress: String,
     val quantity: Double
 )
 
-@Entity(tableName = "transfer")
+@Entity(tableName = "transfer", primaryKeys = ["hash", "addressHash"])
 data class TransferEntity(
-    @PrimaryKey val hash: String,
+    val hash: String,
     val addressHash: String,
     val to: String?,
     val tokenName: String,

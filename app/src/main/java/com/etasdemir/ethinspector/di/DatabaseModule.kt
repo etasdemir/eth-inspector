@@ -25,7 +25,7 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideAddressDao(db: LocalDatabase): AddressDao = db.addressDao()
+    fun provideAddressDao(db: LocalDatabase) = db.addressDao()
 
     @Provides
     fun provideBlockDao(db: LocalDatabase): BlockDao = db.blockDao()
@@ -40,5 +40,6 @@ object DatabaseModule {
     fun provideUserDao(db: LocalDatabase): UserDao = db.userDao()
 
     @Provides
-    fun provideTokenTransferDao(db: LocalDatabase): TokenTransferDao = db.tokenTransferDao()
+    fun provideTokenTransferDao(db: LocalDatabase): TokenDao = db.tokenTransferDao()
+
 }

@@ -9,6 +9,7 @@ data class Contract(
 )
 
 data class ContractInfo(
+    val contractAddress: String,
     val creatorAddress: String,
     val creationTime: String,
     val txCount: Long,

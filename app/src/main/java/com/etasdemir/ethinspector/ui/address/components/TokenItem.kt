@@ -16,18 +16,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.data.domain_model.Token
+import com.etasdemir.ethinspector.data.domain_model.AddressToken
 import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.clip
 
 @Composable
-fun TokenItem(state: Token, onItemClick: (String) -> Unit) {
+fun TokenItem(state: AddressToken, onItemClick: (String) -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(30))
         .background(MaterialTheme.colorScheme.primary)
-        .clickable { onItemClick(state.address) }
+        .clickable { onItemClick(state.tokenAddress) }
         .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -44,7 +44,7 @@ fun TokenItem(state: Token, onItemClick: (String) -> Unit) {
                 fontWeight = FontWeight.Bold
             )
             CardRowItem(
-                field = stringResource(id = R.string.address), value = state.address.clip(8)
+                field = stringResource(id = R.string.address), value = state.tokenAddress.clip(8)
             )
             CardRowItem(
                 field = stringResource(id = R.string.quantity), value = state.quantity.toString()
@@ -57,7 +57,8 @@ fun TokenItem(state: Token, onItemClick: (String) -> Unit) {
 @Preview
 @Composable
 fun TokenItemPreview() {
-    val state = Token(
+    val state = AddressToken(
+        "0X12837987HG12JGH12GH3F89FS7",
         "Furucombo",
         "COMBO",
         "0X12837987HG12JGH12GH3F89FS7",

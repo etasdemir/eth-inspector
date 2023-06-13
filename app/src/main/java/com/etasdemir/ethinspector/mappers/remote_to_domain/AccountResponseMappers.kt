@@ -6,18 +6,24 @@ import com.etasdemir.ethinspector.data.remote.service.BlockchairAccountResponse
 import com.etasdemir.ethinspector.utils.convertTokenAmountFromDecimal
 
 fun mapAccountResponseToAccount(
-    response: ResponseResult<BlockchairAccountResponse>
+    response: ResponseResult<BlockchairAccountResponse>,
+    accountAddress: String
 ): ResponseResult<Account> {
     val root = response.data
     val data = response.data?.data
     if (response is ResponseResult.Success && root != null && data != null) {
         val address = data.address
         val transactions = arrayListOf<AddressTransaction>()
-        val tokens = arrayListOf<Token>()
+        val addressTokens = arrayListOf<AddressToken>()
         val transfers = arrayListOf<AddressTransfer>()
 
         val accountInfo =
-            AccountInfo(address.balanceWei, address.balanceUsd, address.transactionCount)
+            AccountInfo(
+                accountAddress,
+                address.balanceWei,
+                address.balanceUsd,
+                address.transactionCount
+            )
 
         data.calls?.forEach { call ->
             transactions.add(
@@ -31,8 +37,14 @@ fun mapAccountResponseToAccount(
         }
 
         data.holdings?.erc20?.forEach {
-            tokens.add(
-                Token(it.tokenName, it.tokenSymbol, it.tokenAddress, it.balanceApproximate)
+            addressTokens.add(
+                AddressToken(
+                    accountAddress,
+                    it.tokenName,
+                    it.tokenSymbol,
+                    it.tokenAddress,
+                    it.balanceApproximate
+                )
             )
         }
 
@@ -40,7 +52,7 @@ fun mapAccountResponseToAccount(
             Account(
                 accountInfo,
                 transactions,
-                tokens,
+                addressTokens,
                 transfers
             )
         )
@@ -78,12 +90,11 @@ fun addTransfersToAccount(
             Account(
                 accountData.accountInfo,
                 accountData.transactions,
-                accountData.tokens,
+                accountData.addressTokens,
                 transfers
             )
         )
-    }
-    else {
+    } else {
         val errorMessage = account.errorMessage!!
         ResponseResult.Error(errorMessage)
     }

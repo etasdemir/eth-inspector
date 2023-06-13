@@ -3,7 +3,7 @@ package com.etasdemir.ethinspector.data.domain_model
 data class Account(
     val accountInfo: AccountInfo,
     val transactions: List<AddressTransaction>,
-    val tokens: List<Token>,
+    val addressTokens: List<AddressToken>,
     val transfers: List<AddressTransfer>,
 
     var isFavourite: Boolean = false,
@@ -11,6 +11,7 @@ data class Account(
 )
 
 data class AccountInfo(
+    val accountAddress: String,
     val balanceWei: String,
     val balanceUsd: Double,
     val transactionCount: Long

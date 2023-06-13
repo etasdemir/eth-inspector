@@ -62,7 +62,7 @@ fun ContractInfoColumnPreview() {
     val balanceEth = "29.1273293897"
     val balanceUsd = 35123.1238123
     val state = ContractInfo(
-        creatorAddress, creationTime, txCount, balanceEth, balanceUsd
+        address, creatorAddress, creationTime, txCount, balanceEth, balanceUsd
     )
     ContractInfoColumn(state, address)
 }

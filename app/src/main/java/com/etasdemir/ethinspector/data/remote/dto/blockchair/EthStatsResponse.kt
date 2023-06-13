@@ -36,7 +36,7 @@ data class EthStatsResponse(
     @field:Json(name = "mempool_tps") val mempoolTps: String? = null,
     @field:Json(name = "mempool_total_value_approximate") val mempoolTotalValueApproximate: String? = null,
 
-    // Token Stats
+    // AddressToken Stats
     @field:Json(name = "layer_2") val layer2: Layer2? = Layer2(),
 )
 
@@ -54,7 +54,7 @@ data class Layer2(
 
 @JsonClass(generateAdapter = true)
 data class TokenStat(
-    @field:Json(name = "tokens") val tokens: String? = null,
+    @field:Json(name = "addressTokens") val tokens: String? = null,
     @field:Json(name = "transactions") val transactions: String? = null,
     @field:Json(name = "tokens_24h") val tokens_24h: String? = null,
     @field:Json(name = "transactions_24h") val transactions_24h: String? = null,

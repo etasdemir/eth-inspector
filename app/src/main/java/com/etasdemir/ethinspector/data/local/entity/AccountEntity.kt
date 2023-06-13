@@ -11,7 +11,7 @@ data class AccountInfoEntity(
     val transactionCount: Long,
 
     val isFavourite: Boolean,
-    val userGivenName: String,
+    val userGivenName: String?,
 )
 
 data class AccountRelationEntity(
@@ -26,10 +26,9 @@ data class AccountRelationEntity(
 
     @Relation(
         parentColumn = "accountAddress",
-        entityColumn = "symbol",
-        associateBy = Junction(TokenEntityAccountCrossRef::class)
+        entityColumn = "ownerAddress"
     )
-    val tokens: List<TokenEntity>,
+    val tokens: List<AddressTokenEntity>,
 
     @Relation(
         parentColumn = "accountAddress",
