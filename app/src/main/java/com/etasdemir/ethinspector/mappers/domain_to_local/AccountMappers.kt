@@ -3,12 +3,13 @@ package com.etasdemir.ethinspector.mappers.domain_to_local
 import com.etasdemir.ethinspector.data.domain_model.Account
 import com.etasdemir.ethinspector.data.local.entity.*
 
-fun mapAccountToAccountRelation(account: Account, address: String): AccountRelationEntity {
+fun mapAccountToAccountRelation(account: Account): AccountRelationEntity {
+    val accountInfo = account.accountInfo
     val accountInfoEntity = AccountInfoEntity(
-        account.accountInfo.accountAddress,
-        account.accountInfo.balanceWei,
-        account.accountInfo.balanceUsd,
-        account.accountInfo.transactionCount,
+        accountInfo.accountAddress,
+        accountInfo.balanceWei,
+        accountInfo.balanceUsd,
+        accountInfo.transactionCount,
         account.isFavourite,
         account.userGivenName,
     )
@@ -21,7 +22,7 @@ fun mapAccountToAccountRelation(account: Account, address: String): AccountRelat
             transactions.add(
                 AddressTransactionEntity(
                     it.transactionHash,
-                    address,
+                    accountInfo.accountAddress,
                     it.amountWei,
                     it.block,
                     it.date
@@ -33,7 +34,7 @@ fun mapAccountToAccountRelation(account: Account, address: String): AccountRelat
         transfers.add(
             TransferEntity(
                 it.hash,
-                address,
+                accountInfo.accountAddress,
                 it.to,
                 it.tokenName,
                 it.tokenSymbol,
@@ -46,7 +47,7 @@ fun mapAccountToAccountRelation(account: Account, address: String): AccountRelat
     for (token in account.addressTokens) {
         tokens.add(
             AddressTokenEntity(
-                address,
+                accountInfo.accountAddress,
                 token.name,
                 token.symbol,
                 token.tokenAddress,

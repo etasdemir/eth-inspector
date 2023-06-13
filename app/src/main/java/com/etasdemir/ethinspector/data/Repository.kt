@@ -43,6 +43,16 @@ class Repository @Inject constructor(
         localRepository.saveTransaction(transactionEntity)
     }
 
+    suspend fun saveAccount(account: Account) {
+        val accountRelation = mapAccountToAccountRelation(account)
+        localRepository.saveAccountRelation(accountRelation)
+    }
+
+    suspend fun saveContract(contract: Contract) {
+        val contractRelation = mapContractToContractRelation(contract)
+        localRepository.saveContractRelation(contractRelation)
+    }
+
     @Suppress("UNCHECKED_CAST")
     suspend fun search(searchText: String): Pair<SearchType, ResponseResult<*>> {
         val response = remoteRepository.search(searchText)
@@ -53,7 +63,7 @@ class Repository @Inject constructor(
                         response.second as ResponseResult<EtherscanRPCResponse<TransactionResponse>>
                     )
                 transaction.data?.let {
-                    localRepository.saveTransaction(mapTransactionToTransactionEntity(transaction.data))
+                    this.saveTransaction(transaction.data)
                 }
                 return Pair(response.first, transaction)
             }
@@ -62,7 +72,7 @@ class Repository @Inject constructor(
                 val block =
                     mapBlockResponseToBlock(response.second as ResponseResult<EtherscanRPCResponse<BlockResponse>>)
                 block.data?.let {
-                    localRepository.saveBlock(mapBlockToBlockEntity(it))
+                    this.saveBlock(block.data)
                 }
                 return Pair(response.first, block)
             }
@@ -73,6 +83,9 @@ class Repository @Inject constructor(
                         response.second as ResponseResult<BlockchairAccountResponse>,
                         searchText
                     )
+                account.data?.let {
+                    this.saveAccount(account.data)
+                }
                 return Pair(response.first, account)
             }
 
@@ -83,7 +96,7 @@ class Repository @Inject constructor(
                         searchText
                     )
                 contract.data?.let {
-                    localRepository.saveContractRelation(mapContractToContractRelation(contract.data))
+                    this.saveContract(contract.data)
                 }
                 return Pair(response.first, contract)
             }
@@ -147,7 +160,7 @@ class Repository @Inject constructor(
         val cacheStrategy = LocalFirstStrategy(
             { mapAccountResponseToAccount(it, addressHash) },
             ::mapAccountRelationToAccount,
-            { mapAccountToAccountRelation(it, addressHash) }
+            ::mapAccountToAccountRelation
         )
         val account = cacheStrategy.execute(
             { remoteRepository.getAccountInfoByHash(addressHash) },
