@@ -17,7 +17,9 @@ class LocalFirstStrategy<T, K, V>(
         persistResponse: suspend (K) -> Unit
     ): ResponseResult<V> {
         val persistedObject = fetchFromLocal()
-        return if (persistedObject != null) {
+        return if ((persistedObject is List<*> && persistedObject.isNotEmpty()) ||
+            (persistedObject !is List<*> && persistedObject != null)
+        ) {
             val persistedDomainObj = localToDomain(persistedObject)
             ResponseResult.Success(persistedDomainObj)
         } else {

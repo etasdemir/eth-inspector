@@ -12,6 +12,7 @@ class LocalRepository @Inject constructor(
     private val ethStatsDao: EthStatsDao,
     private val blockDao: BlockDao,
     private val transactionDao: TransactionDao,
+    private val tokenTransferDao: TokenTransferDao,
     private val addressDao: AddressDao,
     private val userDao: UserDao,
     private val installation: Installation
@@ -50,4 +51,11 @@ class LocalRepository @Inject constructor(
 
     suspend fun getTransactionByHash(hash: String) =
         transactionDao.getTransactionByHash(hash)
+
+    suspend fun saveTokenTransfers(tokenTransfers: List<TokenTransferEntity>) {
+        tokenTransferDao.saveTokenTransfers(tokenTransfers)
+    }
+
+    suspend fun getTokenTransfersByAddress(address: String) =
+        tokenTransferDao.getTokenTransfersByAddress(address)
 }

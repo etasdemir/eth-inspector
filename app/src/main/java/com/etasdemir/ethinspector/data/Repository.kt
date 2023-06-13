@@ -144,7 +144,15 @@ class Repository @Inject constructor(
 
     @SuppressWarnings("WeakerAccess")
     suspend fun getERC20TokenTransfers(addressHash: String): ResponseResult<List<TokenTransfer>> {
-        val tokenTransfersResponse = remoteRepository.getERC20TokenTransfers(addressHash)
-        return mapTokenTransfersResponseToTokenTransfers(tokenTransfersResponse)
+        val cacheStrategy = LocalFirstStrategy(
+            ::mapTokenTransfersResponseToTokenTransfers,
+            ::mapTokenTransferEntityToDomain,
+            ::mapTokenTransfersToEntity
+        )
+        return cacheStrategy.execute(
+            { remoteRepository.getERC20TokenTransfers(addressHash) },
+            { localRepository.getTokenTransfersByAddress(addressHash) },
+            localRepository::saveTokenTransfers
+        )
     }
 }

@@ -24,7 +24,9 @@ class RemoteFirstStrategy<T, K, V>(
             ResponseResult.Success(domainObject)
         } else {
             val persistedObject = fetchFromLocal()
-            if (persistedObject != null) {
+            if ((persistedObject is List<*> && persistedObject.isNotEmpty()) ||
+                (persistedObject !is List<*> && persistedObject != null)
+            ) {
                 val persistedDomainObj = localToDomain(persistedObject)
                 ResponseResult.Success(persistedDomainObj)
             } else {

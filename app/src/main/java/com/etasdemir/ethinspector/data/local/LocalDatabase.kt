@@ -18,14 +18,16 @@ import com.etasdemir.ethinspector.utils.Constants
         AddressTransactionEntity::class,
         TokenEntityAccountCrossRef::class,
         TokenEntity::class,
-        TransferEntity::class
+        TransferEntity::class,
+        TokenTransferEntity::class
     ],
     version = Constants.LOCAL_DB_VERSION
 )
 abstract class LocalDatabase : RoomDatabase() {
-    abstract fun addressDaoLocal(): AddressDao
-    abstract fun blockDaoLocal(): BlockDao
-    abstract fun ethStatsDaoLocal(): EthStatsDao
-    abstract fun transactionDaoLocal(): TransactionDao
-    abstract fun userDaoLocal(): UserDao
+    abstract fun addressDao(): AddressDao
+    abstract fun blockDao(): BlockDao
+    abstract fun ethStatsDao(): EthStatsDao
+    abstract fun transactionDao(): TransactionDao
+    abstract fun userDao(): UserDao
+    abstract fun tokenTransferDao(): TokenTransferDao
 }
