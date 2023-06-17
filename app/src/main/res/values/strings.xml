@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">EthInspector</string>
 
+    <string name="en">English</string>
+    <string name="tr">Turkish</string>
+
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
+    <string name="save">Save</string>
     <string name="skip">Skip</string>
 
     <string name="ethereum">Ethereum</string>
@@ -69,7 +73,7 @@
     <string name="max_fee_per_gas">Max Fee per Gas</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="nonce">Nonce</string>
-    
+
     <string name="block_details">Block Details</string>
     <string name="block_number">Block Number</string>
     <string name="miner">Miner</string>
@@ -94,5 +98,10 @@
 
     <string name="modal_address_title">Give your address a name</string>
     <string name="modal_address_hash">Address: %1$s</string>
+
+    <string name="theme_select_title">Appearance</string>
+    <string name="theme_select_description">Select the theme to be applied throughout the application.</string>
+    <string name="language_select_title">Language</string>
+    <string name="language_select_description">Select the language to be applied throughout the application.</string>
 
 </resources>
