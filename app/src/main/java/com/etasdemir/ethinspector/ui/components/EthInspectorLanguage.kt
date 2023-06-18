@@ -1,10 +1,7 @@
 package com.etasdemir.ethinspector.ui.components
 
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.EthInspectorApp
 import com.etasdemir.ethinspector.data.domain_model.AvailableLanguages
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
@@ -12,10 +9,11 @@ import com.etasdemir.ethinspector.utils.setAppLocale
 
 @Composable
 fun EthInspectorLanguage(
-    accountViewModel: SharedAccountViewModel = viewModel(LocalContext.current as ComponentActivity),
+    accountViewModel: SharedAccountViewModel,
     Content: @Composable () -> Unit,
 ) {
-    val userState by accountViewModel.userState.collectAsStateWithLifecycle()
+    val userState by accountViewModel.userState.collectAsState(initial = null)
+
     var isAppReady by remember {
         mutableStateOf(false)
     }

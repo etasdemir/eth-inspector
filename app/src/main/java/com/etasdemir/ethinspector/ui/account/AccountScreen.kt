@@ -1,6 +1,5 @@
 package com.etasdemir.ethinspector.ui.account
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -9,16 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.User
 import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItem
 import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItemState
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.components.radio_dialog.LanguageRadioDialog
+import com.etasdemir.ethinspector.ui.components.radio_dialog.ThemeRadioDialog
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 
 private enum class AccountItem {
@@ -26,11 +23,11 @@ private enum class AccountItem {
 }
 
 @Composable
-@Preview
 fun AccountScreen(
-    accountViewModel: SharedAccountViewModel = viewModel(LocalContext.current as ComponentActivity)
+    accountViewModel: SharedAccountViewModel
 ) {
-    val userState by accountViewModel.userState.collectAsStateWithLifecycle()
+    val userState by accountViewModel.userState.collectAsState(initial = null)
+
     var isThemeDialogOpen by remember {
         mutableStateOf(false)
     }
@@ -77,6 +74,12 @@ fun AccountScreen(
                 user = userState!!,
                 updateUser = saveUser,
                 onCancel = { isLanguageDialogOpen = false })
+        }
+        if (isThemeDialogOpen) {
+            ThemeRadioDialog(
+                user = userState!!,
+                updateUser = saveUser,
+                onCancel = { isThemeDialogOpen = false })
         }
         Column(
             modifier = Modifier

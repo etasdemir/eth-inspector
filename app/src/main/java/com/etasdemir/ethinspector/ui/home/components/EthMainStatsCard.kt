@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.AvailableThemes
+import com.etasdemir.ethinspector.ui.theme.LocalTheme
 import com.etasdemir.ethinspector.utils.*
 import kotlin.math.abs
 
@@ -39,8 +41,7 @@ private val previewState = EthMainStatsState(
 @Composable
 @Preview
 fun EthMainStatsCard(state: EthMainStatsState = previewState) {
-    // TODO Check for saved value too.
-    val isDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = LocalTheme.current == AvailableThemes.Dark
     val ethIconResId = if (isDarkTheme) R.drawable.ic_eth_dark else R.drawable.ic_eth_light
     val priceChangeStr = remember {
         val change = state.priceChange

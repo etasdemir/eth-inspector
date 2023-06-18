@@ -1,7 +1,6 @@
 package com.etasdemir.ethinspector.ui.search
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -16,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.AvailableThemes
+import com.etasdemir.ethinspector.ui.theme.LocalTheme
 
 @Composable
 fun InvalidSearchScreen() {
@@ -23,8 +24,7 @@ fun InvalidSearchScreen() {
     // TODO Take from args
     val searchedValue = "Some wrong address"
 
-    // TODO Check for saved value too.
-    val isDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = LocalTheme.current == AvailableThemes.Dark
     val searchNotFoundImg = remember {
         if (isDarkTheme)
             R.drawable.search_not_found_dark

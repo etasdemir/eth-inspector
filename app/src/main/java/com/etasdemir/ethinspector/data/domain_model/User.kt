@@ -11,11 +11,11 @@ data class User(
     var useSystemLanguage: Boolean
 )
 
+@SuppressLint("DiscouragedApi")
 enum class AvailableThemes(val code: String) {
     Dark("dark"),
     Light("light");
 
-    @SuppressLint("DiscouragedApi")
     fun getLocalizedName(context: Context): String {
         val resId = context.resources.getIdentifier(
             "theme_${this.code}",
@@ -25,7 +25,20 @@ enum class AvailableThemes(val code: String) {
         return context.getString(resId)
     }
 
+    fun getIndex(): Int {
+        return AvailableThemes.values().indexOf(this)
+    }
+
     companion object {
+        fun getAvailableLocalizedNames(context: Context): List<String> {
+            val res = context.resources
+            val packageName = context.packageName
+            return AvailableThemes.values().map {
+                val resId = res.getIdentifier("theme_${it.code}", "string", packageName)
+                context.getString(resId)
+            }
+        }
+
         fun getFromCode(code: String): AvailableThemes? {
             val filtered = AvailableThemes.values().filter {
                 it.code == code
