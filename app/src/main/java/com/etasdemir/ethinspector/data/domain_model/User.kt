@@ -15,6 +15,16 @@ enum class AvailableThemes(val code: String) {
     Dark("dark"),
     Light("light");
 
+    @SuppressLint("DiscouragedApi")
+    fun getLocalizedName(context: Context): String {
+        val resId = context.resources.getIdentifier(
+            "theme_${this.code}",
+            "string",
+            context.packageName
+        )
+        return context.getString(resId)
+    }
+
     companion object {
         fun getFromCode(code: String): AvailableThemes? {
             val filtered = AvailableThemes.values().filter {

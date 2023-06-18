@@ -1,11 +1,13 @@
 package com.etasdemir.ethinspector.ui.components.radio_dialog
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,8 +37,8 @@ fun RadioDialog(state: RadioDialogState) {
         )
     }
     val radioButtonColors = RadioButtonDefaults.colors(
-        selectedColor = MaterialTheme.colorScheme.primary,
-        unselectedColor = MaterialTheme.colorScheme.primary
+        selectedColor = MaterialTheme.colorScheme.tertiary,
+        unselectedColor = MaterialTheme.colorScheme.tertiary
     )
     var selectedIndex by remember {
         mutableStateOf(state.defaultSelectedItemIndex)
@@ -46,8 +48,10 @@ fun RadioDialog(state: RadioDialogState) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 40.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+                .clip(RoundedCornerShape(25.dp))
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = 30.dp, vertical = 50.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
                 color = MaterialTheme.colorScheme.tertiary,
@@ -98,18 +102,18 @@ fun RadioDialog(state: RadioDialogState) {
 @Composable
 private fun ActionButton(onClick: () -> Unit, text: String) {
     val buttonColors = ButtonDefaults.outlinedButtonColors(
-        containerColor = MaterialTheme.colorScheme.secondary,
+        containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.tertiary
     )
     OutlinedButton(
         onClick = onClick,
         contentPadding = PaddingValues(horizontal = 40.dp, vertical = 0.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
         colors = buttonColors
     ) {
         Text(
             text = text,
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.secondary
+            fontSize = 14.sp
         )
     }
 }

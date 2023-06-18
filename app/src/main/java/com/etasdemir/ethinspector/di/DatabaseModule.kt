@@ -21,6 +21,7 @@ object DatabaseModule {
     fun getLocalDatabase(@ApplicationContext context: Context): LocalDatabase {
         return Room
             .databaseBuilder(context, LocalDatabase::class.java, Constants.LOCAL_DB_NAME)
+            .fallbackToDestructiveMigration()
             .build()
     }
 

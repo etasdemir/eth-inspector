@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.utils.*
+import kotlin.math.abs
 
 data class EthMainStatsState(
     val marketPrice: Double,
@@ -43,10 +44,11 @@ fun EthMainStatsCard(state: EthMainStatsState = previewState) {
     val ethIconResId = if (isDarkTheme) R.drawable.ic_eth_dark else R.drawable.ic_eth_light
     val priceChangeStr = remember {
         val change = state.priceChange
+        val absChange = abs(change)
         if (change < 0) {
-            "-${change.format(2)}"
+            "-${absChange.format(2)}"
         } else {
-            "+${change.format(2)}"
+            "+${absChange.format(2)}"
         }
     }
 

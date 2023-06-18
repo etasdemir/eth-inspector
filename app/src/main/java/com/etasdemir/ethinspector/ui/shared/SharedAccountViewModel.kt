@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.ui.account
+package com.etasdemir.ethinspector.ui.shared
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountViewModel @Inject constructor(
+class SharedAccountViewModel @Inject constructor(
     private val repository: Repository
 ): ViewModel() {
 

@@ -8,29 +8,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.etasdemir.ethinspector.ui.account.AccountScreen
+import com.etasdemir.ethinspector.ui.components.EthInspectorLanguage
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            EthInspectorTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-//                    HomeScreen()
-//                    InvalidSearchScreen()
-//                    WalletScreen()
-                    AccountScreen()
-//                    SavedItemScreen(type = SavedItemScreen.TRANSACTION)
-//                    TransactionDetailScreen()
-//                    BlockDetailScreen()
-//                    AddressDetailScreen()
-//                    ContractDetailScreen()
+            EthInspectorLanguage {
+                EthInspectorTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+//                        HomeScreen()
+//                        InvalidSearchScreen()
+//                        WalletScreen()
+                        AccountScreen()
+//                        SavedItemScreen(type = SavedItemScreen.TRANSACTION)
+//                        TransactionDetailScreen()
+//                        BlockDetailScreen()
+//                        AddressDetailScreen()
+//                        ContractDetailScreen()
+                    }
                 }
             }
         }

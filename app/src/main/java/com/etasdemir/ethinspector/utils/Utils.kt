@@ -1,5 +1,8 @@
 package com.etasdemir.ethinspector.utils
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,7 +22,7 @@ fun Double.format(digits: Int): Double {
     for (i in 0 until digits) {
         pattern.append("#")
     }
-    val df = DecimalFormat(pattern.toString())
+    val df = DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.ENGLISH))
     return df.format(this).toDouble()
 }
 
@@ -104,7 +107,7 @@ fun String.addDots(): String {
 }
 
 private val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.ENGLISH)
-fun getDateString(time: Long) : String = simpleDateFormat.format(time * 1000L)
+fun getDateString(time: Long): String = simpleDateFormat.format(time * 1000L)
 
 fun Double.toPlainString(): String {
     val df = DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH))
@@ -116,10 +119,31 @@ fun convertTokenAmountFromDecimal(amount: String, tokenDecimal: Int): Double {
     val numbers = amount.toMutableList()
     val diff = numbers.size - tokenDecimal
     if (diff <= 0) {
-        for (i in 0 .. abs(diff)) {
+        for (i in 0..abs(diff)) {
             numbers.add(0, '0')
         }
     }
     numbers.add(numbers.size - tokenDecimal, '.')
     return String(numbers.toCharArray()).format(3).toDouble()
+}
+
+fun Context.setAppLocale(language: String, recreateActivity: Boolean) {
+    val locale = Locale(language)
+    Locale.setDefault(locale)
+    val config = resources.configuration
+    config.setLocale(locale)
+    config.setLayoutDirection(locale)
+    resources.updateConfiguration(config, resources.displayMetrics)
+    if (recreateActivity) {
+        this.findActivity().recreate()
+    }
+}
+
+fun Context.findActivity(): Activity {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    throw IllegalStateException("no activity")
 }

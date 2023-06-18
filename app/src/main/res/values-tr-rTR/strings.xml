@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="en">İngilizce</string>
+    <string name="tr">Türkçe</string>
+
+    <string name="cancel">İptal</string>
+    <string name="create">Oluştur</string>
+    <string name="save">Kaydet</string>
+    <string name="skip">Kapat</string>
+
+    <string name="percentage_with_value">%%%1$s</string>
+    <string name="coin_circulation">Dolaşan Arz</string>
+    <string name="coin_market_cap">Piyasa Değeri</string>
+    <string name="coin_dominance">Baskınlık</string>
+    <string name="all_time">Tüm Zamanlar</string>
+    <string name="blockchain_size">Blokzincir boyutu</string>
+    <string name="transactions">İşlem</string>
+    <string name="calls">Opsiyonlar</string>
+    <string name="mempool">Bellek Havuzu</string>
+    <string name="transaction_per_sec">Saniye başına işlem</string>
+    <string name="values_of_pending_tx">Askıdaki işlemlerin değeri</string>
+    <string name="daily_statistics">24 Saatlik İstatistikler</string>
+    <string name="blocks">Bloklar</string>
+    <string name="burned_24h">24 Saatlik Yakım</string>
+    <string name="largest_tx_value">En büyük işlem değeri</string>
+    <string name="volume">Hacim</string>
+    <string name="avg_tx_fee">Ortalama işlem maliyeti</string>
+    <string name="title_erc_20">ERC-20 Token Verileri</string>
+    <string name="title_erc_721">ERC-721 (NFT) Token Verileri</string>
+    <string name="tokens">Tokenlar</string>
+    <string name="new_tokens_24h">24h Yeni Tokenlar</string>
+    <string name="new_tx_24h">24h Yeni İşlemler</string>
+
+    <string name="search_placeholder">İşlem, adres ya da blok ara…</string>
+    <string name="search_invalid_search_title">Hmm…</string>
+    <string name="search_invalid_search_desc">Bir işlem, adres veya blok numarası gibi görünmüyor. \nBaşka bir şey bulmaya çalışın</string>
+
+    <string name="my_wallets">Cüzdanlarım</string>
+    <string name="no_saved_wallet_title">Hiç cüzdan bulunamadı</string>
+    <string name="no_saved_wallet_desc">Cüzdanınıza bir adres ekleyin.</string>
+    <string name="no_saved_wallet_desc2">Arama işlevinden istediğiniz adresi bulabilirsiniz. Bir adresi kaydetmek için favorilere ekleyin.</string>
+    <string name="wallet_saved_address">Adres:</string>
+    <string name="wallet_saved_balance">Bakiye:</string>
+
+    <string name="account_settings">Hesap Ayarları</string>
+    <string name="account_settings_theme">Tema değiştir</string>
+    <string name="account_settings_lang">Dil değiştir</string>
+    <string name="account_settings_tx">Kaydedilmiş işlemler</string>
+    <string name="account_settings_blocks">Kaydedilmiş bloklar</string>
+    <string name="account_settings_info">Bilgi</string>
+    <string name="account_settings_tx_count">İşlem: %1$d</string>
+    <string name="account_settings_miner">Madenci: %1$s</string>
+    <string name="account_settings_block">Block: %1$s</string>
+    <string name="account_settings_saved_tx">Kaydedilmiş işlemler</string>
+    <string name="account_settings_saved_blocks">Kaydedilmiş bloklar</string>
+
+    <string name="transaction_detail">İşlem Detayları</string>
+    <string name="transaction_hash">İşlem Hash Değeri</string>
+    <string name="time">Tarih</string>
+    <string name="block">Blok</string>
+    <string name="amount">Miktar</string>
+    <string name="fee">Maliyet</string>
+    <string name="from">Gönderen</string>
+    <string name="to">Alıcı</string>
+    <string name="gas_amount">Gas Miktarı</string>
+    <string name="gas_price">Gas Fiyatı</string>
+    <string name="max_fee_per_gas">Gas Başına Maks Ücret</string>
+    <string name="transaction_type">İşlem Tipi</string>
+    <string name="nonce">Nonce</string>
+
+    <string name="block_details">Blok Detayları</string>
+    <string name="block_number">Blok Numarası</string>
+    <string name="miner">Madenci</string>
+    <string name="gas_limit">Gas Limit</string>
+    <string name="gas_used">Kullanılan Gas</string>
+    <string name="base_fee_per_gas">Gas Başına Taban Ücret</string>
+    <string name="block_transactions">Blok İşlemleri</string>
+    <string name="tx_hash">İşlem Hash Değeri</string>
+
+    <string name="address_details">Adres Detayları</string>
+    <string name="address">Adres</string>
+    <string name="balance">Bakiye</string>
+    <string name="tx_count">İşlem Sayısı</string>
+    <string name="to_short">Alıcı</string>
+    <string name="transfers">Transferler</string>
+    <string name="quantity">Miktar</string>
+    <string name="token">Token</string>
+
+    <string name="contract_details">Sözleşme Detayları</string>
+    <string name="creator_address">Oluşturan Adres</string>
+    <string name="creation_time">Oluşturma Tarihi</string>
+
+    <string name="modal_address_title">Adresinize bir isim verin</string>
+    <string name="modal_address_hash">Adres: %1$s</string>
+
+    <string name="theme_dark">Karanlık Tema</string>
+    <string name="theme_light">Aydınlık Tema</string>
+    <string name="theme_select_title">Görünüm</string>
+    <string name="theme_select_description">Uygulama boyunca uygulanacak temayı seçin.</string>
+    <string name="language_select_title">Dil</string>
+    <string name="language_select_description">Uygulama boyunca uygulanacak dili seçin.</string>
+    <string name="system_default">Sistem varsayılanını kullan</string>
+</resources>

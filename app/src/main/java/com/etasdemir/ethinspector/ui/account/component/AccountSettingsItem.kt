@@ -26,7 +26,7 @@ fun AccountSettingsItem(state: AccountSettingsItemState) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = state.onItemClick)
-            .padding(12.dp),
+            .padding(vertical = 12.dp, horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

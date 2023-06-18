@@ -32,8 +32,8 @@ data class EthStats(
 )
 
 data class TokenStats(
-    val tokens: String,
-    val newTokens: String,
-    val tx: String,
-    val newTx: String,
+    val tokens: String?,
+    val newTokens: String?,
+    val tx: String?,
+    val newTx: String?,
 )

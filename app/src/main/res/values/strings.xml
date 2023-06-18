@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EthInspector</string>
+    <string name="app_name" translatable="false">EthInspector</string>
 
     <string name="en">English</string>
     <string name="tr">Turkish</string>
@@ -9,12 +9,12 @@
     <string name="save">Save</string>
     <string name="skip">Skip</string>
 
-    <string name="ethereum">Ethereum</string>
+    <string name="ethereum" translatable="false">Ethereum</string>
     <string name="percentage_with_value">%1$s%%</string>
-    <string name="usd_with_amount">\$%1$s USD</string>
-    <string name="eth_with_amount">%1$s ETH</string>
-    <string name="gwei_with_amount">%1$s Gwei</string>
-    <string name="wei_with_amount">%1$s Wei</string>
+    <string name="usd_with_amount" translatable="false">\$%1$s USD</string>
+    <string name="eth_with_amount" translatable="false">%1$s ETH</string>
+    <string name="gwei_with_amount" translatable="false">%1$s Gwei</string>
+    <string name="wei_with_amount" translatable="false">%1$s Wei</string>
     <string name="coin_circulation">Circulation</string>
     <string name="coin_market_cap">Market Cap</string>
     <string name="coin_dominance">Dominance</string>
@@ -99,6 +99,8 @@
     <string name="modal_address_title">Give your address a name</string>
     <string name="modal_address_hash">Address: %1$s</string>
 
+    <string name="theme_dark">Dark Theme</string>
+    <string name="theme_light">Light Theme</string>
     <string name="theme_select_title">Appearance</string>
     <string name="theme_select_description">Select the theme to be applied throughout the application.</string>
     <string name="language_select_title">Language</string>

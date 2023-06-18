@@ -16,18 +16,18 @@ fun mapEthStatsResponseToEthStats(
         val nftResponse = data.layer2?.erc_721
         val erc20Stats = erc20Response?.let {
             TokenStats(
-                erc20Response.tokens!!,
-                erc20Response.tokens_24h!!,
-                erc20Response.transactions!!,
-                erc20Response.transactions_24h!!,
+                erc20Response.tokens,
+                erc20Response.tokens_24h,
+                erc20Response.transactions,
+                erc20Response.transactions_24h,
             )
         }
         val nftStats = nftResponse?.let {
             TokenStats(
-                nftResponse.tokens!!,
-                nftResponse.tokens_24h!!,
-                nftResponse.transactions!!,
-                nftResponse.transactions_24h!!,
+                nftResponse.tokens,
+                nftResponse.tokens_24h,
+                nftResponse.transactions,
+                nftResponse.transactions_24h,
             )
         }
         val ethStats = EthStats(

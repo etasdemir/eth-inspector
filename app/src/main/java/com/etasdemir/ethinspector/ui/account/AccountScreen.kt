@@ -1,10 +1,12 @@
 package com.etasdemir.ethinspector.ui.account
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,6 +19,7 @@ import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItem
 import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItemState
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.components.radio_dialog.LanguageRadioDialog
+import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 
 private enum class AccountItem {
     THEME, LANGUAGE, TRANSACTION, BLOCK, INFO
@@ -25,7 +28,7 @@ private enum class AccountItem {
 @Composable
 @Preview
 fun AccountScreen(
-    accountViewModel: AccountViewModel = viewModel()
+    accountViewModel: SharedAccountViewModel = viewModel(LocalContext.current as ComponentActivity)
 ) {
     val userState by accountViewModel.userState.collectAsStateWithLifecycle()
     var isThemeDialogOpen by remember {
@@ -54,7 +57,11 @@ fun AccountScreen(
                 AccountItem.THEME -> {
                     isThemeDialogOpen = true
                 }
-                AccountItem.LANGUAGE -> {}
+
+                AccountItem.LANGUAGE -> {
+                    isLanguageDialogOpen = true
+                }
+
                 AccountItem.TRANSACTION -> {}
                 AccountItem.BLOCK -> {}
                 AccountItem.INFO -> {}
@@ -65,23 +72,30 @@ fun AccountScreen(
     Scaffold(topBar = {
         SimpleTopBar(title = stringResource(id = R.string.account_settings))
     }) {
-        if (isLanguageDialogOpen) LanguageRadioDialog(user = userState!!, saveUser = saveUser)
-        Column(modifier = Modifier
-            .padding(it)
-            .padding(top = 10.dp)) {
+        if (isLanguageDialogOpen) {
+            LanguageRadioDialog(
+                user = userState!!,
+                updateUser = saveUser,
+                onCancel = { isLanguageDialogOpen = false })
+        }
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .padding(top = 10.dp)
+        ) {
             AccountSettingsItem(
                 state = AccountSettingsItemState(
                     painterResource(id = R.drawable.nights_stay_24),
                     stringResource(id = R.string.account_settings_theme),
                     { onItemClick(AccountItem.THEME) },
-                    { FeintText(text = userState!!.theme.name) })
+                    { FeintText(text = userState!!.theme.getLocalizedName(LocalContext.current)) })
             )
             AccountSettingsItem(
                 state = AccountSettingsItemState(
                     painterResource(id = R.drawable.language_24),
                     stringResource(id = R.string.account_settings_lang),
                     { onItemClick(AccountItem.LANGUAGE) },
-                    { FeintText(text = userState!!.language.name) })
+                    { FeintText(text = userState!!.language.getLocalizedName(LocalContext.current)) })
             )
             AccountSettingsItem(
                 state = AccountSettingsItemState(

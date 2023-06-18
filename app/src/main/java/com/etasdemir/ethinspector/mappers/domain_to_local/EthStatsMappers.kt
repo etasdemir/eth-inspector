@@ -6,20 +6,24 @@ import com.etasdemir.ethinspector.data.local.entity.LocalTokenStats
 
 fun mapEthStatsToEntity(ethStats: EthStats, installationId: String): EthStatsEntity {
     val erc20Stats = ethStats.erc20Stats?.let {
-        LocalTokenStats(
-            it.tokens,
-            it.newTokens,
-            it.tx,
-            it.newTx,
-        )
+        return@let if (it.tokens != null && it.newTokens != null && it.tx != null && it.newTx != null) {
+            LocalTokenStats(
+                it.tokens,
+                it.newTokens,
+                it.tx,
+                it.newTx,
+            )
+        } else null
     }
     val nftStats = ethStats.nftStats?.let {
-        LocalTokenStats(
-            it.tokens,
-            it.newTokens,
-            it.tx,
-            it.newTx,
-        )
+        return@let if (it.tokens != null && it.newTokens != null && it.tx != null && it.newTx != null) {
+            LocalTokenStats(
+                it.tokens,
+                it.newTokens,
+                it.tx,
+                it.newTx,
+            )
+        } else null
     }
     return EthStatsEntity(
         installationId,

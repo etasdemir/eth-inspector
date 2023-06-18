@@ -1,18 +1,17 @@
 package com.etasdemir.ethinspector.ui.components.radio_dialog
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
+import com.etasdemir.ethinspector.EthInspectorApp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AvailableLanguages
 import com.etasdemir.ethinspector.data.domain_model.User
-import java.util.Locale as JavaLocale
+import com.etasdemir.ethinspector.utils.setAppLocale
 
 @Composable
-fun LanguageRadioDialog(user: User, saveUser: (User) -> Unit) {
+fun LanguageRadioDialog(user: User, updateUser: (User) -> Unit, onCancel: () -> Unit) {
     val context = LocalContext.current
     val systemDefaultStr = stringResource(id = R.string.system_default)
     val availableLanguages = AvailableLanguages.getAvailableLocalizedNames(context)
@@ -23,16 +22,18 @@ fun LanguageRadioDialog(user: User, saveUser: (User) -> Unit) {
             val newLanguage: AvailableLanguages
             if (index == items.lastIndex) {
                 user.useSystemLanguage = true
-                val systemLanguageCode = Locale.current.language
-                newLanguage = AvailableLanguages.getFromISOCode(systemLanguageCode)
+                val systemLanguageCode =
+                    (context.applicationContext as EthInspectorApp).systemLanguage
+                user.language = AvailableLanguages.getFromISOCode(systemLanguageCode)
                     ?: AvailableLanguages.English
+                newLanguage = user.language
             } else {
                 user.useSystemLanguage = false
                 user.language = AvailableLanguages.values()[index]
                 newLanguage = user.language
             }
-            context.setAppLocale(newLanguage.iso639Code)
-            saveUser(user)
+            context.setAppLocale(newLanguage.iso639Code, true)
+            updateUser(user)
         }
     }
 
@@ -42,17 +43,8 @@ fun LanguageRadioDialog(user: User, saveUser: (User) -> Unit) {
         items = items,
         defaultSelectedItemIndex = selectedIndex,
         onSuccess = onSuccess,
-        onCancel = {},
+        onCancel = onCancel,
     )
 
     RadioDialog(state = state)
-}
-
-fun Context.setAppLocale(language: String): Context {
-    val locale = JavaLocale(language)
-    JavaLocale.setDefault(locale)
-    val config = resources.configuration
-    config.setLocale(locale)
-    config.setLayoutDirection(locale)
-    return createConfigurationContext(config)
 }
