@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 data class UserEntity(
     @PrimaryKey val installationId: String,
     val theme: String,
-    val language: String
+    val useSystemTheme: Boolean,
+    val language: String,
+    val useSystemLanguage: Boolean
 )

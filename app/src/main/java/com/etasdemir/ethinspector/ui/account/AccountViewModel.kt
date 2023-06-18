@@ -25,10 +25,10 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun updateUser(newUser: User) {
+    fun saveUser(user: User) {
         viewModelScope.launch {
-            repository.updateUser(newUser)
-            _userState.value = newUser
+            repository.saveUser(user)
+            _userState.value = repository.getUser()
         }
     }
 }

@@ -19,18 +19,30 @@ import javax.inject.Singleton
 class Repository @Inject constructor(
     private val remoteRepository: RemoteRepository,
     private val localRepository: LocalRepository,
-    private val installation: Installation
+    installation: Installation
 ) {
 
     private val installationId = installation.id()
 
     suspend fun getUser(): User {
-        val userEntity = localRepository.getUser()
-        return User(installation.id(), AvailableThemes.Light, AvailableLanguages.English)
+        val userEntity = localRepository.getUser(installationId)
+        if (userEntity == null) {
+            val defaultUser = User(
+                installationId,
+                AvailableThemes.Dark,
+                true,
+                AvailableLanguages.English,
+                true
+            )
+            this.saveUser(defaultUser)
+            return defaultUser
+        }
+        return mapUserEntityToDomain(userEntity)!!
     }
 
-    suspend fun updateUser(newUser: User) {
-        // update or create user
+    suspend fun saveUser(user: User) {
+        val userEntity = mapUserToEntity(user)
+        localRepository.saveUser(userEntity)
     }
 
     suspend fun saveBlock(block: Block) {

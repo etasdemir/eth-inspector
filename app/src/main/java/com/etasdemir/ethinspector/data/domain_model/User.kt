@@ -5,13 +5,28 @@ import android.content.Context
 
 data class User(
     val installationId: String,
-    var theme: AvailableThemes = AvailableThemes.Light,
-    var language: AvailableLanguages = AvailableLanguages.Turkish
+    var theme: AvailableThemes,
+    var useSystemTheme: Boolean,
+    var language: AvailableLanguages,
+    var useSystemLanguage: Boolean
 )
 
 enum class AvailableThemes(val code: String) {
     Dark("dark"),
-    Light("light")
+    Light("light");
+
+    companion object {
+        fun getFromCode(code: String): AvailableThemes? {
+            val filtered = AvailableThemes.values().filter {
+                it.code == code
+            }
+            return if (filtered.size == 1) {
+                filtered.first()
+            } else {
+                null
+            }
+        }
+    }
 }
 
 @SuppressLint("DiscouragedApi")
@@ -39,6 +54,17 @@ enum class AvailableLanguages(val iso639Code: String) {
             return AvailableLanguages.values().map {
                 val resId = res.getIdentifier(it.iso639Code, "string", packageName)
                 context.getString(resId)
+            }
+        }
+
+        fun getFromISOCode(iso639Code: String): AvailableLanguages? {
+            val filtered = AvailableLanguages.values().filter {
+                it.iso639Code == iso639Code
+            }
+            return if (filtered.size == 1) {
+                filtered.first()
+            } else {
+                null
             }
         }
     }

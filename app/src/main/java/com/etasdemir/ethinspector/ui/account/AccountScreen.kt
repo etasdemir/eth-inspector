@@ -12,9 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.User
 import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItem
 import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItemState
 import com.etasdemir.ethinspector.ui.components.*
+import com.etasdemir.ethinspector.ui.components.radio_dialog.LanguageRadioDialog
 
 private enum class AccountItem {
     THEME, LANGUAGE, TRANSACTION, BLOCK, INFO
@@ -26,15 +28,32 @@ fun AccountScreen(
     accountViewModel: AccountViewModel = viewModel()
 ) {
     val userState by accountViewModel.userState.collectAsStateWithLifecycle()
+    var isThemeDialogOpen by remember {
+        mutableStateOf(false)
+    }
+    var isLanguageDialogOpen by remember {
+        mutableStateOf(false)
+    }
+
     if (userState == null) {
         accountViewModel.getUser()
         return
     }
 
+    val saveUser = remember {
+        { newUser: User ->
+            accountViewModel.saveUser(newUser)
+            isLanguageDialogOpen = false
+            isThemeDialogOpen = false
+        }
+    }
+
     val onItemClick = remember {
         { type: AccountItem ->
             when (type) {
-                AccountItem.THEME -> {}
+                AccountItem.THEME -> {
+                    isThemeDialogOpen = true
+                }
                 AccountItem.LANGUAGE -> {}
                 AccountItem.TRANSACTION -> {}
                 AccountItem.BLOCK -> {}
@@ -46,6 +65,7 @@ fun AccountScreen(
     Scaffold(topBar = {
         SimpleTopBar(title = stringResource(id = R.string.account_settings))
     }) {
+        if (isLanguageDialogOpen) LanguageRadioDialog(user = userState!!, saveUser = saveUser)
         Column(modifier = Modifier
             .padding(it)
             .padding(top = 10.dp)) {

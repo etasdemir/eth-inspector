@@ -103,5 +103,6 @@
     <string name="theme_select_description">Select the theme to be applied throughout the application.</string>
     <string name="language_select_title">Language</string>
     <string name="language_select_description">Select the language to be applied throughout the application.</string>
+    <string name="system_default">Use system default</string>
 
 </resources>

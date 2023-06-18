@@ -20,18 +20,9 @@ class LocalRepository @Inject constructor(
     private val installation: Installation
 ) {
 
-    suspend fun getUser(): UserEntity {
-        // TODO if user table empty create and return
-        return UserEntity(
-            installation.id(),
-            AvailableThemes.Light.name,
-            AvailableLanguages.English.name
-        )
-    }
+    suspend fun getUser(installationId: String): UserEntity? = userDao.getUser(installationId)
 
-    suspend fun saveUser(newUser: User) {
-
-    }
+    suspend fun saveUser(userEntity: UserEntity) = userDao.saveUser(userEntity)
 
     suspend fun saveEthStats(ethStats: EthStatsEntity) {
         ethStatsDao.saveEthStats(ethStats)
