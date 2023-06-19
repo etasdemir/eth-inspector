@@ -17,8 +17,8 @@ import timber.log.Timber
 @Composable
 fun WalletScreen() {
     val onWalletItemClick = remember {
-        {
-            Timber.e("on wallet item click")
+        { address: String ->
+            Timber.e("on wallet item click $address")
         }
     }
     // TODO delete later
@@ -29,13 +29,11 @@ fun WalletScreen() {
             "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
             29.077655,
             "34.253.19",
-            onWalletItemClick
         ),
         SavedWalletState(
             "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
             29.077655,
             "34.253.19",
-            onWalletItemClick
         )
     )
 
@@ -49,7 +47,7 @@ fun WalletScreen() {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(savedWallets) { wallet ->
-                    SavedWalletItem(state = wallet)
+                    SavedWalletItem(state = wallet, onItemClick = onWalletItemClick)
                 }
             }
         } else {
