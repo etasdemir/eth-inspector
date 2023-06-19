@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.theme.Negative
 import com.etasdemir.ethinspector.ui.theme.Positive
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.*
 import java.util.Locale
 import kotlin.math.abs
@@ -30,6 +32,12 @@ fun String.format(digits: Int): String {
     if (digits == 0) {
         return this.split('.')[0]
     }
+    var smallestAmount = "0."
+    for (i in 0 until  digits) {
+        smallestAmount += "0"
+    }
+    if (this < smallestAmount) return smallestAmount
+
     val delimiter = "."
     val parts = this.split(delimiter)
     val lastPart = parts.last().toCharArray()
@@ -54,15 +62,16 @@ fun String.clip(digits: Int): String {
 }
 
 @Composable
-fun ColoredAmountText(modifier: Modifier = Modifier, amount: Double, digits: Int = 5) {
-    val formattedNumber = remember { amount.format(digits) }
+fun ColoredAmountText(modifier: Modifier = Modifier, amount: BigDecimal, digits: Int = 5) {
+    val formattedNumber = remember { amount.setScale(digits, RoundingMode.HALF_DOWN) }
     val amountTextColor: Color?
     val amountText: String?
-    if (amount >= 0) {
-        amountText = "+$formattedNumber"
+    val res = amount.compareTo(BigDecimal.ZERO)
+    if (res == 0 || res == 1) {
+        amountText = "+${formattedNumber.toPlainString()}"
         amountTextColor = Positive
     } else {
-        amountText = "-$formattedNumber"
+        amountText = "-${formattedNumber.toPlainString()}"
         amountTextColor = Negative
     }
 

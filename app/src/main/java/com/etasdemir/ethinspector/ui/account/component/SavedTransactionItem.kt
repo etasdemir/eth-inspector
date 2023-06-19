@@ -15,6 +15,7 @@ import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.components.FeintText
 import com.etasdemir.ethinspector.utils.ColoredAmountText
 import com.etasdemir.ethinspector.utils.clip
+import java.math.BigDecimal
 
 data class SavedTransactionState(
     val transactionHash: String,
@@ -47,7 +48,7 @@ fun SavedTransactionItem(state: SavedTransactionState) {
                 color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 18.sp
             )
-            ColoredAmountText(amount = state.amount)
+            ColoredAmountText(amount = BigDecimal(state.amount), digits = 6)
         }
         Row(
             modifier = Modifier

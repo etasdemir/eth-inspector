@@ -28,7 +28,7 @@ fun AddressTransactionItem(state: AddressTransaction, onItemClick: (String) -> U
         state.transactionHash.clip(6)
     }
     val amountEth = remember {
-        state.amountWei.toString().fromWei(EthUnit.ETHER).toString().format(6).toDouble()
+        state.amountWei.toString().fromWei(EthUnit.ETHER)
     }
 
     Row(
@@ -57,7 +57,7 @@ fun AddressTransactionItem(state: AddressTransaction, onItemClick: (String) -> U
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 18.sp
                 )
-                ColoredAmountText(amount = amountEth)
+                ColoredAmountText(amount = amountEth, digits = 6)
             }
             Row(
                 modifier = Modifier

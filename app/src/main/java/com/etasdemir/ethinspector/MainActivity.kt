@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.etasdemir.ethinspector.ui.components.EthInspectorLanguage
+import com.etasdemir.ethinspector.ui.contract.ContractDetailScreen
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
 //                        TransactionDetailScreen()
 //                        BlockDetailScreen()
 //                        AddressDetailScreen()
-//                        ContractDetailScreen()
+                        ContractDetailScreen()
                     }
                 }
             }

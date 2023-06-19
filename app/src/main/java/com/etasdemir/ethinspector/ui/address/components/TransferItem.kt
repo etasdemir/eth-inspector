@@ -19,6 +19,7 @@ import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.ColoredAmountText
 import com.etasdemir.ethinspector.utils.clip
+import java.math.BigDecimal
 
 
 @Composable
@@ -54,7 +55,7 @@ fun TransferItem(state: AddressTransfer, onItemClick: (String) -> Unit) {
                         )
                     }
                 }
-                ColoredAmountText(amount = state.amount)
+                ColoredAmountText(amount = BigDecimal(state.amount), digits = 6)
             }
             CardRowItem(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
