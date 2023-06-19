@@ -50,7 +50,8 @@ class LocalRepository @Inject constructor(
     }
 
     @SuppressWarnings("WeakerAccess")
-    suspend fun saveAddressTokens(tokens: List<AddressTokenEntity>) = tokenDao.saveAddressTokens(tokens)
+    suspend fun saveAddressTokens(tokens: List<AddressTokenEntity>) =
+        tokenDao.saveAddressTokens(tokens)
 
     suspend fun getTokenTransfersByAddress(address: String) =
         tokenDao.getTokenTransfersByAddress(address)
@@ -72,4 +73,10 @@ class LocalRepository @Inject constructor(
         addressDao.saveTransfers(account.transfers)
         this.saveAddressTokens(account.tokens)
     }
+
+    suspend fun getFavouriteContractRelations(isFavourite: Boolean = true) =
+        addressDao.getFavouriteContractRelations(isFavourite)
+
+    suspend fun getFavouriteAccountRelations(isFavourite: Boolean = true) =
+        addressDao.getFavouriteAccountRelations(isFavourite)
 }

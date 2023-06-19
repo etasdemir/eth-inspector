@@ -100,4 +100,6 @@
     <string name="language_select_title">Dil</string>
     <string name="language_select_description">Uygulama boyunca uygulanacak dili seçin.</string>
     <string name="system_default">Sistem varsayılanını kullan</string>
+
+    <string name="address_type">Adres Tipi</string>
 </resources>

@@ -17,26 +17,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.utils.clip
-import com.etasdemir.ethinspector.utils.format
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class SavedWalletState(
+    val addressName: String?,
     val address: String,
-    val ethBalance: Double,
-    val usdBalance: String
+    val ethBalance: BigDecimal,
+    val usdBalance: String,
+    val addressType: AddressType
 )
 
 @Composable
-fun SavedWalletItem(state: SavedWalletState, onItemClick: (String) -> Unit) {
+fun SavedWalletItem(state: SavedWalletState, onItemClick: (String, AddressType) -> Unit) {
     val clippedAddress = remember {
         state.address.clip(12)
     }
+    val ethBalance = remember { state.ethBalance.setScale(6, RoundingMode.HALF_DOWN) }
     val balance =
         "${
             stringResource(
                 id = R.string.eth_with_amount,
-                state.ethBalance.format(5)
+                ethBalance.toPlainString()
             )
         } (${stringResource(id = R.string.usd_with_amount, state.usdBalance)})"
 
@@ -44,14 +49,26 @@ fun SavedWalletItem(state: SavedWalletState, onItemClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(30))
+            .clip(RoundedCornerShape(20))
             .background(MaterialTheme.colorScheme.primary)
-            .clickable(onClick = { onItemClick(state.address) })
-            .padding(vertical = 15.dp, horizontal = 12.dp),
+            .clickable(onClick = { onItemClick(state.address, state.addressType) })
+            .padding(vertical = 20.dp, horizontal = 15.dp),
         verticalAlignment = Alignment.CenterVertically
     )
     {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (state.addressName != null) {
+                Text(
+                    text = state.addressName,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            HorizontalItem(
+                text = stringResource(id = R.string.address_type),
+                value = state.addressType.name
+            )
             HorizontalItem(
                 text = stringResource(id = R.string.wallet_saved_address),
                 value = clippedAddress
@@ -67,11 +84,14 @@ fun SavedWalletItem(state: SavedWalletState, onItemClick: (String) -> Unit) {
 
 @Composable
 private fun HorizontalItem(text: String, value: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Text(
             modifier = Modifier.padding(end = 8.dp),
             text = text,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.secondary,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -87,9 +107,11 @@ private fun HorizontalItem(text: String, value: String) {
 @Preview
 fun SavedWalletItemPreview() {
     val state = SavedWalletState(
+        "My address",
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-        29.077655,
-        "34.253.19"
+        BigDecimal(29.077655),
+        "34.253.19",
+        AddressType.CONTRACT
     )
-    SavedWalletItem(state){}
+    SavedWalletItem(state) { _: String, _: AddressType -> }
 }

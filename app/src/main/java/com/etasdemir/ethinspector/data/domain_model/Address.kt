@@ -1,5 +1,8 @@
 package com.etasdemir.ethinspector.data.domain_model
 
+import com.etasdemir.ethinspector.data.local.entity.AccountRelationEntity
+import com.etasdemir.ethinspector.data.local.entity.ContractAndTransactionsRelationEntity
+
 data class AddressTransaction(
     val transactionHash: String?,
     val amountWei: Double,
@@ -20,3 +23,8 @@ data class AddressTransfer(
 enum class AddressType {
     CONTRACT, ACCOUNT
 }
+
+data class SavedAddresses(
+    val savedAccounts: List<AccountRelationEntity>,
+    val savedContracts: List<ContractAndTransactionsRelationEntity>
+)

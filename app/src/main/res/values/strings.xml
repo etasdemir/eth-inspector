@@ -107,4 +107,5 @@
     <string name="language_select_description">Select the language to be applied throughout the application.</string>
     <string name="system_default">Use system default</string>
 
+    <string name="address_type">Address Type</string>
 </resources>

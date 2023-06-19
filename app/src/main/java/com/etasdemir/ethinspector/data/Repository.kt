@@ -212,4 +212,10 @@ class Repository @Inject constructor(
             localRepository::saveTokenTransfers
         )
     }
+
+    suspend fun getSavedAddresses(): SavedAddresses {
+        val savedAccounts = localRepository.getFavouriteAccountRelations()
+        val savedContracts = localRepository.getFavouriteContractRelations()
+        return SavedAddresses(savedAccounts, savedContracts)
+    }
 }

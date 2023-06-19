@@ -9,9 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.etasdemir.ethinspector.ui.components.EthInspectorLanguage
-import com.etasdemir.ethinspector.ui.contract.ContractDetailScreen
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
+import com.etasdemir.ethinspector.ui.wallet.WalletScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,13 +31,13 @@ class MainActivity : ComponentActivity() {
                     ) {
 //                        HomeScreen()
 //                        InvalidSearchScreen()
-//                        WalletScreen()
+                        WalletScreen()
 //                        AccountScreen(sharedAccountViewModel)
 //                        SavedItemScreen(type = SavedItemScreen.TRANSACTION)
 //                        TransactionDetailScreen()
 //                        BlockDetailScreen()
 //                        AddressDetailScreen()
-                        ContractDetailScreen()
+//                        ContractDetailScreen()
                     }
                 }
             }

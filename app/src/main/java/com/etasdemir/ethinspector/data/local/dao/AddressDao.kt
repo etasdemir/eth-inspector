@@ -18,11 +18,19 @@ interface AddressDao {
 
     @Transaction
     @Query("SELECT * from account_info where accountAddress=:address")
-    suspend fun getAccountRelationByAddress(address: String): AccountRelationEntity
+    suspend fun getAccountRelationByAddress(address: String): AccountRelationEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAccountInfo(accountInfoEntity: AccountInfoEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveTransfers(addressTransfers: List<TransferEntity>)
+
+    @Transaction
+    @Query("SELECT * FROM contract_info WHERE isFavourite=:isFavourite")
+    suspend fun getFavouriteContractRelations(isFavourite: Boolean = true): List<ContractAndTransactionsRelationEntity>
+
+    @Transaction
+    @Query("SELECT * from account_info where isFavourite=:isFavourite")
+    suspend fun getFavouriteAccountRelations(isFavourite: Boolean = true): List<AccountRelationEntity>
 }
