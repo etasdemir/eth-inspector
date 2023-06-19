@@ -79,4 +79,10 @@ class LocalRepository @Inject constructor(
 
     suspend fun getFavouriteAccountRelations(isFavourite: Boolean = true) =
         addressDao.getFavouriteAccountRelations(isFavourite)
+
+    suspend fun getFavouriteTransactions(): List<TransactionEntity> =
+        transactionDao.getFavouriteTransactions()
+
+    suspend fun getFavouriteBlocks(): List<BlockAndTransactionsRelationEntity> =
+        blockDao.getFavouriteBlocks()
 }

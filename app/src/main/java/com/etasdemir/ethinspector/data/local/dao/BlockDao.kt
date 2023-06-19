@@ -16,4 +16,8 @@ interface BlockDao {
     @Query("SELECT * FROM block WHERE blockNumber=:blockNumber")
     suspend fun getBlockByNumber(blockNumber: Long): BlockAndTransactionsRelationEntity?
 
+    @Transaction
+    @Query("SELECT * FROM block WHERE isFavourite = 1")
+    suspend fun getFavouriteBlocks(): List<BlockAndTransactionsRelationEntity>
+
 }

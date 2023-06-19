@@ -17,6 +17,7 @@ import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.components.radio_dialog.LanguageRadioDialog
 import com.etasdemir.ethinspector.ui.components.radio_dialog.ThemeRadioDialog
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedItemType
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 
 private enum class AccountItem {
@@ -62,8 +63,12 @@ fun AccountScreen(
                     isLanguageDialogOpen = true
                 }
 
-                AccountItem.TRANSACTION -> {}
-                AccountItem.BLOCK -> {}
+                AccountItem.TRANSACTION -> {
+                    navigationHandler.navigateToSavedItem(SavedItemType.TRANSACTION)
+                }
+                AccountItem.BLOCK -> {
+                    navigationHandler.navigateToSavedItem(SavedItemType.BLOCK)
+                }
                 AccountItem.INFO -> {}
             }
         }

@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.ui.account.component
+package com.etasdemir.ethinspector.ui.saved_tx_and_block.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,29 +12,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.Transaction
 import com.etasdemir.ethinspector.ui.components.FeintText
-import com.etasdemir.ethinspector.utils.ColoredAmountText
-import com.etasdemir.ethinspector.utils.clip
+import com.etasdemir.ethinspector.utils.*
 import java.math.BigDecimal
 
-data class SavedTransactionState(
-    val transactionHash: String,
-    val amount: Double,
-    val block: String,
-    val date: String,
-    val time: String,
-    val onItemClick: () -> Unit
-)
-
 @Composable
-fun SavedTransactionItem(state: SavedTransactionState) {
+fun SavedTransactionItem(state: Transaction, onItemClick: () -> Unit) {
     val clippedTxHash = remember {
         state.transactionHash.clip(10)
     }
+    val convertedDate =
+        if (state.timestamp != null) getDateString(state.timestamp.toLong()) else null
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .clickable(onClick = state.onItemClick)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onItemClick)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,12 +58,13 @@ fun SavedTransactionItem(state: SavedTransactionState) {
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                FeintText(text = state.date)
-                FeintText(text = state.time)
+            if (convertedDate != null) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    FeintText(text = convertedDate)
+                }
             }
         }
         Divider(
@@ -82,12 +78,20 @@ fun SavedTransactionItem(state: SavedTransactionState) {
 @Composable
 @Preview
 fun SavedTransactionItemPreview() {
-    val state = SavedTransactionState(
+    val state = Transaction(
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
+        "1723891240123",
+        4123908123u,
         0.03253677751,
-        "2165403",
+        2165403.0,
         "2 Jan, 2018",
-        "12:54:11"
-    ) {}
-    SavedTransactionItem(state)
+        "12:54:11",
+        123908123.0,
+        123908123.0,
+        123908123.0,
+        1,
+        "123908",
+        true
+    )
+    SavedTransactionItem(state) {}
 }

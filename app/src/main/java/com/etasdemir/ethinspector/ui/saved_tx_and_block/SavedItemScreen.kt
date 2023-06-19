@@ -3,63 +3,67 @@ package com.etasdemir.ethinspector.ui.saved_tx_and_block
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.ui.account.component.*
 import com.etasdemir.ethinspector.ui.components.BackButton
 import com.etasdemir.ethinspector.ui.components.SimpleTopBar
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.components.SavedBlockItem
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.components.SavedTransactionItem
 import com.etasdemir.ethinspector.ui.theme.Feint
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 enum class SavedItemType {
     TRANSACTION, BLOCK
 }
 
 @Composable
-fun SavedItemScreen(type: SavedItemType, navigationHandler: NavigationHandler) {
-    val savedItems = listOf<Any>(
-        SavedTransactionState(
-            "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-            0.035412312,
-            "2165403",
-            "2 Jan, 2018",
-            "12:54:11"
-        ) {},
-        SavedTransactionState(
-            "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-            0.035412312,
-            "2165403",
-            "2 Jan, 2018",
-            "12:54:11"
-        ) {},
-        SavedTransactionState(
-            "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-            0.035412312,
-            "2165403",
-            "3 Jan, 2018",
-            "12:54:11"
-        ) {}
-    )
-
-    val topBarTitle: String?
-    if (type == SavedItemType.TRANSACTION) {
-        topBarTitle = stringResource(id = R.string.account_settings_saved_tx)
-        // TODO retrieve saved transaction entities
+fun SavedItemScreen(
+    type: SavedItemType,
+    navigationHandler: NavigationHandler,
+    viewModel: SavedItemViewModel = hiltViewModel()
+) {
+    val topBarTitle: String = if (type == SavedItemType.TRANSACTION) {
+        stringResource(id = R.string.account_settings_saved_tx)
     } else {
-        topBarTitle = stringResource(id = R.string.account_settings_saved_blocks)
-        // TODO retrieve saved block entities
+        stringResource(id = R.string.account_settings_saved_blocks)
     }
 
-    var lastRenderedDate = ""
+    val savedBlocksState by viewModel.savedBlocksState.collectAsStateWithLifecycle()
+    val savedTransactionsState by viewModel.savedTransactionsState.collectAsStateWithLifecycle()
+
+    val onItemClick = remember {
+        { arg: String ->
+            if (type == SavedItemType.TRANSACTION) {
+                navigationHandler.navigateToTransaction(arg)
+            } else {
+                navigationHandler.navigateToBlock(arg)
+            }
+        }
+    }
+
+    val simpleDateFormat = remember {
+        SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH)
+    }
+
+    LaunchedEffect(key1 = type) {
+        viewModel.getSavedItems(type)
+    }
+
+    var lastItemDate = ""
     Scaffold(topBar = {
         SimpleTopBar(
             title = topBarTitle,
@@ -72,28 +76,33 @@ fun SavedItemScreen(type: SavedItemType, navigationHandler: NavigationHandler) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         )
         {
-            items(savedItems.count()) { index: Int ->
-                val item = savedItems[index]
-                val date: String
-                if (type == SavedItemType.TRANSACTION) {
-                    item as SavedTransactionState
-                    date = item.date
-                    RenderDate(prevDate = lastRenderedDate, currentDate = date)
-                    SavedTransactionItem(state = item)
-                } else {
-                    item as SavedBlockState
-                    date = item.date
-                    RenderDate(prevDate = lastRenderedDate, currentDate = date)
-                    SavedBlockItem(state = item)
+            if (type == SavedItemType.TRANSACTION) {
+                items(savedTransactionsState) { item ->
+                    item.timestamp?.let { time ->
+                        val date = simpleDateFormat.format(time.toLong() * 1000L)
+                        GroupDateAsDaily(prevDate = lastItemDate, currentDate = date)
+                        lastItemDate = date
+                    }
+                    SavedTransactionItem(state = item) {
+                        onItemClick(item.transactionHash)
+                    }
                 }
-                lastRenderedDate = date
+            } else {
+                items(savedBlocksState) { item ->
+                    val date = simpleDateFormat.format(item.timestamp.toLong() * 1000L)
+                    GroupDateAsDaily(prevDate = lastItemDate, currentDate = date)
+                    SavedBlockItem(state = item) {
+                        onItemClick(item.blockNumber.toString())
+                    }
+                    lastItemDate = date
+                }
             }
         }
     }
 }
 
 @Composable
-private fun RenderDate(prevDate: String, currentDate: String) {
+private fun GroupDateAsDaily(prevDate: String, currentDate: String) {
     if (prevDate != currentDate) {
         Text(
             modifier = Modifier.padding(top = 15.dp),

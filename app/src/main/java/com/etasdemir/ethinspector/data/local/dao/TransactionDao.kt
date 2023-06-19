@@ -12,4 +12,6 @@ interface TransactionDao {
     @Query("SELECT * from `transaction` where transactionHash=:hash")
     suspend fun getTransactionByHash(hash: String): TransactionEntity
 
+    @Query("SELECT * from `transaction` where isFavourite = 1")
+    suspend fun getFavouriteTransactions(): List<TransactionEntity>
 }

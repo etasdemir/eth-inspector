@@ -236,4 +236,23 @@ class Repository @Inject constructor(
         val savedContracts = localRepository.getFavouriteContractRelations()
         return SavedAddresses(savedAccounts, savedContracts)
     }
+
+    suspend fun getFavouriteTransactions(): List<Transaction> {
+        val transactionEntities = localRepository.getFavouriteTransactions()
+        val transactions = arrayListOf<Transaction>()
+        transactionEntities.forEach {
+            transactions.add(mapTransactionEntityToTransaction(it))
+        }
+        return transactions
+    }
+
+    suspend fun getFavouriteBlocks(): List<Block> {
+        val blockEntities = localRepository.getFavouriteBlocks()
+        val blocks = arrayListOf<Block>()
+        blockEntities.forEach {
+            blocks.add(mapBlockEntityToBlock(it))
+        }
+        return blocks
+    }
+
 }

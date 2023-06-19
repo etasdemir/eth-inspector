@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.ui.account.component
+package com.etasdemir.ethinspector.ui.saved_tx_and_block.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,27 +12,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.data.domain_model.Block
 import com.etasdemir.ethinspector.ui.components.FeintText
 import com.etasdemir.ethinspector.utils.clip
-
-data class SavedBlockState(
-    val blockNumber: String,
-    val transactionCount: Int,
-    val minerAddress: String,
-    val date: String,
-    val time: String,
-    val onItemClick: () -> Unit
-)
+import com.etasdemir.ethinspector.utils.getDateString
 
 @Composable
-fun SavedBlockItem(state: SavedBlockState) {
+fun SavedBlockItem(state: Block, onItemClick: () -> Unit) {
     val clippedMinerAdr = remember {
         state.minerAddress.clip(6)
     }
+    val blockCreationDate = remember { getDateString(state.timestamp.toLong()) }
 
     Column(modifier = Modifier
         .fillMaxWidth()
-        .clickable(onClick = state.onItemClick)) {
+        .clickable(onClick = onItemClick)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -49,7 +43,7 @@ fun SavedBlockItem(state: SavedBlockState) {
             FeintText(
                 text = stringResource(
                     id = R.string.account_settings_tx_count,
-                    state.transactionCount
+                    state.txCount
                 )
             )
         }
@@ -66,8 +60,7 @@ fun SavedBlockItem(state: SavedBlockState) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                FeintText(text = state.date)
-                FeintText(text = state.time)
+                FeintText(text = blockCreationDate)
             }
         }
         Divider(
@@ -81,12 +74,16 @@ fun SavedBlockItem(state: SavedBlockState) {
 @Preview
 @Composable
 fun SavedBlockItemPreview() {
-    val state = SavedBlockState(
-        "2165403",
-        341,
+    val state = Block(
+        2165403u,
+        "123124123123",
+        10230,
         "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
-        "2 Jan, 2018",
-        "12:54:11"
-    ) {}
-    SavedBlockItem(state)
+        1245123123u,
+        12314212u,
+        123123131u,
+        emptyList(),
+        true
+    )
+    SavedBlockItem(state) {}
 }
