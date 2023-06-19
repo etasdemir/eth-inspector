@@ -26,7 +26,10 @@ class NavigationHandler(
     }
 
     fun navigateToHome() {
-        navHostController.navigate(NavigationRoute.Home.root)
+        navHostController.navigate(NavigationRoute.Home.root) {
+            popUpTo(NavigationRoute.Home.route)
+            launchSingleTop = true
+        }
     }
 
     fun navigateToInvalidSearch(searchedValue: String) {
@@ -34,15 +37,23 @@ class NavigationHandler(
             NavigationRoute.InvalidSearch.withArgs(
                 searchedValue
             )
-        )
+        ) {
+            launchSingleTop = true
+        }
     }
 
-    fun navigateToWallet() {
-        navHostController.navigate(NavigationRoute.Wallet.root)
+    fun navigateToWallet(shouldUpdate: Boolean) {
+        navHostController.navigate(NavigationRoute.Wallet.withArgs(shouldUpdate.toString())) {
+            popUpTo(NavigationRoute.Wallet.route)
+            launchSingleTop = true
+        }
     }
 
     fun navigateToProfile() {
-        navHostController.navigate(NavigationRoute.Profile.root)
+        navHostController.navigate(NavigationRoute.Profile.root) {
+            popUpTo(NavigationRoute.Profile.route)
+            launchSingleTop = true
+        }
     }
 
     fun navigateToSavedItem(type: SavedItemType) {
@@ -50,7 +61,9 @@ class NavigationHandler(
             NavigationRoute.SavedItem.withArgs(
                 type.name
             )
-        )
+        ) {
+            launchSingleTop = true
+        }
     }
 
     fun navigateToTransaction(txHash: String) {
@@ -58,7 +71,9 @@ class NavigationHandler(
             NavigationRoute.Transaction.withArgs(
                 txHash
             )
-        )
+        ) {
+            launchSingleTop = true
+        }
     }
 
     fun navigateToBlock(blockNumber: String) {
@@ -66,7 +81,9 @@ class NavigationHandler(
             NavigationRoute.Block.withArgs(
                 blockNumber
             )
-        )
+        ) {
+            launchSingleTop = true
+        }
     }
 
     fun navigateToAccount(accountAddress: String) {
@@ -74,7 +91,9 @@ class NavigationHandler(
             NavigationRoute.Account.withArgs(
                 accountAddress
             )
-        )
+        ) {
+            launchSingleTop = true
+        }
     }
 
     fun navigateToContract(contractAddress: String) {
@@ -82,7 +101,9 @@ class NavigationHandler(
             NavigationRoute.Contract.withArgs(
                 contractAddress
             )
-        )
+        ) {
+            launchSingleTop = true
+        }
     }
 
 }

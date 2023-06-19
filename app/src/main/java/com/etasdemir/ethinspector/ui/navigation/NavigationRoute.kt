@@ -15,7 +15,9 @@ sealed class NavigationRoute(val root: String) {
     }
 
     object Wallet : NavigationRoute("wallet") {
-        val route = addArgsToRoot(root)
+        const val shouldUpdate = "shouldUpdate"
+
+        val route = addArgsToRoot(root, shouldUpdate)
     }
 
     object Profile : NavigationRoute("profile") {

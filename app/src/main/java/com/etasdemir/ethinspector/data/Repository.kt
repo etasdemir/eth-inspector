@@ -141,7 +141,10 @@ class Repository @Inject constructor(
             ::mapBlockResponseToBlock,
             ::mapBlockEntityToBlock,
             ::mapBlockToBlockEntity
-        )
+        ) { old, new ->
+            val blockEntity = new.blockEntity.copy(isFavourite = old.blockEntity.isFavourite)
+            new.copy(blockEntity = blockEntity)
+        }
         return cacheStrategy.execute(
             {
                 remoteRepository.getBlockInfoByNumber(blockNumber, getTransactionsAsObject)
@@ -160,7 +163,9 @@ class Repository @Inject constructor(
             ::mapTransactionResponseToTransaction,
             ::mapTransactionEntityToTransaction,
             ::mapTransactionToTransactionEntity
-        )
+        ) { old, new ->
+            new.copy(isFavourite = old.isFavourite)
+        }
         return cacheStrategy.execute(
             { remoteRepository.getTransactionByHash(transactionHash) },
             { localRepository.getTransactionByHash(transactionHash) },
@@ -173,7 +178,13 @@ class Repository @Inject constructor(
             { mapAccountResponseToAccount(it, addressHash) },
             ::mapAccountRelationToAccount,
             ::mapAccountToAccountRelation
-        )
+        ) { old, new ->
+            val accountInfo = new.accountInfo.copy(
+                isFavourite = old.accountInfo.isFavourite,
+                userGivenName = old.accountInfo.userGivenName
+            )
+            new.copy(accountInfo = accountInfo)
+        }
         val account = cacheStrategy.execute(
             { remoteRepository.getAccountInfoByHash(addressHash) },
             { localRepository.getAccountRelationByAddress(addressHash) },
@@ -191,7 +202,13 @@ class Repository @Inject constructor(
             { mapContractResponseToContract(it, addressHash) },
             ::mapContractRelationToContract,
             ::mapContractToContractRelation,
-        )
+        ) { old, new ->
+            val contractInfo = new.contractInfoEntity.copy(
+                isFavourite = old.contractInfoEntity.isFavourite,
+                userGivenName = old.contractInfoEntity.userGivenName
+            )
+            new.copy(contractInfoEntity = contractInfo)
+        }
         return cacheStrategy.execute(
             { remoteRepository.getContractInfoByHash(addressHash) },
             { localRepository.getContractRelationByAddress(addressHash) },
@@ -204,7 +221,8 @@ class Repository @Inject constructor(
         val cacheStrategy = LocalFirstStrategy(
             ::mapTokenTransfersResponseToTokenTransfers,
             ::mapTokenTransferEntityToDomain,
-            ::mapTokenTransfersToEntity
+            ::mapTokenTransfersToEntity,
+            null
         )
         return cacheStrategy.execute(
             { remoteRepository.getERC20TokenTransfers(addressHash) },

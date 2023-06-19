@@ -39,7 +39,7 @@ fun BottomBar(
         BottomNavItem(
             stringResource(id = R.string.bottom_bar_wallet),
             NavigationRoute.Wallet.route,
-            navHandler::navigateToWallet,
+            { navHandler.navigateToWallet(true) },
             painterResource(id = R.drawable.bottom_bar_wallet_36)
         ),
         BottomNavItem(

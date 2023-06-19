@@ -24,6 +24,7 @@ import com.etasdemir.ethinspector.utils.fromWei
 fun WalletScreen(
     navigationHandler: NavigationHandler,
     bottomBar: @Composable () -> Unit,
+    shouldUpdate: Boolean,
     walletViewModel: WalletViewModel = hiltViewModel()
 ) {
     val savedAddressesState by walletViewModel.savedAddresses.collectAsStateWithLifecycle()
@@ -42,7 +43,7 @@ fun WalletScreen(
         }
     }
 
-    LaunchedEffect(key1 = savedAddressesState) {
+    if (savedAddressesState == null || shouldUpdate) {
         walletViewModel.getSavedAddresses()
     }
 
@@ -94,5 +95,5 @@ private fun WalletScreenPreview() {
     val navHandler = NavigationHandler(testController)
     WalletScreen(navHandler, {
         BottomBar(navController = testController, navHandler = navHandler)
-    })
+    }, true)
 }

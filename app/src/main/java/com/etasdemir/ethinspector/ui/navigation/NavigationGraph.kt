@@ -42,8 +42,16 @@ fun NavigationGraph(
             InvalidSearchScreen(searchedValue!!, navigationHandler)
         }
 
-        composable(NavigationRoute.Wallet.route) {
-            WalletScreen(navigationHandler, bottomBar)
+        composable(
+            NavigationRoute.Wallet.route,
+            arguments = listOf(navArgument(NavigationRoute.Wallet.shouldUpdate) {
+                type = NavType.BoolType
+                defaultValue = false
+            })
+        ) {
+            val args = it.arguments
+            val shouldUpdate = args?.getBoolean(NavigationRoute.Wallet.shouldUpdate) ?: false
+            WalletScreen(navigationHandler, bottomBar, shouldUpdate)
         }
 
         composable(NavigationRoute.Profile.route) {
