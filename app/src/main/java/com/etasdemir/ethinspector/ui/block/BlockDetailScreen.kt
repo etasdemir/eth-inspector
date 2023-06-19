@@ -9,23 +9,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.block.components.BlockInfoCard
 import com.etasdemir.ethinspector.ui.block.components.BlockTransactionItem
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import com.etasdemir.ethinspector.ui.theme.Feint
 import timber.log.Timber
 
 @Composable
-@Preview
-fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
-    val blockNumberFromArgs = "17372699"
+fun BlockDetailScreen(
+    blockNumber: String,
+    navigationHandler: NavigationHandler,
+    blockViewModel: BlockDetailViewModel = hiltViewModel()
+) {
     val topBarTitle = stringResource(id = R.string.block_details)
 
     val blockState by blockViewModel.blockState.collectAsStateWithLifecycle()
@@ -33,25 +35,26 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
 
     LaunchedEffect(key1 = "initialize_block_detail") {
         blockViewModel.apply {
-            initialize(blockNumberFromArgs, topBarTitle)
-            getBlockDetailByNumber(blockNumberFromArgs)
+            initialize(blockNumber, topBarTitle)
+            getBlockDetailByNumber(blockNumber)
         }
     }
 
     val onTransactionClick = remember {
         { txHash: String ->
-            Timber.e("navigate to tx detail: $txHash")
+            navigationHandler.navigateToTransaction(txHash)
         }
     }
 
 
     if (blockState is UIResponseState.Loading) {
         // Show loading
-        Timber.e("BlockDetailScreen: Loading transaction detail screen")
+        Timber.e("BlockDetailScreen: Loading block detail screen")
         return
     }
     if (blockState is UIResponseState.Error) {
         Timber.e("BlockDetailScreen: Error ${blockState.errorMessage}")
+        navigationHandler.popBackStack()
         return
     }
     if (blockState is UIResponseState.Success && blockState.data == null) {
@@ -59,7 +62,12 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
         return
     }
 
-    Scaffold(topBar = { DetailTopBar(state = topBarState!!) }) {
+    Scaffold(topBar = {
+        DetailTopBar(
+            state = topBarState!!,
+            navigateBack = navigationHandler::popBackStack
+        )
+    }) {
         LazyColumn(
             modifier = Modifier
                 .padding(it)
@@ -68,7 +76,7 @@ fun BlockDetailScreen(blockViewModel: BlockDetailViewModel = viewModel()) {
                 .padding(20.dp)
         ) {
             item(3) {
-                BlockInfoCard(blockState.data!!)
+                BlockInfoCard(blockState.data!!, navigationHandler::navigateToAccount)
                 Text(
                     modifier = Modifier.padding(top = 40.dp),
                     text = stringResource(id = R.string.block_transactions),

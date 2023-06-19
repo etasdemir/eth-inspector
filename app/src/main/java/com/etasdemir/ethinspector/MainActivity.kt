@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.etasdemir.ethinspector.ui.components.EthInspectorLanguage
+import com.etasdemir.ethinspector.ui.navigation.NavigationGraph
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 import com.etasdemir.ethinspector.ui.theme.EthInspectorTheme
-import com.etasdemir.ethinspector.ui.wallet.WalletScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,15 +30,11 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-//                        HomeScreen()
-//                        InvalidSearchScreen()
-                        WalletScreen()
-//                        AccountScreen(sharedAccountViewModel)
-//                        SavedItemScreen(type = SavedItemScreen.TRANSACTION)
-//                        TransactionDetailScreen()
-//                        BlockDetailScreen()
-//                        AddressDetailScreen()
-//                        ContractDetailScreen()
+                        val navHostController = rememberNavController()
+                        NavigationGraph(
+                            navController = navHostController,
+                            sharedAccountViewModel
+                        )
                     }
                 }
             }

@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.ui.wallet
+package com.etasdemir.ethinspector.ui.saved_tx_and_block
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,7 +36,7 @@ fun SavedWalletItem(state: SavedWalletState, onItemClick: (String, AddressType) 
     val clippedAddress = remember {
         state.address.clip(12)
     }
-    val ethBalance = remember { state.ethBalance.setScale(6, RoundingMode.HALF_DOWN) }
+    val ethBalance = remember { state.ethBalance.setScale(6, RoundingMode.UP) }
     val balance =
         "${
             stringResource(

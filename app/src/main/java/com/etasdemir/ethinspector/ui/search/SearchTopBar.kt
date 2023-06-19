@@ -15,11 +15,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.data.domain_model.SearchType
+import com.etasdemir.ethinspector.data.domain_model.*
 import com.etasdemir.ethinspector.ui.UIResponseState
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import timber.log.Timber
 
 @Composable
@@ -27,11 +29,15 @@ fun SearchTopBar(
     uneditableText: String? = null,
     onButtonClick: ((searchText: String) -> Unit)? = null,
     searchIcon: ImageVector,
-    searchViewModel: SearchViewModel = viewModel()
+    navigationHandler: NavigationHandler,
+    searchViewModel: SearchViewModel = hiltViewModel()
 ) {
     var searchText by remember { mutableStateOf("") }
     val isSearchEnabled = uneditableText == null
-    val searchResultPair by searchViewModel.searchResult.collectAsStateWithLifecycle()
+    val searchResultPairState by searchViewModel.searchResult.collectAsStateWithLifecycle()
+    var isSearching by remember {
+        mutableStateOf(false)
+    }
 
     val onTextChange = remember {
         { newText: String ->
@@ -41,53 +47,57 @@ fun SearchTopBar(
 
     val onSearchButtonClick = remember {
         {
-            if (isSearchEnabled) {
-                if (searchResultPair == null) {
+            if (isSearchEnabled && searchText.length > 2) {
+                if (searchResultPairState == null) {
+                    isSearching = true
                     searchViewModel.searchText(searchText)
                 }
             } else {
                 searchText = ""
-                Timber.e("Navigate to home")
-                // Navigate to home
+                navigationHandler.navigateToHome()
             }
         }
     }
 
-    if (searchResultPair != null) {
-        if (searchResultPair!!.second is UIResponseState.Success) {
-            val response = searchResultPair!!.second.data
-            when (searchResultPair!!.first) {
-                SearchType.TRANSACTION -> {
-                    Timber.e("TRANSACTION result: $response")
-                    // Navigate to transaction with type casted data
-                }
+    LaunchedEffect(key1 = searchResultPairState) {
+        if (searchResultPairState != null) {
+            isSearching = false
+            val response = searchResultPairState?.second
+            val data = searchResultPairState?.second?.data
 
-                SearchType.ACCOUNT -> {
-                    Timber.e("ACCOUNT result: $response")
-                    // Navigate to account with type casted data
-                }
+            if (response is UIResponseState.Success && data != null) {
+                when (searchResultPairState!!.first) {
+                    SearchType.TRANSACTION -> {
+                        val txHash = (data as Transaction).transactionHash
+                        navigationHandler.navigateToTransaction(txHash)
+                    }
 
-                SearchType.CONTRACT -> {
-                    Timber.e("CONTRACT result: $response")
-                    // Navigate to contract with type casted data
-                }
+                    SearchType.ACCOUNT -> {
+                        val accountAddress = (data as Account).accountInfo.accountAddress
+                        navigationHandler.navigateToAccount(accountAddress)
+                    }
 
-                SearchType.BLOCK -> {
-                    Timber.e("BLOCK result: $response")
-                    // Navigate to block with type casted data
-                }
+                    SearchType.CONTRACT -> {
+                        val contractAddress = (data as Contract).contractInfo.contractAddress
+                        navigationHandler.navigateToContract(contractAddress)
+                    }
 
-                else -> {
-                    Timber.e("Invalid search")
-                    // Navigate to invalid search screen
+                    SearchType.BLOCK -> {
+                        val blockNumber = (data as Block).blockNumber
+                        navigationHandler.navigateToBlock(blockNumber.toString())
+                    }
+
+                    else -> {
+                        navigationHandler.navigateToInvalidSearch(searchText)
+                    }
                 }
+            } else if (searchResultPairState?.second is UIResponseState.Error) {
+                val errorMessage = searchResultPairState!!.second.errorMessage
+                Timber.e("Error response: $errorMessage")
+                navigationHandler.navigateToInvalidSearch(searchText)
             }
-        } else if (searchResultPair?.second is UIResponseState.Error) {
-            val errorMessage = searchResultPair!!.second.errorMessage
-            Timber.e("Error response: $errorMessage")
-            // Navigate to invalid search screen
+            searchViewModel.resetSearchResult()
         }
-        searchViewModel.resetSearchResult()
     }
 
     Row(
@@ -136,6 +146,7 @@ fun SearchTopBar(
                     onButtonClick(searchText)
                 }
             },
+            enabled = !isSearching,
             colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(
@@ -154,10 +165,15 @@ fun SearchTopBarPreview() {
     val text = "Some wrong address"
     val searchIcon = remember { Icons.Filled.Search }
     val closeIcon = remember { Icons.Filled.Close }
+    val testController = rememberNavController()
 
     Column {
-        SearchTopBar(onButtonClick = click, searchIcon = searchIcon)
+        SearchTopBar(
+            onButtonClick = click,
+            searchIcon = searchIcon,
+            navigationHandler = NavigationHandler(testController)
+        )
         Divider(Modifier.height(10.dp))
-        SearchTopBar(text, click, closeIcon)
+        SearchTopBar(text, click, closeIcon, navigationHandler = NavigationHandler(testController))
     }
 }

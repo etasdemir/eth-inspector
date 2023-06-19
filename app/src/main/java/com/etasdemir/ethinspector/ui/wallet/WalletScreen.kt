@@ -9,18 +9,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.components.SimpleTopBar
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedWalletItem
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedWalletState
 import com.etasdemir.ethinspector.utils.EthUnit
 import com.etasdemir.ethinspector.utils.fromWei
-import timber.log.Timber
 
 @Composable
 fun WalletScreen(
-    walletViewModel: WalletViewModel = viewModel()
+    navigationHandler: NavigationHandler,
+    walletViewModel: WalletViewModel = hiltViewModel()
 ) {
     val savedAddressesState by walletViewModel.savedAddresses.collectAsStateWithLifecycle()
     val isAnyAddressSaved =
@@ -30,7 +34,11 @@ fun WalletScreen(
 
     val onWalletItemClick = remember {
         { address: String, addressType: AddressType ->
-            Timber.e("on wallet item click $address type: $addressType")
+            if (addressType == AddressType.CONTRACT) {
+                navigationHandler.navigateToContract(address)
+            } else if (addressType == AddressType.ACCOUNT) {
+                navigationHandler.navigateToAccount(address)
+            }
         }
     }
 
@@ -75,5 +83,6 @@ fun WalletScreen(
 @Composable
 @Preview
 fun WalletScreenPreview() {
-    WalletScreen()
+    val testController = rememberNavController()
+    WalletScreen(NavigationHandler(testController))
 }

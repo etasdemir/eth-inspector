@@ -9,24 +9,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.*
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import timber.log.Timber
 
 @Composable
-@Preview
 fun AddressDetailScreen(
-    addressViewModel: AddressDetailViewModel = viewModel()
+    address: String,
+    navigationHandler: NavigationHandler,
+    addressViewModel: AddressDetailViewModel = hiltViewModel(),
 ) {
-    // TODO static data
-    val address = "0x31A47094C6325D357c7331c621d6768Ba041916e"
     val topBarTitle = stringResource(id = R.string.address_details)
 
     val topBarState by addressViewModel.topBarState.collectAsStateWithLifecycle()
@@ -41,13 +40,13 @@ fun AddressDetailScreen(
 
     val onTransactionItemClick = remember {
         { txHash: String ->
-            Timber.e("navigate to transaction detail with $txHash")
+            navigationHandler.navigateToTransaction(txHash)
         }
     }
 
     val onTokenItemClick = remember {
         { address: String ->
-            Timber.e("navigate to token detail with $address")
+            navigationHandler.navigateToContract(address)
         }
     }
 
@@ -58,11 +57,12 @@ fun AddressDetailScreen(
 
     if (addressState is UIResponseState.Loading) {
         // Show loading
-        Timber.e("AddressDetailScreen: Loading transaction detail screen")
+        Timber.e("AddressDetailScreen: Loading address detail screen")
         return
     }
     if (addressState is UIResponseState.Error) {
         Timber.e("AddressDetailScreen: Error ${addressState.errorMessage}")
+        navigationHandler.popBackStack()
         return
     }
     if (addressState is UIResponseState.Success && addressState.data == null) {
@@ -74,7 +74,8 @@ fun AddressDetailScreen(
     Scaffold(topBar = {
         if (topBarState != null) {
             DetailTopBar(
-                state = topBarState!!
+                state = topBarState!!,
+                navigateBack = navigationHandler::popBackStack
             )
         }
     }) {
@@ -87,12 +88,16 @@ fun AddressDetailScreen(
         ) {
             item {
                 AddressInfoColumn(address, data.accountInfo)
-                Text(
-                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                    text = stringResource(id = R.string.tokens),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    style = MaterialTheme.typography.titleLarge
-                )
+            }
+            item {
+                if (data.addressTokens.isNotEmpty()) {
+                    Text(
+                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                        text = stringResource(id = R.string.tokens),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
             items(data.addressTokens) { token ->
                 TokenItem(state = token, onTokenItemClick)
@@ -103,12 +108,14 @@ fun AddressDetailScreen(
                 )
             }
             item {
-                Text(
-                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                    text = stringResource(id = R.string.transactions),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    style = MaterialTheme.typography.titleLarge
-                )
+                if (data.transactions.isNotEmpty()) {
+                    Text(
+                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                        text = stringResource(id = R.string.transactions),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
             items(data.transactions) { item ->
                 if (item.transactionHash != null) {
@@ -121,12 +128,14 @@ fun AddressDetailScreen(
                 }
             }
             item {
-                Text(
-                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                    text = stringResource(id = R.string.transfers),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    style = MaterialTheme.typography.titleLarge
-                )
+                if (data.transfers.isNotEmpty()) {
+                    Text(
+                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                        text = stringResource(id = R.string.transfers),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
             items(data.transfers) { transfer ->
                 TransferItem(state = transfer, onTransferItemClick)

@@ -16,16 +16,9 @@ import com.etasdemir.ethinspector.data.domain_model.Transaction
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.utils.format
 import com.etasdemir.ethinspector.utils.toPlainString
-import timber.log.Timber
 
 @Composable
-fun TransactionDetailCard(transaction: Transaction) {
-    val onAddressClick = remember {
-        { address: String ->
-            Timber.e("navigate to address screen $address")
-        }
-    }
-
+fun TransactionDetailCard(transaction: Transaction, onAddressClick: (address: String) -> Unit) {
     val gasPriceStr = remember {
         transaction.gasPrice.toPlainString().format(6)
     }
@@ -102,5 +95,5 @@ fun TransactionDetailCardPreview() {
         2,
         "40351"
     )
-    TransactionDetailCard(state)
+    TransactionDetailCard(state) {}
 }

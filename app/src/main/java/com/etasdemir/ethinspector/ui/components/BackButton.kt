@@ -11,10 +11,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BackButton() {
+fun BackButton(navigateBack: () -> Unit) {
     val onBackClick = remember {
         {
-            // TODO navigation pop
+            navigateBack()
         }
     }
 
@@ -31,5 +31,5 @@ fun BackButton() {
 @Composable
 @Preview
 fun BackButtonPreview() {
-    BackButton()
+    BackButton(){}
 }

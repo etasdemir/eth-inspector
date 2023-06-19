@@ -14,16 +14,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AvailableThemes
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import com.etasdemir.ethinspector.ui.theme.LocalTheme
 
 @Composable
-fun InvalidSearchScreen() {
+fun InvalidSearchScreen(
+    searchedValue: String,
+    navigationHandler: NavigationHandler
+) {
     val searchIcon = remember { Icons.Filled.Close }
-    // TODO Take from args
-    val searchedValue = "Some wrong address"
-
     val isDarkTheme = LocalTheme.current == AvailableThemes.Dark
     val searchNotFoundImg = remember {
         if (isDarkTheme)
@@ -32,7 +34,13 @@ fun InvalidSearchScreen() {
             R.drawable.search_not_found_light
     }
 
-    Scaffold(topBar = { SearchTopBar(searchedValue, searchIcon = searchIcon) }) {
+    Scaffold(topBar = {
+        SearchTopBar(
+            uneditableText = searchedValue,
+            searchIcon = searchIcon,
+            navigationHandler = navigationHandler
+        )
+    }) {
         Column(modifier = Modifier.padding(it)) {
             Image(
                 modifier = Modifier.fillMaxWidth(),
@@ -60,5 +68,6 @@ fun InvalidSearchScreen() {
 @Preview
 @Composable
 fun InvalidSearchScreenPreview() {
-    InvalidSearchScreen()
+    val testHost = rememberNavController()
+    InvalidSearchScreen("Some wrong address", NavigationHandler(testHost))
 }

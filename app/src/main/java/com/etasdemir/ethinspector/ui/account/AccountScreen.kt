@@ -16,6 +16,7 @@ import com.etasdemir.ethinspector.ui.account.component.AccountSettingsItemState
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.components.radio_dialog.LanguageRadioDialog
 import com.etasdemir.ethinspector.ui.components.radio_dialog.ThemeRadioDialog
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 
 private enum class AccountItem {
@@ -24,7 +25,8 @@ private enum class AccountItem {
 
 @Composable
 fun AccountScreen(
-    accountViewModel: SharedAccountViewModel
+    accountViewModel: SharedAccountViewModel,
+    navigationHandler: NavigationHandler
 ) {
     val userState by accountViewModel.userState.collectAsState(initial = null)
 

@@ -15,5 +15,5 @@ data class CallResponse (
     val value: Double,
     @Json(name = "value_usd")
     val valueUsd: Double?,
-    val transferred: Boolean,
+    val transferred: Boolean?,
 )

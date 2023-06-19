@@ -10,12 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.TokenStats
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.home.components.*
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import com.etasdemir.ethinspector.ui.search.SearchTopBar
 import timber.log.Timber
 
@@ -30,7 +31,8 @@ data class EthStatsState(
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = viewModel()
+    navigationHandler: NavigationHandler,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollState: ScrollState = rememberScrollState(0)
     val searchIcon = remember { Icons.Filled.Search }
@@ -42,7 +44,7 @@ fun HomeScreen(
 
     if (ethStats is UIResponseState.Loading) {
         // Show loading
-        Timber.e("HomeScreen: Loading transaction detail screen")
+        Timber.e("HomeScreen: Loading home screen")
         return
     }
     if (ethStats is UIResponseState.Error) {
@@ -57,7 +59,7 @@ fun HomeScreen(
     val ethStatsState = homeViewModel.mapEthStatsToState(stats)
 
     Scaffold(topBar = {
-        SearchTopBar(searchIcon = searchIcon)
+        SearchTopBar(searchIcon = searchIcon, navigationHandler = navigationHandler)
     }) { padding ->
         Column(
             modifier = Modifier

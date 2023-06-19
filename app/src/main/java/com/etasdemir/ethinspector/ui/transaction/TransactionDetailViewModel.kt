@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.domain_model.Transaction
+import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionDetailViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val remoteRepository: RemoteRepository
 ) : ViewModel() {
 
     private val _transactionState =
@@ -42,6 +44,8 @@ class TransactionDetailViewModel @Inject constructor(
             changeTopBarFavouriteState(mappedUIResponse.data?.isFavourite ?: false)
         }
     }
+
+    suspend fun isAddressContract(address: String) = remoteRepository.isAddressContract(address)
 
     private fun onFavouriteChange(previous: Boolean, now: Boolean) {
         val transaction = transactionState.value.data

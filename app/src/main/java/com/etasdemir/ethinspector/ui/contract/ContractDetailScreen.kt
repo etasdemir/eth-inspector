@@ -8,24 +8,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumn
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import timber.log.Timber
 
 @Composable
-@Preview
 fun ContractDetailScreen(
-    contractViewModel: ContractDetailViewModel = viewModel()
+    address: String,
+    navigationHandler: NavigationHandler,
+    contractViewModel: ContractDetailViewModel = hiltViewModel()
 ) {
-    // TODO static data
-    val address = "0x388C818CA8B9251b393131C08a736A67ccB19297"
     val topBarTitle = stringResource(id = R.string.contract_details)
 
     val topBarState by contractViewModel.topBarState.collectAsStateWithLifecycle()
@@ -34,7 +33,7 @@ fun ContractDetailScreen(
 
     val onTransactionClick = remember {
         { txHash: String ->
-            Timber.e("navigate to transaction: $txHash")
+            navigationHandler.navigateToTransaction(txHash)
         }
     }
 
@@ -45,11 +44,12 @@ fun ContractDetailScreen(
 
     if (contractState is UIResponseState.Loading) {
         // Show loading
-        Timber.e("ContractDetailScreen: Loading transaction detail screen")
+        Timber.e("ContractDetailScreen: Loading contract detail screen")
         return
     }
     if (contractState is UIResponseState.Error) {
         Timber.e("ContractDetailScreen: Error ${contractState.errorMessage}")
+        navigationHandler.popBackStack()
         return
     }
     if (contractState is UIResponseState.Success && contractState.data == null) {
@@ -62,7 +62,8 @@ fun ContractDetailScreen(
     Scaffold(topBar = {
         if (topBarState != null) {
             DetailTopBar(
-                state = topBarState!!
+                state = topBarState!!,
+                navigateBack = navigationHandler::popBackStack
             )
         }
     }) {
@@ -74,7 +75,11 @@ fun ContractDetailScreen(
                 .padding(24.dp)
         ) {
             item {
-                ContractInfoColumn(state = data.contractInfo, address)
+                ContractInfoColumn(
+                    state = data.contractInfo,
+                    address,
+                    navigationHandler::navigateToAccount
+                )
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = stringResource(id = R.string.transactions),

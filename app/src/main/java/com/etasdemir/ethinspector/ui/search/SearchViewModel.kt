@@ -2,8 +2,8 @@ package com.etasdemir.ethinspector.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.domain_model.SearchType
-import com.etasdemir.ethinspector.data.remote.RemoteRepository
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _searchResult: MutableStateFlow<Pair<SearchType, UIResponseState<*>>?> =
@@ -25,7 +25,7 @@ class SearchViewModel @Inject constructor(
     fun searchText(searchText: String) {
         viewModelScope.launch {
             _searchResult.value = Pair(SearchType.INVALID, UIResponseState.Loading<Any>())
-            val searchResultPair = remoteRepository.search(searchText)
+            val searchResultPair = repository.search(searchText)
             val uiResponseState =
                 mapResponseToUIResponseState(searchResultPair.second)
             val searchType = searchResultPair.first

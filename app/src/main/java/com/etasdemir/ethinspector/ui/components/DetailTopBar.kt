@@ -14,11 +14,11 @@ data class DetailTopBarState(
     val barTitle: String,
     val isFavouriteEnabled: Boolean,
     val onFavouriteClick: (previous: Boolean, now: Boolean) -> Unit,
-    val textToCopy: String
+    val textToCopy: String,
 )
 
 @Composable
-fun DetailTopBar(state: DetailTopBarState) {
+fun DetailTopBar(state: DetailTopBarState, navigateBack: () -> Unit) {
     Column {
         Row(
             modifier = Modifier
@@ -32,7 +32,7 @@ fun DetailTopBar(state: DetailTopBarState) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(2f)
             ) {
-                BackButton()
+                BackButton(navigateBack)
                 Text(
                     text = state.barTitle,
                     style = MaterialTheme.typography.titleLarge,
@@ -64,7 +64,7 @@ fun DetailTopBarPreview() {
         barTitle = "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
         isFavouriteEnabled = true,
         onFavouriteClick = { _: Boolean, _: Boolean -> },
-        textToCopy = "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2"
+        textToCopy = "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
     )
-    DetailTopBar(state)
+    DetailTopBar(state) {}
 }

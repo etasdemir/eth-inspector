@@ -20,6 +20,8 @@ import com.etasdemir.ethinspector.data.domain_model.AddressToken
 import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.clip
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Composable
 fun TokenItem(state: AddressToken, onItemClick: (String) -> Unit) {
@@ -47,7 +49,10 @@ fun TokenItem(state: AddressToken, onItemClick: (String) -> Unit) {
                 field = stringResource(id = R.string.address), value = state.tokenAddress.clip(8)
             )
             CardRowItem(
-                field = stringResource(id = R.string.quantity), value = state.quantity.toString()
+                field = stringResource(id = R.string.quantity),
+                value = BigDecimal(state.quantity)
+                    .setScale(2, RoundingMode.UP)
+                    .toPlainString()
             )
         }
         ArrowIcon()

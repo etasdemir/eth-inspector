@@ -7,6 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.*
+import java.math.RoundingMode
 
 data class DailyStatsState(
     val transactions: Double,
@@ -22,8 +23,8 @@ fun DailyStatsCard(state: DailyStatsState) {
     val formatted24Burned = remember {
         state.burned24h
             .fromWei(EthUnit.ETHER)
-            .toString()
-            .format(2)
+            .setScale(2, RoundingMode.UP)
+            .toPlainString()
     }
     val formattedLargestTxValue = remember {
         state.largestTxValue
@@ -33,8 +34,8 @@ fun DailyStatsCard(state: DailyStatsState) {
     val formattedVolume = remember {
         state.volume
             .fromWei(EthUnit.ETHER)
-            .toString()
-            .format(0)
+            .setScale(0, RoundingMode.UP)
+            .toPlainString()
             .addDots()
     }
 

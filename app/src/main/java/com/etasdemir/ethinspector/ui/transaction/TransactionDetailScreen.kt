@@ -7,33 +7,47 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
+import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionDetailCard
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionInfoCard
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
-@Preview
 fun TransactionDetailScreen(
-    transactionDetailViewModel: TransactionDetailViewModel = viewModel()
+    txHash: String,
+    navigationHandler: NavigationHandler,
+    transactionDetailViewModel: TransactionDetailViewModel = hiltViewModel()
 ) {
-    val txHashTakenFromArgs = "0xbc78ab8a9e9a0bca7d0321a27b2c03addeae08ba81ea98b03cd3dd237eabed44"
-
     val scrollState = remember { ScrollState(0) }
     val topBarTitle = stringResource(id = R.string.transaction_detail)
     val transactionState by transactionDetailViewModel.transactionState.collectAsStateWithLifecycle()
     val topBarState by transactionDetailViewModel.topBarState.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = "initialize_transaction_screen") {
         transactionDetailViewModel.apply {
-            initialize(txHashTakenFromArgs, topBarTitle)
-            getTransactionByHash(txHashTakenFromArgs)
+            initialize(txHash, topBarTitle)
+            getTransactionByHash(txHash)
+        }
+    }
+
+    val onAddressClick = remember {
+        { address: String ->
+            coroutineScope.launch {
+                val isContract = transactionDetailViewModel.isAddressContract(address)
+                if (isContract) {
+                    navigationHandler.navigateToContract(address)
+                } else {
+                    navigationHandler.navigateToAccount(address)
+                }
+            }
         }
     }
 
@@ -44,6 +58,7 @@ fun TransactionDetailScreen(
     }
     if (transactionState is UIResponseState.Error) {
         Timber.e("TransactionDetailScreen: Error ${transactionState.errorMessage}")
+        navigationHandler.popBackStack()
         return
     }
     if (transactionState is UIResponseState.Success && transactionState.data == null) {
@@ -51,7 +66,12 @@ fun TransactionDetailScreen(
         return
     }
 
-    Scaffold(topBar = { DetailTopBar(topBarState!!) }) {
+    Scaffold(topBar = {
+        DetailTopBar(
+            topBarState!!,
+            navigateBack = navigationHandler::popBackStack
+        )
+    }) { it ->
         Column(
             modifier = Modifier
                 .fillMaxHeight()
@@ -60,13 +80,17 @@ fun TransactionDetailScreen(
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(20.dp)
         ) {
-            TransactionInfoCard(transactionState.data!!)
+            TransactionInfoCard(transactionState.data!!, navigationHandler::navigateToBlock)
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(20.dp)
             )
-            TransactionDetailCard(transactionState.data!!)
+            TransactionDetailCard(transactionState.data!!) { address: String ->
+                onAddressClick(
+                    address
+                )
+            }
         }
     }
 }

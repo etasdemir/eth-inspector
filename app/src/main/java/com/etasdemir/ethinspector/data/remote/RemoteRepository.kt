@@ -103,7 +103,7 @@ class RemoteRepository @Inject constructor(
     }
 
     @Throws(IllegalStateException::class)
-    private suspend fun isAddressContract(addressHash: String): Boolean {
+    suspend fun isAddressContract(addressHash: String): Boolean {
         val contractCreation =
             retrofitResponseResultFactory<EtherscanResponse<ContractCreationResponse>> {
                 etherscanAddressService.getContractCreation(

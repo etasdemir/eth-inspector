@@ -20,6 +20,7 @@ import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AvailableThemes
 import com.etasdemir.ethinspector.ui.theme.LocalTheme
 import com.etasdemir.ethinspector.utils.*
+import java.math.RoundingMode
 import kotlin.math.abs
 
 data class EthMainStatsState(
@@ -89,8 +90,8 @@ fun EthMainStatsCard(state: EthMainStatsState = previewState) {
                 id = R.string.eth_with_amount,
                 state.circulation
                     .fromWei(EthUnit.ETHER)
-                    .toString()
-                    .format(0)
+                    .setScale(0, RoundingMode.UP)
+                    .toPlainString()
                     .addDots()
             ),
             modifier = Modifier.padding(bottom = 16.dp)

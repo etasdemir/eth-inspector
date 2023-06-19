@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.BlockTransaction
 import com.etasdemir.ethinspector.utils.*
+import java.math.RoundingMode
 
 @Composable
 fun BlockTransactionItem(
@@ -27,7 +28,9 @@ fun BlockTransactionItem(
     onClick: (txHash: String) -> Unit
 ) {
     val amount = remember {
-        blockTransaction.amount.toString().fromWei(EthUnit.ETHER).toString().format(6)
+        blockTransaction.amount.toString()
+            .fromWei(EthUnit.ETHER).setScale(6, RoundingMode.UP)
+            .toPlainString()
     }
 
     Row(

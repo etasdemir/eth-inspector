@@ -13,21 +13,35 @@ fun mapBlockResponseToBlock(response: ResponseResult<EtherscanRPCResponse<BlockR
         val result = responseData.result
         val mappedTransactions = ArrayList<BlockTransaction>()
         for (transaction in result.transactions) {
-            mappedTransactions.add(
-                BlockTransaction(result.number.toDecimal(), transaction.hash, transaction.value.toDecimal())
-            )
+            val number = result.number.toDecimal()
+            val value = transaction.value.toDecimal()
+            if (number != null && value != null) {
+                mappedTransactions.add(
+                    BlockTransaction(number, transaction.hash, value)
+                )
+            }
         }
-        val block = Block(
-            blockNumber = result.number.toDecimal(),
-            timestamp = result.timestamp.toDecimal().toString(),
-            txCount = result.transactions.size,
-            minerAddress = result.miner,
-            gasLimit = result.gasLimit.toDecimal(),
-            gasUsed = result.gasUsed.toDecimal(),
-            baseFeePerGas = result.baseFeePerGas.toDecimal(),
-            transactions = mappedTransactions
-        )
-        return ResponseResult.Success(block)
+
+        val blockNumber = result.number.toDecimal()
+        val gasLimit = result.gasLimit.toDecimal()
+        val gasUsed = result.gasUsed.toDecimal()
+        val baseFeePerGas = result.baseFeePerGas.toDecimal()
+        return if (blockNumber != null && gasLimit != null && gasUsed != null && baseFeePerGas != null) {
+            val block = Block(
+                blockNumber = blockNumber,
+                timestamp = result.timestamp.toDecimal().toString(),
+                txCount = result.transactions.size,
+                minerAddress = result.miner,
+                gasLimit = gasLimit,
+                gasUsed = gasUsed,
+                baseFeePerGas = baseFeePerGas,
+                transactions = mappedTransactions
+            )
+            ResponseResult.Success(block)
+        } else {
+            ResponseResult.Error("Error at mapBlockResponseToBlock: could not convert hex to decimal")
+        }
+
     } else {
         val errorMessage = response.errorMessage!!
         return ResponseResult.Error(errorMessage)

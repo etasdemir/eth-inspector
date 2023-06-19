@@ -10,23 +10,28 @@ import androidx.compose.ui.unit.dp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.ContractInfo
 import com.etasdemir.ethinspector.ui.components.*
-import com.etasdemir.ethinspector.utils.*
-import timber.log.Timber
+import com.etasdemir.ethinspector.utils.EthUnit
+import com.etasdemir.ethinspector.utils.fromWei
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Composable
-fun ContractInfoColumn(state: ContractInfo, address: String) {
+fun ContractInfoColumn(state: ContractInfo, address: String, navigateToAccount: (String) -> Unit) {
     val onCreatorAddressClick = remember {
         {
-            Timber.e("navigate to address detail with $address")
+            navigateToAccount(state.creatorAddress)
         }
     }
     val balanceEth = remember {
-        state.balanceWei.fromWei(EthUnit.ETHER).toString().format(3)
+        state.balanceWei.fromWei(EthUnit.ETHER).setScale(3, RoundingMode.UP).toPlainString()
     }
     val balanceEthStr =
-        stringResource(id = R.string.eth_with_amount, balanceEth.format(digits = 5))
+        stringResource(id = R.string.eth_with_amount, balanceEth)
     val balanceUsdStr =
-        stringResource(id = R.string.usd_with_amount, state.balanceUsd.format(digits = 5))
+        stringResource(
+            id = R.string.usd_with_amount,
+            BigDecimal(state.balanceUsd).setScale(5, RoundingMode.UP).toPlainString()
+        )
 
     Column(modifier = Modifier.fillMaxWidth()) {
         CardColumnItem(
@@ -64,5 +69,5 @@ fun ContractInfoColumnPreview() {
     val state = ContractInfo(
         address, creatorAddress, creationTime, txCount, balanceEth, balanceUsd
     )
-    ContractInfoColumn(state, address)
+    ContractInfoColumn(state, address) {}
 }

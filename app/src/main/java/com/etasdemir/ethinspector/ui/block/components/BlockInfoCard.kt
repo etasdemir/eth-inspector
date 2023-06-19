@@ -15,13 +15,13 @@ import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.Block
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.utils.*
-import timber.log.Timber
+import java.math.RoundingMode
 
 @Composable
-fun BlockInfoCard(block: Block) {
+fun BlockInfoCard(block: Block, navigateToAccount: (String) -> Unit) {
     val onMinerAddressClick = remember {
         { _: String ->
-            Timber.e("navigate to address screen with: ${block.minerAddress}")
+            navigateToAccount(block.minerAddress)
         }
     }
     val blockCreationDate = remember { getDateString(block.timestamp.toLong()) }
@@ -39,7 +39,7 @@ fun BlockInfoCard(block: Block) {
     }
     val gasUsedStrRes = stringResource(id = R.string.wei_with_amount, gasUsedStr)
     val baseFeePerGas = remember {
-        block.baseFeePerGas.toString().fromWei(EthUnit.GWEI).toString().format(3)
+        block.baseFeePerGas.toString().fromWei(EthUnit.GWEI).setScale(3, RoundingMode.UP).toPlainString()
     }
 
     Column(
@@ -94,5 +94,5 @@ fun BlockInfoCardPreview() {
         24962883652u,
         emptyList()
     )
-    BlockInfoCard(state)
+    BlockInfoCard(state) {}
 }

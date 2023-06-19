@@ -7,6 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.components.CardRowItem
 import com.etasdemir.ethinspector.utils.*
+import java.math.RoundingMode
 
 data class MempoolState(
     val transactions: String,
@@ -18,7 +19,7 @@ data class MempoolState(
 fun MempoolCard(state: MempoolState) {
     val formattedTps = remember { state.tps.format(2) }
     val formattedTxValue = remember {
-        state.pendingTxValue.fromWei(EthUnit.ETHER).toString().format(2)
+        state.pendingTxValue.fromWei(EthUnit.ETHER).setScale(2, RoundingMode.UP).toPlainString()
     }
 
     RoundedTitleCard(title = stringResource(id = R.string.mempool)) {

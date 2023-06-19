@@ -16,17 +16,19 @@ import com.etasdemir.ethinspector.data.domain_model.Transaction
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.utils.format
 import com.etasdemir.ethinspector.utils.getDateString
-import timber.log.Timber
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Composable
-fun TransactionInfoCard(transaction: Transaction) {
+fun TransactionInfoCard(transaction: Transaction, navigateToBlockScreen: (String) -> Unit) {
     val onBlockClick = remember {
         { block: String ->
-            Timber.e("Navigate to block: $block")
+            navigateToBlockScreen(block)
         }
     }
     val convertedDate =
         if (transaction.timestamp != null) getDateString(transaction.timestamp.toLong()) else null
+    val amount = BigDecimal(transaction.amount).setScale(5, RoundingMode.UP).toPlainString()
 
     Column(
         modifier = Modifier
@@ -52,7 +54,7 @@ fun TransactionInfoCard(transaction: Transaction) {
         }
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.amount)) },
-            value = stringResource(id = R.string.eth_with_amount, transaction.amount.format(5))
+            value = stringResource(id = R.string.eth_with_amount, amount)
         )
         CardRowItem(
             leftContent = { BodyTitleText(text = stringResource(id = R.string.fee)) },
@@ -82,5 +84,5 @@ fun TransactionInfoCardPreview() {
         2,
         "40351"
     )
-    TransactionInfoCard(state)
+    TransactionInfoCard(state) {}
 }
