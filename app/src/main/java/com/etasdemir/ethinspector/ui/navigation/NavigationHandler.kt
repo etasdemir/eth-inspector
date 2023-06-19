@@ -1,7 +1,7 @@
 package com.etasdemir.ethinspector.ui.navigation
 
 import androidx.navigation.NavHostController
-import com.etasdemir.ethinspector.ui.wallet.SavedItemType
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedItemType
 import timber.log.Timber
 
 class NavigationHandler(

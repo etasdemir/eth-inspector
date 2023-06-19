@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.ui.wallet
+package com.etasdemir.ethinspector.ui.saved_tx_and_block
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding

@@ -1,4 +1,4 @@
-package com.etasdemir.ethinspector.ui.saved_tx_and_block
+package com.etasdemir.ethinspector.ui.wallet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +20,7 @@ import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.components.ArrowIcon
 import com.etasdemir.ethinspector.utils.clip
+import com.etasdemir.ethinspector.utils.format
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -43,7 +44,7 @@ fun SavedWalletItem(state: SavedWalletState, onItemClick: (String, AddressType) 
                 id = R.string.eth_with_amount,
                 ethBalance.toPlainString()
             )
-        } (${stringResource(id = R.string.usd_with_amount, state.usdBalance)})"
+        } (${stringResource(id = R.string.usd_with_amount, state.usdBalance.format(digits = 5))})"
 
 
     Row(

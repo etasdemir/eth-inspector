@@ -12,13 +12,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WalletViewModel @Inject constructor(
-    repository: Repository
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _savedAddresses = MutableStateFlow<SavedAddresses?>(null)
     val savedAddresses = _savedAddresses.asStateFlow()
 
-    init {
+    fun getSavedAddresses() {
         viewModelScope.launch {
             val result = repository.getSavedAddresses()
             _savedAddresses.emit(result)

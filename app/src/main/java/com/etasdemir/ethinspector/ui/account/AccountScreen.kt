@@ -26,6 +26,7 @@ private enum class AccountItem {
 @Composable
 fun AccountScreen(
     accountViewModel: SharedAccountViewModel,
+    bottomBar: @Composable () -> Unit,
     navigationHandler: NavigationHandler
 ) {
     val userState by accountViewModel.userState.collectAsState(initial = null)
@@ -68,9 +69,12 @@ fun AccountScreen(
         }
     }
 
-    Scaffold(topBar = {
-        SimpleTopBar(title = stringResource(id = R.string.account_settings))
-    }) {
+    Scaffold(
+        topBar = {
+            SimpleTopBar(title = stringResource(id = R.string.account_settings))
+        },
+        bottomBar = bottomBar
+    ) {
         if (isLanguageDialogOpen) {
             LanguageRadioDialog(
                 user = userState!!,

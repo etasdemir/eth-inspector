@@ -15,15 +15,15 @@ import androidx.navigation.compose.rememberNavController
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AddressType
 import com.etasdemir.ethinspector.ui.components.SimpleTopBar
+import com.etasdemir.ethinspector.ui.navigation.BottomBar
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
-import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedWalletItem
-import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedWalletState
 import com.etasdemir.ethinspector.utils.EthUnit
 import com.etasdemir.ethinspector.utils.fromWei
 
 @Composable
 fun WalletScreen(
     navigationHandler: NavigationHandler,
+    bottomBar: @Composable () -> Unit,
     walletViewModel: WalletViewModel = hiltViewModel()
 ) {
     val savedAddressesState by walletViewModel.savedAddresses.collectAsStateWithLifecycle()
@@ -42,9 +42,16 @@ fun WalletScreen(
         }
     }
 
-    Scaffold(topBar = {
-        SimpleTopBar(title = stringResource(id = R.string.my_wallets))
-    }) {
+    LaunchedEffect(key1 = savedAddressesState) {
+        walletViewModel.getSavedAddresses()
+    }
+
+    Scaffold(
+        topBar = {
+            SimpleTopBar(title = stringResource(id = R.string.my_wallets))
+        },
+        bottomBar = bottomBar
+    ) {
         if (isAnyAddressSaved) {
             LazyColumn(
                 modifier = Modifier.padding(it),
@@ -82,7 +89,10 @@ fun WalletScreen(
 
 @Composable
 @Preview
-fun WalletScreenPreview() {
+private fun WalletScreenPreview() {
     val testController = rememberNavController()
-    WalletScreen(NavigationHandler(testController))
+    val navHandler = NavigationHandler(testController)
+    WalletScreen(navHandler, {
+        BottomBar(navController = testController, navHandler = navHandler)
+    })
 }

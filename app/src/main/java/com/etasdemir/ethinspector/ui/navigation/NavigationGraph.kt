@@ -9,10 +9,12 @@ import com.etasdemir.ethinspector.ui.address.AddressDetailScreen
 import com.etasdemir.ethinspector.ui.block.BlockDetailScreen
 import com.etasdemir.ethinspector.ui.contract.ContractDetailScreen
 import com.etasdemir.ethinspector.ui.home.HomeScreen
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedItemScreen
+import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedItemType
 import com.etasdemir.ethinspector.ui.search.InvalidSearchScreen
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
 import com.etasdemir.ethinspector.ui.transaction.TransactionDetailScreen
-import com.etasdemir.ethinspector.ui.wallet.*
+import com.etasdemir.ethinspector.ui.wallet.WalletScreen
 
 @Composable
 fun NavigationGraph(
@@ -20,10 +22,13 @@ fun NavigationGraph(
     sharedAccountViewModel: SharedAccountViewModel
 ) {
     val navigationHandler = NavigationHandler(navController)
+    val bottomBar = @Composable {
+        BottomBar(navController = navController, navHandler = navigationHandler)
+    }
 
     NavHost(navController = navController, startDestination = NavigationRoute.Home.root) {
         composable(NavigationRoute.Home.route) {
-            HomeScreen(navigationHandler)
+            HomeScreen(navigationHandler, bottomBar)
         }
 
         composable(
@@ -38,11 +43,11 @@ fun NavigationGraph(
         }
 
         composable(NavigationRoute.Wallet.route) {
-            WalletScreen(navigationHandler)
+            WalletScreen(navigationHandler, bottomBar)
         }
 
         composable(NavigationRoute.Profile.route) {
-            AccountScreen(sharedAccountViewModel, navigationHandler)
+            AccountScreen(sharedAccountViewModel, bottomBar, navigationHandler)
         }
 
         composable(

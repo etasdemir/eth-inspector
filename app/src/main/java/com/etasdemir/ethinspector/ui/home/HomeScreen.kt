@@ -32,6 +32,7 @@ data class EthStatsState(
 @Composable
 fun HomeScreen(
     navigationHandler: NavigationHandler,
+    bottomBar: @Composable () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollState: ScrollState = rememberScrollState(0)
@@ -58,9 +59,11 @@ fun HomeScreen(
     val stats = ethStats.data!!
     val ethStatsState = homeViewModel.mapEthStatsToState(stats)
 
-    Scaffold(topBar = {
-        SearchTopBar(searchIcon = searchIcon, navigationHandler = navigationHandler)
-    }) { padding ->
+    Scaffold(
+        topBar = {
+            SearchTopBar(searchIcon = searchIcon, navigationHandler = navigationHandler)
+        }, bottomBar = bottomBar
+    ) { padding ->
         Column(
             modifier = Modifier
                 .padding(

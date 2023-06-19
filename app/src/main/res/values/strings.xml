@@ -108,4 +108,8 @@
     <string name="system_default">Use system default</string>
 
     <string name="address_type">Address Type</string>
+
+    <string name="bottom_bar_home">Home</string>
+    <string name="bottom_bar_wallet">Wallet</string>
+    <string name="bottom_bar_profile">Profile</string>
 </resources>

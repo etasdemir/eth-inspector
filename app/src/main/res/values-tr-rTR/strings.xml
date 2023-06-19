@@ -102,4 +102,8 @@
     <string name="system_default">Sistem varsayılanını kullan</string>
 
     <string name="address_type">Adres Tipi</string>
+
+    <string name="bottom_bar_home">Ana Sayfa</string>
+    <string name="bottom_bar_wallet">Cüzdan</string>
+    <string name="bottom_bar_profile">Profil</string>
 </resources>
