@@ -7,6 +7,7 @@ import com.etasdemir.ethinspector.data.domain_model.SearchType
 import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class SearchViewModel @Inject constructor(
         _searchResult.asStateFlow()
 
     fun searchText(searchText: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _searchResult.value = Pair(SearchType.INVALID, UIResponseState.Loading<Any>())
             val searchResultPair = repository.search(searchText)
             val uiResponseState =

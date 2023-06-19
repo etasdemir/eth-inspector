@@ -7,6 +7,7 @@ import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import com.etasdemir.ethinspector.ui.shared.AddressViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ class ContractDetailViewModel @Inject constructor(
     val contractState = _contractState.asStateFlow()
 
     fun getContractDetailByHash(hash: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val contractResponse = repository.getContractInfoByHash(hash)
             val contractState = mapResponseToUIResponseState(contractResponse)
             contractState.data?.let {

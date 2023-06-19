@@ -8,6 +8,7 @@ import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.home.components.*
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class HomeViewModel @Inject constructor(
         _ethStats.asStateFlow()
 
     fun getEthStats() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val ethStatsResponse = repository.getEthStats()
             val mappedResponse = mapResponseToUIResponseState(ethStatsResponse)
             _ethStats.value = mappedResponse

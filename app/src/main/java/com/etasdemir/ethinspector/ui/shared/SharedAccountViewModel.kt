@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.domain_model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -24,13 +25,13 @@ class SharedAccountViewModel @Inject constructor(
     val userState = _userState.asSharedFlow()
 
     fun getUser() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _userState.emit(repository.getUser())
         }
     }
 
     fun saveUser(user: User) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.saveUser(user)
             val savedUser = repository.getUser()
             _userState.emit(savedUser)

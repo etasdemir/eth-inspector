@@ -8,6 +8,7 @@ import com.etasdemir.ethinspector.data.domain_model.*
 import com.etasdemir.ethinspector.ui.components.AddressSaveModalState
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.utils.clip
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -60,7 +61,7 @@ abstract class AddressViewModel<T> constructor(
 
     private fun onModalCancel() {
         _isSheetShown.value = false
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val address = getAddress()
             address?.let {
                 val name = address.clip(6)
@@ -71,7 +72,7 @@ abstract class AddressViewModel<T> constructor(
 
     private fun onModalSave(name: String) {
         _isSheetShown.value = false
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             updateDbData(name = name, isFavourite =  true)
         }
     }
@@ -80,7 +81,7 @@ abstract class AddressViewModel<T> constructor(
         if (now) {
             _isSheetShown.value = true
         } else {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 updateDbData(isFavourite =  false)
                 changeTopBarFavouriteState(false)
             }

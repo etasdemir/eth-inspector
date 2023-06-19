@@ -16,6 +16,7 @@ import com.etasdemir.ethinspector.ui.components.DetailTopBar
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionDetailCard
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionInfoCard
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -40,7 +41,7 @@ fun TransactionDetailScreen(
 
     val onAddressClick = remember {
         { address: String ->
-            coroutineScope.launch {
+            coroutineScope.launch(Dispatchers.IO) {
                 val isContract = transactionDetailViewModel.isAddressContract(address)
                 if (isContract) {
                     navigationHandler.navigateToContract(address)

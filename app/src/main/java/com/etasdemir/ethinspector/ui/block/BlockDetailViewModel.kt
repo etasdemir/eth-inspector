@@ -8,6 +8,7 @@ import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -35,7 +36,7 @@ class BlockDetailViewModel @Inject constructor(
     }
 
     fun getBlockDetailByNumber(blockNumber: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val blockResponse =
                 repository.getBlockInfoByNumber(blockNumber.toULong(), true)
             val uiBlockState = mapResponseToUIResponseState(blockResponse)
@@ -47,7 +48,7 @@ class BlockDetailViewModel @Inject constructor(
     private fun onFavouriteChange(previous: Boolean, now: Boolean) {
         val block = blockState.value.data
         if (block != null) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 val newBlock = block.copy(isFavourite = now)
                 repository.saveBlock(newBlock)
                 changeTopBarFavouriteState(now)

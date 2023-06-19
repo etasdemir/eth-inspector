@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.utils.clip
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -65,7 +66,7 @@ fun AddressSaveModal(
             } else {
                 state.onCancel()
             }
-            coroutineScope.launch {
+            coroutineScope.launch(Dispatchers.IO) {
                 state.sheetState.hide()
             }
         }

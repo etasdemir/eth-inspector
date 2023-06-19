@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.etasdemir.ethinspector.data.Repository
 import com.etasdemir.ethinspector.data.domain_model.SavedAddresses
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ class WalletViewModel @Inject constructor(
     val savedAddresses = _savedAddresses.asStateFlow()
 
     fun getSavedAddresses() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getSavedAddresses()
             _savedAddresses.emit(result)
         }
