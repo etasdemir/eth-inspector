@@ -32,10 +32,22 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            if (properties["ETH_INSPECTOR_STORE_FILE"]) {
+                storeFile file(properties["ETH_INSPECTOR_STORE_FILE"])
+                storePassword properties["ETH_INSPECTOR_STORE_PASS"]
+                keyAlias properties["ETH_INSPECTOR_KEY_ALIAS"]
+                keyPassword properties["ETH_INSPECTOR_KEY_PASS"]
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
