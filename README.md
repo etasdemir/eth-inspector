@@ -50,7 +50,7 @@ With <strong>EthInspector</strong>, you have a powerful Ethereum Block Explorer 
 <br />
 
 ## Screen Record
-<img src="https://github.com/etasdemir/eth-inspector/blob/main/media/eth_inspector.gif?raw=true" height="600">
+<img src="https://github.com/etasdemir/eth-inspector/blob/main/media/eth_inspector.gif?raw=true">
 
 <br />
 <br />
