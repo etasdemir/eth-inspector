@@ -10,20 +10,26 @@ import com.etasdemir.ethinspector.utils.addDots
 
 @Composable
 fun TokenStatsCard(title: String, state: TokenStats) {
-    if (state.tokens != null && state.newTokens != null && state.tx != null && state.newTx != null) {
-        RoundedTitleCard(title) {
+    RoundedTitleCard(title) {
+        if (state.tokens != null) {
             CardRowItem(
                 field = stringResource(id = R.string.tokens),
                 value = state.tokens.addDots()
             )
+        }
+        if (state.newTokens != null) {
             CardRowItem(
                 field = stringResource(id = R.string.new_tokens_24h),
                 value = state.newTokens.addDots()
             )
+        }
+        if (state.tx != null) {
             CardRowItem(
                 field = stringResource(id = R.string.transactions),
                 value = state.tx.addDots()
             )
+        }
+        if (state.newTx != null) {
             CardRowItem(
                 field = stringResource(id = R.string.new_tx_24h),
                 value = state.newTx.addDots()

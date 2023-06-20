@@ -54,7 +54,7 @@ data class Layer2(
 
 @JsonClass(generateAdapter = true)
 data class TokenStat(
-    @field:Json(name = "addressTokens") val tokens: String? = null,
+    @field:Json(name = "tokens") val tokens: String? = null,
     @field:Json(name = "transactions") val transactions: String? = null,
     @field:Json(name = "tokens_24h") val tokens_24h: String? = null,
     @field:Json(name = "transactions_24h") val transactions_24h: String? = null,
