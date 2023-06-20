@@ -9,9 +9,8 @@ import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.ui.mapResponseToUIResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +41,9 @@ class TransactionDetailViewModel @Inject constructor(
             val txResponse = repository.getTransactionByHash(txHash)
             val mappedUIResponse = mapResponseToUIResponseState(txResponse)
             _transactionState.value = mappedUIResponse
-            changeTopBarFavouriteState(mappedUIResponse.data?.isFavourite ?: false)
+            withContext(Dispatchers.Main) {
+                changeTopBarFavouriteState(mappedUIResponse.data?.isFavourite ?: false)
+            }
         }
     }
 
@@ -54,7 +55,9 @@ class TransactionDetailViewModel @Inject constructor(
             viewModelScope.launch(Dispatchers.IO) {
                 val newTransaction = transaction.copy(isFavourite = now)
                 repository.saveTransaction(newTransaction)
-                changeTopBarFavouriteState(now)
+                withContext(Dispatchers.Main) {
+                    changeTopBarFavouriteState(now)
+                }
             }
         }
     }

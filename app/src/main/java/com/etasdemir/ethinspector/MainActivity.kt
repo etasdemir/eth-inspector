@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.etasdemir.ethinspector.ui.components.EthInspectorLanguage
@@ -24,20 +24,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            EthInspectorLanguage(sharedAccountViewModel) {
-                EthInspectorTheme(sharedAccountViewModel) {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        val navHostController = rememberNavController()
-                        NavigationGraph(
-                            navController = navHostController,
-                            sharedAccountViewModel
-                        )
+                EthInspectorLanguage(sharedAccountViewModel) {
+                    EthInspectorTheme(sharedAccountViewModel) {
+                        Scaffold(
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            Surface(
+                                modifier = Modifier.padding(it),
+                                color = MaterialTheme.colorScheme.background
+                            ) {
+                                val navHostController = rememberNavController()
+                                NavigationGraph(
+                                    navController = navHostController,
+                                    sharedAccountViewModel
+                                )
+                            }
+                        }
                     }
                 }
-            }
         }
     }
 }

@@ -66,7 +66,7 @@ fun AddressSaveModal(
             } else {
                 state.onCancel()
             }
-            coroutineScope.launch(Dispatchers.IO) {
+            coroutineScope.launch(Dispatchers.Main) {
                 state.sheetState.hide()
             }
         }

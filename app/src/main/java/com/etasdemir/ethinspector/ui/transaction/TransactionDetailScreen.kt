@@ -11,14 +11,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
+import com.etasdemir.ethinspector.ui.shared.UIResponseHandler
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionDetailCard
 import com.etasdemir.ethinspector.ui.transaction.components.TransactionInfoCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun TransactionDetailScreen(
@@ -41,7 +40,7 @@ fun TransactionDetailScreen(
 
     val onAddressClick = remember {
         { address: String ->
-            coroutineScope.launch(Dispatchers.IO) {
+            coroutineScope.launch(Dispatchers.Main) {
                 val isContract = transactionDetailViewModel.isAddressContract(address)
                 if (isContract) {
                     navigationHandler.navigateToContract(address)
@@ -52,45 +51,35 @@ fun TransactionDetailScreen(
         }
     }
 
-    if (transactionState is UIResponseState.Loading) {
-        // Show loading
-        Timber.e("TransactionDetailScreen: Loading transaction detail screen")
-        return
-    }
-    if (transactionState is UIResponseState.Error) {
-        Timber.e("TransactionDetailScreen: Error ${transactionState.errorMessage}")
-        navigationHandler.popBackStack()
-        return
-    }
-    if (transactionState is UIResponseState.Success && transactionState.data == null) {
-        Timber.e("TransactionDetailScreen: Response is success but data null.")
-        return
-    }
-
-    Scaffold(topBar = {
-        DetailTopBar(
-            topBarState!!,
-            navigateBack = navigationHandler::popBackStack
-        )
-    }) { it ->
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(it)
-                .verticalScroll(scrollState)
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(20.dp)
-        ) {
-            TransactionInfoCard(transactionState.data!!, navigationHandler::navigateToBlock)
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
+    UIResponseHandler(
+        state = transactionState,
+        navigationHandler = navigationHandler
+    ) { transaction ->
+        Scaffold(topBar = {
+            DetailTopBar(
+                topBarState!!,
+                navigateBack = navigationHandler::popBackStack
             )
-            TransactionDetailCard(transactionState.data!!) { address: String ->
-                onAddressClick(
-                    address
+        }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(it)
+                    .verticalScroll(scrollState)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(20.dp)
+            ) {
+                TransactionInfoCard(transaction, navigationHandler::navigateToBlock)
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp)
                 )
+                TransactionDetailCard(transaction) { address: String ->
+                    onAddressClick(
+                        address
+                    )
+                }
             }
         }
     }

@@ -13,11 +13,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AddressType
-import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.contract.components.ContractInfoColumn
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
-import timber.log.Timber
+import com.etasdemir.ethinspector.ui.shared.UIResponseHandler
 
 @Composable
 fun ContractDetailScreen(
@@ -42,60 +41,45 @@ fun ContractDetailScreen(
         contractViewModel.getContractDetailByHash(address)
     }
 
-    if (contractState is UIResponseState.Loading) {
-        // Show loading
-        Timber.e("ContractDetailScreen: Loading contract detail screen")
-        return
-    }
-    if (contractState is UIResponseState.Error) {
-        Timber.e("ContractDetailScreen: Error ${contractState.errorMessage}")
-        navigationHandler.popBackStack()
-        return
-    }
-    if (contractState is UIResponseState.Success && contractState.data == null) {
-        Timber.e("ContractDetailScreen: Response is success but data null.")
-        return
-    }
-    val data = contractState.data!!
-
-
-    Scaffold(topBar = {
-        if (topBarState != null) {
-            DetailTopBar(
-                state = topBarState!!,
-                navigateBack = navigationHandler::popBackStack
-            )
-        }
-    }) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(it)
-                .background(MaterialTheme.colorScheme.background)
-                .padding(24.dp)
-        ) {
-            item {
-                ContractInfoColumn(
-                    state = data.contractInfo,
-                    address,
-                    navigationHandler::navigateToAccount
-                )
-                Text(
-                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                    text = stringResource(id = R.string.transactions),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    style = MaterialTheme.typography.titleLarge
+    UIResponseHandler(state = contractState, navigationHandler = navigationHandler) {contract ->
+        Scaffold(topBar = {
+            if (topBarState != null) {
+                DetailTopBar(
+                    state = topBarState!!,
+                    navigateBack = navigationHandler::popBackStack
                 )
             }
-            items(data.transactions) { transaction ->
-                if (transaction.transactionHash != null) {
-                    AddressTransactionItem(state = transaction, onTransactionClick)
-                    Spacer(modifier = Modifier.height(8.dp))
+        }) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(it)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(24.dp)
+            ) {
+                item {
+                    ContractInfoColumn(
+                        state = contract.contractInfo,
+                        address,
+                        navigationHandler::navigateToAccount
+                    )
+                    Text(
+                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                        text = stringResource(id = R.string.transactions),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+                items(contract.transactions) { transaction ->
+                    if (transaction.transactionHash != null) {
+                        AddressTransactionItem(state = transaction, onTransactionClick)
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
             }
         }
-    }
-    if (isSheetShown) {
-        AddressSaveModal(contractViewModel.modalState)
+        if (isSheetShown) {
+            AddressSaveModal(contractViewModel.modalState)
+        }
     }
 }

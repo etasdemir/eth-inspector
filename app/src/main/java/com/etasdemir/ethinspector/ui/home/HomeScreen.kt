@@ -12,13 +12,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.TokenStats
-import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.home.components.*
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import com.etasdemir.ethinspector.ui.search.SearchTopBar
-import timber.log.Timber
+import com.etasdemir.ethinspector.ui.shared.UIResponseHandler
 
 data class EthStatsState(
     val mainStatsState: EthMainStatsState,
@@ -43,52 +41,39 @@ fun HomeScreen(
         homeViewModel.getEthStats()
     }
 
-    if (ethStats is UIResponseState.Loading) {
-        // Show loading
-        Timber.e("HomeScreen: Loading home screen")
-        return
-    }
-    if (ethStats is UIResponseState.Error) {
-        Timber.e("HomeScreen: Error ${ethStats.errorMessage}")
-        return
-    }
-    if (ethStats is UIResponseState.Success && ethStats.data == null) {
-        Timber.e("HomeScreen: Response is success but data null.")
-        return
-    }
-    val stats = ethStats.data!!
-    val ethStatsState = homeViewModel.mapEthStatsToState(stats)
-
-    Scaffold(
-        topBar = {
-            SearchTopBar(searchIcon = searchIcon, navigationHandler = navigationHandler)
-        }, bottomBar = bottomBar
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(
-                    top = padding.calculateTopPadding() + 8.dp,
-                    end = 20.dp,
-                    bottom = padding.calculateBottomPadding() + 8.dp,
-                    start = 20.dp,
-                )
-                .verticalScroll(scrollState)
-        ) {
-            EthMainStatsCard(ethStatsState.mainStatsState)
-            AllTimeStatsCard(ethStatsState.allTimeStatsState)
-            MempoolCard(ethStatsState.mempoolStatsState)
-            DailyStatsCard(ethStatsState.dailyStatsState)
-            if (ethStatsState.ercTokenStatsState != null) {
-                TokenStatsCard(
-                    stringResource(id = R.string.title_erc_20),
-                    ethStatsState.ercTokenStatsState
-                )
-            }
-            if (ethStatsState.nftTokenStatsState != null) {
-                TokenStatsCard(
-                    stringResource(id = R.string.title_erc_721),
-                    ethStatsState.nftTokenStatsState
-                )
+    UIResponseHandler(state = ethStats, navigationHandler = navigationHandler) { stats ->
+        val ethStatsState = homeViewModel.mapEthStatsToState(stats)
+        Scaffold(
+            topBar = {
+                SearchTopBar(searchIcon = searchIcon, navigationHandler = navigationHandler)
+            }, bottomBar = bottomBar
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(
+                        top = padding.calculateTopPadding() + 8.dp,
+                        end = 20.dp,
+                        bottom = padding.calculateBottomPadding() + 8.dp,
+                        start = 20.dp,
+                    )
+                    .verticalScroll(scrollState)
+            ) {
+                EthMainStatsCard(ethStatsState.mainStatsState)
+                AllTimeStatsCard(ethStatsState.allTimeStatsState)
+                MempoolCard(ethStatsState.mempoolStatsState)
+                DailyStatsCard(ethStatsState.dailyStatsState)
+                if (ethStatsState.ercTokenStatsState != null) {
+                    TokenStatsCard(
+                        stringResource(id = com.etasdemir.ethinspector.R.string.title_erc_20),
+                        ethStatsState.ercTokenStatsState
+                    )
+                }
+                if (ethStatsState.nftTokenStatsState != null) {
+                    TokenStatsCard(
+                        stringResource(id = com.etasdemir.ethinspector.R.string.title_erc_721),
+                        ethStatsState.nftTokenStatsState
+                    )
+                }
             }
         }
     }

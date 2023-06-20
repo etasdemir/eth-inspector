@@ -8,10 +8,9 @@ import com.etasdemir.ethinspector.data.domain_model.*
 import com.etasdemir.ethinspector.ui.components.AddressSaveModalState
 import com.etasdemir.ethinspector.ui.components.DetailTopBarState
 import com.etasdemir.ethinspector.utils.clip
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 abstract class AddressViewModel<T> constructor(
@@ -83,7 +82,9 @@ abstract class AddressViewModel<T> constructor(
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 updateDbData(isFavourite =  false)
-                changeTopBarFavouriteState(false)
+                withContext(Dispatchers.Main) {
+                    changeTopBarFavouriteState(false)
+                }
             }
         }
     }

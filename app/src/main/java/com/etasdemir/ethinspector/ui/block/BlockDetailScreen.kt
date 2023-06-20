@@ -14,13 +14,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.etasdemir.ethinspector.R
-import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.block.components.BlockInfoCard
 import com.etasdemir.ethinspector.ui.block.components.BlockTransactionItem
 import com.etasdemir.ethinspector.ui.components.DetailTopBar
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
+import com.etasdemir.ethinspector.ui.shared.UIResponseHandler
 import com.etasdemir.ethinspector.ui.theme.Feint
-import timber.log.Timber
 
 @Composable
 fun BlockDetailScreen(
@@ -46,69 +45,56 @@ fun BlockDetailScreen(
         }
     }
 
-
-    if (blockState is UIResponseState.Loading) {
-        // Show loading
-        Timber.e("BlockDetailScreen: Loading block detail screen")
-        return
-    }
-    if (blockState is UIResponseState.Error) {
-        Timber.e("BlockDetailScreen: Error ${blockState.errorMessage}")
-        navigationHandler.popBackStack()
-        return
-    }
-    if (blockState is UIResponseState.Success && blockState.data == null) {
-        Timber.e("BlockDetailScreen: Response is success but data null.")
-        return
-    }
-
-    Scaffold(topBar = {
-        DetailTopBar(
-            state = topBarState!!,
-            navigateBack = navigationHandler::popBackStack
-        )
-    }) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(20.dp)
-        ) {
-            item(3) {
-                BlockInfoCard(blockState.data!!, navigationHandler::navigateToAccount)
-                Text(
-                    modifier = Modifier.padding(top = 40.dp),
-                    text = stringResource(id = R.string.block_transactions),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 19.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+    UIResponseHandler(state = blockState, navigationHandler = navigationHandler) { block ->
+        Scaffold(topBar = {
+            DetailTopBar(
+                state = topBarState!!,
+                navigateBack = navigationHandler::popBackStack
+            )
+        }) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(20.dp)
+            ) {
+                item(3) {
+                    BlockInfoCard(block, navigationHandler::navigateToAccount)
                     Text(
-                        text = stringResource(id = R.string.tx_hash),
-                        fontSize = 16.sp,
-                        color = Feint
+                        modifier = Modifier.padding(top = 40.dp),
+                        text = stringResource(id = R.string.block_transactions),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 19.sp,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
-                    Text(
-                        text = stringResource(id = R.string.amount),
-                        fontSize = 16.sp,
-                        color = Feint
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.tx_hash),
+                            fontSize = 16.sp,
+                            color = Feint
+                        )
+                        Text(
+                            text = stringResource(id = R.string.amount),
+                            fontSize = 16.sp,
+                            color = Feint
+                        )
+                    }
+                }
+                items(block.transactions) { itemBlockState ->
+                    BlockTransactionItem(
+                        modifier = Modifier.padding(vertical = 5.dp),
+                        blockTransaction = itemBlockState,
+                        onClick = onTransactionClick
                     )
                 }
             }
-            items(blockState.data!!.transactions) { itemBlockState ->
-                BlockTransactionItem(
-                    modifier = Modifier.padding(vertical = 5.dp),
-                    blockTransaction = itemBlockState,
-                    onClick = onTransactionClick
-                )
-            }
         }
     }
+
 }

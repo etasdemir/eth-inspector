@@ -14,10 +14,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.data.domain_model.AddressType
-import com.etasdemir.ethinspector.ui.UIResponseState
 import com.etasdemir.ethinspector.ui.address.components.*
 import com.etasdemir.ethinspector.ui.components.*
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
+import com.etasdemir.ethinspector.ui.shared.UIResponseHandler
 import timber.log.Timber
 
 @Composable
@@ -55,71 +55,75 @@ fun AddressDetailScreen(
         addressViewModel.getAccountInfoByHash(address)
     }
 
-    if (addressState is UIResponseState.Loading) {
-        // Show loading
-        Timber.e("AddressDetailScreen: Loading address detail screen")
-        return
-    }
-    if (addressState is UIResponseState.Error) {
-        Timber.e("AddressDetailScreen: Error ${addressState.errorMessage}")
-        navigationHandler.popBackStack()
-        return
-    }
-    if (addressState is UIResponseState.Success && addressState.data == null) {
-        Timber.e("AddressDetailScreen: Response is success but data null.")
-        return
-    }
-    val data = addressState.data!!
-
-    Scaffold(topBar = {
-        if (topBarState != null) {
-            DetailTopBar(
-                state = topBarState!!,
-                navigateBack = navigationHandler::popBackStack
-            )
-        }
-    }) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(it)
-                .background(MaterialTheme.colorScheme.background)
-                .padding(24.dp)
-        ) {
-            item {
-                AddressInfoColumn(address, data.accountInfo)
-            }
-            item {
-                if (data.addressTokens.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                        text = stringResource(id = R.string.tokens),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-            }
-            items(data.addressTokens) { token ->
-                TokenItem(state = token, onTokenItemClick)
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
+    UIResponseHandler(state = addressState, navigationHandler = navigationHandler) { data ->
+        Scaffold(topBar = {
+            if (topBarState != null) {
+                DetailTopBar(
+                    state = topBarState!!,
+                    navigateBack = navigationHandler::popBackStack
                 )
             }
-            item {
-                if (data.transactions.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                        text = stringResource(id = R.string.transactions),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        style = MaterialTheme.typography.titleLarge
+        }) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(it)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(24.dp)
+            ) {
+                item {
+                    AddressInfoColumn(address, data.accountInfo)
+                }
+                item {
+                    if (data.addressTokens.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                            text = stringResource(id = R.string.tokens),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+                items(data.addressTokens) { token ->
+                    TokenItem(state = token, onTokenItemClick)
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
                     )
                 }
-            }
-            items(data.transactions) { item ->
-                if (item.transactionHash != null) {
-                    AddressTransactionItem(item, onTransactionItemClick)
+                item {
+                    if (data.transactions.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                            text = stringResource(id = R.string.transactions),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+                items(data.transactions) { item ->
+                    if (item.transactionHash != null) {
+                        AddressTransactionItem(item, onTransactionItemClick)
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(8.dp)
+                        )
+                    }
+                }
+                item {
+                    if (data.transfers.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                            text = stringResource(id = R.string.transfers),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+                items(data.transfers) { transfer ->
+                    TransferItem(state = transfer, onTransferItemClick)
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -127,27 +131,9 @@ fun AddressDetailScreen(
                     )
                 }
             }
-            item {
-                if (data.transfers.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
-                        text = stringResource(id = R.string.transfers),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-            }
-            items(data.transfers) { transfer ->
-                TransferItem(state = transfer, onTransferItemClick)
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                )
-            }
         }
-    }
-    if (isSheetShown) {
-        AddressSaveModal(addressViewModel.modalState)
+        if (isSheetShown) {
+            AddressSaveModal(addressViewModel.modalState)
+        }
     }
 }
