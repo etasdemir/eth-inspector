@@ -32,7 +32,7 @@ fun LanguageRadioDialog(user: User, updateUser: (User) -> Unit, onCancel: () -> 
                 user.language = AvailableLanguages.values()[index]
                 newLanguage = user.language
             }
-            context.setAppLocale(newLanguage.iso639Code, true)
+            context.setAppLocale(newLanguage.iso639Code, false)
             updateUser(user)
         }
     }
