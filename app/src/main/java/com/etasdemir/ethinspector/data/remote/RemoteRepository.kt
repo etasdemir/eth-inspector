@@ -27,46 +27,59 @@ class RemoteRepository @Inject constructor(
     }
 
     suspend fun search(searchText: String): Pair<SearchType, ResponseResult<*>> {
-        when (parseRawTextToType(searchText)) {
-            SearchType.TRANSACTION -> {
-                val transactionResponse = this.getTransactionByHash(searchText)
-                return Pair(SearchType.TRANSACTION, transactionResponse)
-            }
-
-            SearchType.ADDRESS -> {
-                return try {
-                    if (isAddressContract(searchText)) {
-                        val contractResponse = getContractInfoByHash(searchText)
-                        Pair(SearchType.CONTRACT, contractResponse)
-                    } else {
-                        val accountResponse = getAccountInfoByHash(searchText)
-                        Pair(SearchType.ACCOUNT, accountResponse)
-                    }
-                } catch (exception: IllegalStateException) {
-                    Pair(
-                        SearchType.ADDRESS,
-                        ResponseResult.Error<Any>(
-                            exception.message ?: "Unknown error at isAddressContract(searchText)"
-                        )
-                    )
+        try {
+            when (parseRawTextToType(searchText)) {
+                SearchType.TRANSACTION -> {
+                    val transactionResponse = this.getTransactionByHash(searchText)
+                    return Pair(SearchType.TRANSACTION, transactionResponse)
                 }
-            }
 
-            SearchType.BLOCK -> {
-                val convertedBlockNumber = searchText.toULong()
-                val blockResponse = this.getBlockInfoByNumber(convertedBlockNumber, true)
-                return Pair(SearchType.BLOCK, blockResponse)
-            }
+                SearchType.ADDRESS -> {
+                    return try {
+                        if (isAddressContract(searchText)) {
+                            val contractResponse = getContractInfoByHash(searchText)
+                            Pair(SearchType.CONTRACT, contractResponse)
+                        } else {
+                            val accountResponse = getAccountInfoByHash(searchText)
+                            Pair(SearchType.ACCOUNT, accountResponse)
+                        }
+                    } catch (exception: IllegalStateException) {
+                        Pair(
+                            SearchType.ADDRESS,
+                            ResponseResult.Error<Any>(
+                                exception.message
+                                    ?: "Unknown error at isAddressContract(searchText)"
+                            )
+                        )
+                    }
+                }
 
-            else -> return Pair(
-                SearchType.INVALID,
-                ResponseResult.Error<Any>("Invalid search type")
+                SearchType.BLOCK -> {
+                    val convertedBlockNumber = searchText.toULong()
+                    val blockResponse = this.getBlockInfoByNumber(convertedBlockNumber, true)
+                    return Pair(SearchType.BLOCK, blockResponse)
+                }
+
+                else -> return Pair(
+                    SearchType.INVALID,
+                    ResponseResult.Error<Any>("Invalid search type")
+                )
+            }
+        } catch (exception: Exception) {
+            return Pair(
+                SearchType.ERROR,
+                ResponseResult.Error<Any>("Unknown error at Search: ${exception.stackTraceToString()}")
             )
         }
+
     }
 
     suspend fun getTransactionByHash(transactionHash: String): ResponseResult<EtherscanRPCResponse<TransactionResponse>> {
-        return retrofitResponseResultFactory { transactionService.getTransactionByHash(transactionHash) }
+        return retrofitResponseResultFactory {
+            transactionService.getTransactionByHash(
+                transactionHash
+            )
+        }
     }
 
     suspend fun getAccountInfoByHash(addressHash: String): ResponseResult<BlockchairAccountResponse> {
@@ -86,7 +99,11 @@ class RemoteRepository @Inject constructor(
     }
 
     suspend fun getERC20TokenTransfers(addressHash: String): ResponseResult<EtherscanTokenTransfers> {
-        return retrofitResponseResultFactory { etherscanAddressService.getERC20TokenTransfers(addressHash) }
+        return retrofitResponseResultFactory {
+            etherscanAddressService.getERC20TokenTransfers(
+                addressHash
+            )
+        }
     }
 
     suspend fun getBlockInfoByNumber(

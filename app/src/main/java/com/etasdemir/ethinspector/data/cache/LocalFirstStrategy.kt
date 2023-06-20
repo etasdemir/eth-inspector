@@ -19,25 +19,31 @@ class LocalFirstStrategy<T, K, V>(
         fetchFromLocal: suspend () -> K?,
         persistResponse: suspend (K) -> Unit
     ): ResponseResult<V> {
-        val persistedObject = fetchFromLocal()
-        val response = fetchFromService()
-        return if ((persistedObject is List<*> && persistedObject.isNotEmpty()) ||
-            (persistedObject !is List<*> && persistedObject != null)
-        ) {
-            val persistedDomainObj = localToDomain(persistedObject)
-            withContext(Dispatchers.IO) {
-                updateLocal(persistedObject, response, persistResponse)
-            }
-            ResponseResult.Success(persistedDomainObj)
-        } else {
-            if (response is ResponseResult.Success && response.data != null) {
-                val domainObjectResult = responseToDomain(response)
-                val domainObject = domainObjectResult.data!!
-                persistResponse(domainToLocal(domainObject))
-                ResponseResult.Success(domainObject)
+        try {
+            val persistedObject = fetchFromLocal()
+            val response = fetchFromService()
+            return if ((persistedObject is List<*> && persistedObject.isNotEmpty()) ||
+                (persistedObject !is List<*> && persistedObject != null)
+            ) {
+                val persistedDomainObj = localToDomain(persistedObject)
+                withContext(Dispatchers.IO) {
+                    updateLocal(persistedObject, response, persistResponse)
+                }
+                ResponseResult.Success(persistedDomainObj)
             } else {
-                ResponseResult.Error(response.errorMessage!!)
+                if (response is ResponseResult.Success && response.data != null) {
+                    val domainObjectResult = responseToDomain(response)
+                    val domainObject = domainObjectResult.data!!
+                    persistResponse(domainToLocal(domainObject))
+                    ResponseResult.Success(domainObject)
+                } else {
+                    ResponseResult.Error(response.errorMessage!!)
+                }
             }
+        } catch (exception: Exception) {
+            return ResponseResult.Error(
+                "Unknown error at LocalFirstStrategy: ${exception.stackTraceToString()}"
+            )
         }
     }
 
