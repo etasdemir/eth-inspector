@@ -19,6 +19,7 @@ class NavigationHandler(
     }
 
     fun popBackStack() {
+        printStack()
         if (navHostController.currentBackStack.value.size >= 2) {
             navHostController.popBackStack()
         }
