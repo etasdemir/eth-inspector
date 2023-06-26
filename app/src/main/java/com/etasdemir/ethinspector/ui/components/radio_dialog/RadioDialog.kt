@@ -1,20 +1,18 @@
 package com.etasdemir.ethinspector.ui.components.radio_dialog
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.*
 import com.etasdemir.ethinspector.R
+import com.etasdemir.ethinspector.ui.components.DialogComponent
+import com.etasdemir.ethinspector.ui.components.DialogState
 import timber.log.Timber
 
 
@@ -29,92 +27,43 @@ data class RadioDialogState(
 
 @Composable
 fun RadioDialog(state: RadioDialogState) {
-    val dialogProperties = remember {
-        DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            securePolicy = SecureFlagPolicy.SecureOff,
-        )
-    }
     val radioButtonColors = RadioButtonDefaults.colors(
         selectedColor = MaterialTheme.colorScheme.tertiary,
         unselectedColor = MaterialTheme.colorScheme.tertiary
     )
     var selectedIndex by remember {
-        mutableStateOf(state.defaultSelectedItemIndex)
+        mutableIntStateOf(state.defaultSelectedItemIndex)
+    }
+    val dialogState = remember {
+        DialogState(
+            title = state.title,
+            description = state.description,
+            onCancel = state.onCancel,
+            onSuccess = {
+                state.onSuccess(state.items[selectedIndex], selectedIndex)
+            }
+        )
     }
 
-    Dialog(state.onCancel, dialogProperties) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(25.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 30.dp, vertical = 50.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Text(
-                color = MaterialTheme.colorScheme.tertiary,
-                text = state.title,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(text = state.description, fontSize = 15.sp)
-            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                state.items.forEachIndexed { index, item ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selectedIndex = index },
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = index == selectedIndex,
-                            onClick = null,
-                            colors = radioButtonColors
-                        )
-                        Text(text = item, fontSize = 14.sp)
-                    }
+    DialogComponent(state = dialogState) {
+        Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            state.items.forEachIndexed { index, item ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { selectedIndex = index },
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = index == selectedIndex,
+                        onClick = null,
+                        colors = radioButtonColors
+                    )
+                    Text(text = item, fontSize = 14.sp)
                 }
             }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ActionButton(
-                    onClick = state.onCancel,
-                    text = stringResource(id = R.string.cancel)
-                )
-                ActionButton(
-                    onClick = {
-                        state.onSuccess(state.items[selectedIndex], selectedIndex)
-                    },
-                    text = stringResource(id = R.string.save)
-                )
-            }
         }
-    }
-}
-
-@Composable
-private fun ActionButton(onClick: () -> Unit, text: String) {
-    val buttonColors = ButtonDefaults.outlinedButtonColors(
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.tertiary
-    )
-    OutlinedButton(
-        onClick = onClick,
-        contentPadding = PaddingValues(horizontal = 40.dp, vertical = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
-        colors = buttonColors
-    ) {
-        Text(
-            text = text,
-            fontSize = 14.sp
-        )
     }
 }
 

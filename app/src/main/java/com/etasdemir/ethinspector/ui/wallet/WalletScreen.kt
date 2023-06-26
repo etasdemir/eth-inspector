@@ -92,7 +92,8 @@ fun WalletScreen(
 @Preview
 private fun WalletScreenPreview() {
     val testController = rememberNavController()
-    val navHandler = NavigationHandler(testController)
+    val scope = rememberCoroutineScope()
+    val navHandler = NavigationHandler(testController, scope)
     WalletScreen(navHandler, {
         BottomBar(navController = testController, navHandler = navHandler)
     }, true)

@@ -118,5 +118,6 @@ private fun GroupDateAsDaily(prevDate: String, currentDate: String) {
 @Preview
 fun SavedItemScreenPreview() {
     val testController = rememberNavController()
-    SavedItemScreen(SavedItemType.TRANSACTION, NavigationHandler(testController))
+    val scope = rememberCoroutineScope()
+    SavedItemScreen(SavedItemType.TRANSACTION, NavigationHandler(testController, scope))
 }

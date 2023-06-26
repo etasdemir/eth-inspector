@@ -1,7 +1,11 @@
 package com.etasdemir.ethinspector.ui.shared
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.etasdemir.ethinspector.R
 import com.etasdemir.ethinspector.ui.UIResponseState
+import com.etasdemir.ethinspector.ui.components.DialogState
+import com.etasdemir.ethinspector.ui.components.LocalShowAppDialog
 import com.etasdemir.ethinspector.ui.navigation.NavigationHandler
 import timber.log.Timber
 
@@ -24,6 +28,17 @@ fun <T> UIResponseHandler(
     if (state is UIResponseState.Error) {
         Timber.e("UIResponseHandler: Error ${state.errorMessage}")
         Timber.e("Stack trace: $stack")
+
+        LocalShowAppDialog.current?.let {showDialog ->
+            showDialog(
+                DialogState(
+                    stringResource(id = R.string.error),
+                    if (state.errorMessage.isNullOrBlank()) stack else state.errorMessage,
+                    {}
+                )
+            )
+        }
+
         navigationHandler.popBackStack()
     }
     if (state is UIResponseState.Success) {

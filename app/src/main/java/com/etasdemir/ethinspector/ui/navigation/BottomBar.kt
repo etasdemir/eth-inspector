@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
@@ -97,6 +98,7 @@ fun BottomBar(
 @Preview
 private fun BottomBarPreview() {
     val testController = rememberNavController()
-    val navHandler = NavigationHandler(testController)
+    val scope = rememberCoroutineScope()
+    val navHandler = NavigationHandler(testController, scope)
     BottomBar(testController, navHandler)
 }

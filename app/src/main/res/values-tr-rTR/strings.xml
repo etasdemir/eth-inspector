@@ -7,6 +7,8 @@
     <string name="create">Oluştur</string>
     <string name="save">Kaydet</string>
     <string name="skip">Kapat</string>
+    <string name="error">Hata</string>
+    <string name="confirm">Onayla</string>
 
     <string name="percentage_with_value">%%%1$s</string>
     <string name="coin_circulation">Dolaşan Arz</string>

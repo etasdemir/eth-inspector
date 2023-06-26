@@ -2,11 +2,24 @@ package com.etasdemir.ethinspector.ui.navigation
 
 import androidx.navigation.NavHostController
 import com.etasdemir.ethinspector.ui.saved_tx_and_block.SavedItemType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class NavigationHandler(
-    private val navHostController: NavHostController
+    private val navHostController: NavHostController,
+    coroutineScope: CoroutineScope
 ) {
+
+    init {
+        coroutineScope.launch {
+            navHostController.currentBackStack.collect {
+                if (it.isEmpty()) {
+                    navigateToHome()
+                }
+            }
+        }
+    }
 
     private fun printStack() {
         val prevRoutes = arrayListOf<String>()

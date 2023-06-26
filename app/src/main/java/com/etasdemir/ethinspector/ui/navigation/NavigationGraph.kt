@@ -1,6 +1,7 @@
 package com.etasdemir.ethinspector.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,7 +22,8 @@ fun NavigationGraph(
     navController: NavHostController,
     sharedAccountViewModel: SharedAccountViewModel
 ) {
-    val navigationHandler = NavigationHandler(navController)
+    val coroutineScope = rememberCoroutineScope()
+    val navigationHandler = NavigationHandler(navController, coroutineScope)
     val bottomBar = @Composable {
         BottomBar(navController = navController, navHandler = navigationHandler)
     }

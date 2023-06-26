@@ -8,6 +8,8 @@
     <string name="create">Create</string>
     <string name="save">Save</string>
     <string name="skip">Skip</string>
+    <string name="error">Error</string>
+    <string name="confirm">Confirm</string>
 
     <string name="ethereum" translatable="false">Ethereum</string>
     <string name="percentage_with_value">%1$s%%</string>

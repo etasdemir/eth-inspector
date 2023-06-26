@@ -166,14 +166,15 @@ fun SearchTopBarPreview() {
     val searchIcon = remember { Icons.Filled.Search }
     val closeIcon = remember { Icons.Filled.Close }
     val testController = rememberNavController()
+    val scope = rememberCoroutineScope()
 
     Column {
         SearchTopBar(
             onButtonClick = click,
             searchIcon = searchIcon,
-            navigationHandler = NavigationHandler(testController)
+            navigationHandler = NavigationHandler(testController, scope)
         )
         Divider(Modifier.height(10.dp))
-        SearchTopBar(text, click, closeIcon, navigationHandler = NavigationHandler(testController))
+        SearchTopBar(text, click, closeIcon, navigationHandler = NavigationHandler(testController, scope))
     }
 }

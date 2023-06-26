@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -69,5 +68,6 @@ fun InvalidSearchScreen(
 @Composable
 fun InvalidSearchScreenPreview() {
     val testHost = rememberNavController()
-    InvalidSearchScreen("Some wrong address", NavigationHandler(testHost))
+    val scope = rememberCoroutineScope()
+    InvalidSearchScreen("Some wrong address", NavigationHandler(testHost, scope))
 }

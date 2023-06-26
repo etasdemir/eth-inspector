@@ -5,10 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.etasdemir.ethinspector.ui.components.AppDialog
 import com.etasdemir.ethinspector.ui.components.EthInspectorLanguage
 import com.etasdemir.ethinspector.ui.navigation.NavigationGraph
 import com.etasdemir.ethinspector.ui.shared.SharedAccountViewModel
@@ -24,24 +25,23 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-                EthInspectorLanguage(sharedAccountViewModel) {
-                    EthInspectorTheme(sharedAccountViewModel) {
-                        Scaffold(
-                            modifier = Modifier.fillMaxSize(),
+            EthInspectorLanguage(sharedAccountViewModel) {
+                EthInspectorTheme(sharedAccountViewModel) {
+                    AppDialog {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
                         ) {
-                            Surface(
-                                modifier = Modifier.padding(it),
-                                color = MaterialTheme.colorScheme.background
-                            ) {
-                                val navHostController = rememberNavController()
-                                NavigationGraph(
-                                    navController = navHostController,
-                                    sharedAccountViewModel
-                                )
-                            }
+                            val navHostController = rememberNavController()
+                            NavigationGraph(
+                                navController = navHostController,
+                                sharedAccountViewModel
+                            )
                         }
                     }
                 }
+            }
         }
     }
 }
