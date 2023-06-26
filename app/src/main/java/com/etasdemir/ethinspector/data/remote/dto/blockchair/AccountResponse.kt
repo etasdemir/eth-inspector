@@ -10,23 +10,23 @@ data class AccountResponse(
     @Json(name = "balance_usd")
     val balanceUsd: Double,
     @Json(name = "received_approximate")
-    val receivedApproximate: String,
+    val receivedApproximate: String?,
     @Json(name = "received_usd")
-    val receivedUsd: Double,
+    val receivedUsd: Double?,
     @Json(name = "spent_approximate")
-    val spentApproximate: String,
+    val spentApproximate: String?,
     @Json(name = "spent_usd")
-    val spentUsd: Double,
+    val spentUsd: Double?,
     @Json(name = "fees_approximate")
-    val feesApproximate: String,
+    val feesApproximate: String?,
     @Json(name = "fees_usd")
-    val feesUsd: Double,
+    val feesUsd: Double?,
     @Json(name = "receiving_call_count")
-    val receivingCallCount: Long,
+    val receivingCallCount: Long?,
     @Json(name = "spending_call_count")
-    val spendingCallCount: Long,
+    val spendingCallCount: Long?,
     @Json(name = "call_count")
-    val callCount: Long,
+    val callCount: Long?,
     @Json(name = "transaction_count")
     val transactionCount: Long,
     @Json(name = "first_seen_receiving")

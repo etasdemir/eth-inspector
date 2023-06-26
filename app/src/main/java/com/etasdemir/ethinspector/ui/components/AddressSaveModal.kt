@@ -82,8 +82,7 @@ fun AddressSaveModal(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 250.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

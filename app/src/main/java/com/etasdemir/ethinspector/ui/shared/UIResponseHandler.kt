@@ -39,7 +39,7 @@ fun <T> UIResponseHandler(
             )
         }
 
-        navigationHandler.popBackStack()
+        navigationHandler.navigateToHome()
     }
     if (state is UIResponseState.Success) {
         if (state.data == null) {

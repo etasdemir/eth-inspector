@@ -18,7 +18,7 @@ data class TransactionResponse (
     val value: String,
     val type: String,
     val chainId: String?,
-    val v: String,
-    val r: String,
-    val s: String,
+    val v: String?,
+    val r: String?,
+    val s: String?,
 )

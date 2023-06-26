@@ -9,7 +9,7 @@ data class BlockResponse(
     val gasUsed: String,
     val hash: String,
     val miner: String,
-    val nonce: String,
+    val nonce: String?,
     val number: String,
     val parentHash: String,
     val size: String,
