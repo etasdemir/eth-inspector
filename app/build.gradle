@@ -23,8 +23,8 @@ android {
         applicationId "com.etasdemir.ethinspector"
         minSdk 21
         targetSdk 34
-        versionCode 10202
-        versionName "1.2.2"
+        versionCode 10302
+        versionName "1.3.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
